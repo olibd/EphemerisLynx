@@ -41,6 +41,7 @@
     <Compile Include="Mappers\IDSubsystem\Strategies\IIDMapper.cs" />
     <Compile Include="Mappers\IDSubsystem\Strategies\IAttributeMapper.cs" />
     <Compile Include="Mappers\IDSubsystem\Strategies\ICertificateMapper.cs" />
+    <Compile Include="Mappers\IdentityMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">
