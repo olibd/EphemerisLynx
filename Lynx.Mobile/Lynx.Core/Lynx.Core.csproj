@@ -34,6 +34,10 @@
     <Compile Include="App.cs" />
     <Compile Include="Models\IDSubsystem\Watchdog.cs" />
     <Compile Include="Models\IDSubsystem\ID.cs" />
+    <Compile Include="Models\IDSubsystem\SmartContract.cs" />
+    <Compile Include="Models\IDSubsystem\Attribute.cs" />
+    <Compile Include="Models\IDSubsystem\Certificate.cs" />
+    <Compile Include="Models\IDSubsystem\ExternalElement.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">
