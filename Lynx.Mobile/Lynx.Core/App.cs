@@ -1,3 +1,5 @@
+using Lynx.Core.Models.IDSubsystem;
+using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
 
 namespace Lynx.Core
@@ -10,6 +12,9 @@ namespace Lynx.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
+
+            //Register the ID as a Singleton
+            Mvx.RegisterSingleton<ID>(() => new ID());
 
             RegisterAppStart<ViewModels.MainViewModel>();
         }
