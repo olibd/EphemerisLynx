@@ -4,11 +4,11 @@
     interface ICertificateFacade
     {
         /// <summary>
-        /// Returns a new CertificateModel using the data contained in the contract at the address specified.
+        /// Returns a new Certificate using the data contained in the contract at the address specified.
         /// </summary>
         /// <param name="address">The certificate contract address</param>
         /// <returns>The certificate at this address</returns>
-        CertificateModel GetCertificate(string address);
+        Certificate GetCertificate(string address);
     }
 
 

@@ -28,8 +28,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Facade\AttributeContent.cs" />
-    <Compile Include="Facade\Interfaces.cs" />
+    <Compile Include="Facade\IAttributeFacade.cs" />
+    <Compile Include="Facade\ICertificateFacade.cs" />
+    <Compile Include="Facade\IIDFacade.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

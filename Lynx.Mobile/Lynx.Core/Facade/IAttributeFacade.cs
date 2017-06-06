@@ -7,21 +7,21 @@ namespace Lynx.Core.Facade
         /// <summary>
         /// Creates a new attribute
         /// </summary>
-        /// <param name="model"></param>
-        void Deploy(AttributeModel model);
+        /// <param name="attribute"></param>
+        void Deploy(Attribute attribute);
 
         /// <summary>
-        /// Returns a new AttributeModel using the data contained in the contract at the address specified.
+        /// Returns a new Attribute using the data contained in the contract at the address specified.
         /// </summary>
         /// <param name="address">The Attribute contract address</param>
         /// <returns>The Attribute at this address</returns>
-        AttributeModel GetAttribute(string address);
+        Attribute GetAttribute(string address);
 
         /// <summary>
         /// Gets the list of certificates in the attribute
         /// </summary>
         /// <returns>Certificates</returns>
-        List<CertificateModel> GetCertificates(AttributeModel attribute);
+        List<Certificate> GetCertificates(Attribute attribute);
     }
 
 

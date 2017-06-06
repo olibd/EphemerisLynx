@@ -9,26 +9,26 @@ namespace Lynx.Core.Facade
         /// Create a new ID contract as well as all attached attributes/models
         /// </summary>
         /// <returns>The new ID contract's address</returns>
-        string Deploy(IDModel id);
+        string Deploy(ID id);
 
         /// <summary>
-        /// Populates a new IDModel using the data at the Ethereum address specified
+        /// Populates a new ID using the data at the Ethereum address specified
         /// </summary>
         /// <param name="address">The ID contract's address</param>
         /// <returns>The ID at this address</returns>
-        IDModel GetID(string address);
+        ID GetID(string address);
 
         /// <summary>
         /// Gets the list of attributes in the ID contract
         /// </summary>
-        List<AttributeModel> GetAttributes();
+        List<Attribute> GetAttributes();
 
         /// <summary>
         /// Adds the attribute to the ID
         /// </summary>
-        /// <param name="model">The attribute to be added</param>
+        /// <param name="attribute">The attribute to be added</param>
         /// <returns>True if adding was successful</returns>
-        bool AddAttribute(AttributeModel attribute);
+        bool AddAttribute(Attribute attribute);
     }
 
 
