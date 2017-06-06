@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Lynx.Core.Models.IDSubsystem;
 
-namespace Lynx.Core.Facade
+namespace Lynx.Core.Facade.Interfaces
 {
     interface IIDFacade
     {
@@ -21,14 +22,14 @@ namespace Lynx.Core.Facade
         /// <summary>
         /// Gets the list of attributes in the ID contract
         /// </summary>
-        List<Attribute> GetAttributes();
+        List<Attribute<object>> GetAttributes();
 
         /// <summary>
         /// Adds the attribute to the ID
         /// </summary>
         /// <param name="attribute">The attribute to be added</param>
         /// <returns>True if adding was successful</returns>
-        bool AddAttribute(Attribute attribute);
+        bool AddAttribute(Attribute<object> attribute);
     }
 
 

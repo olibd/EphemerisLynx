@@ -1,4 +1,6 @@
-﻿namespace Lynx.Core.Facade
+﻿using Lynx.Core.Models.IDSubsystem;
+
+namespace Lynx.Core.Facade.Interfaces
 {
 
     interface ICertificateFacade
@@ -8,7 +10,7 @@
         /// </summary>
         /// <param name="address">The certificate contract address</param>
         /// <returns>The certificate at this address</returns>
-        Certificate GetCertificate(string address);
+        Certificate<string> GetCertificate(string address);
     }
 
 

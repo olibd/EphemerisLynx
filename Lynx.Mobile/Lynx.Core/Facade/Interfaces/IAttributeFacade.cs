@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Lynx.Core.Models.IDSubsystem;
 
-namespace Lynx.Core.Facade
+namespace Lynx.Core.Facade.Interfaces
 {
     interface IAttributeFacade
     {
@@ -8,20 +9,20 @@ namespace Lynx.Core.Facade
         /// Creates a new attribute
         /// </summary>
         /// <param name="attribute"></param>
-        void Deploy(Attribute attribute);
+        void Deploy(Attribute<object> attribute);
 
         /// <summary>
         /// Returns a new Attribute using the data contained in the contract at the address specified.
         /// </summary>
         /// <param name="address">The Attribute contract address</param>
         /// <returns>The Attribute at this address</returns>
-        Attribute GetAttribute(string address);
+        Attribute<object> GetAttribute(string address);
 
         /// <summary>
         /// Gets the list of certificates in the attribute
         /// </summary>
         /// <returns>Certificates</returns>
-        List<Certificate> GetCertificates(Attribute attribute);
+        List<Certificate<object>> GetCertificates(Attribute<object> attribute);
     }
 
 
