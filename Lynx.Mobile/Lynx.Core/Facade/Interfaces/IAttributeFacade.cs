@@ -8,8 +8,8 @@ namespace Lynx.Core.Facade.Interfaces
         /// <summary>
         /// Creates a new attribute
         /// </summary>
-        /// <param name="attribute"></param>
-        void Deploy(Attribute<object> attribute);
+        /// <param name="attribute">The attribute to be deployed. The address fields will be updated with the smart contract addresses.</param>
+        void Deploy(out Attribute<object> attribute);
 
         /// <summary>
         /// Returns a new Attribute using the data contained in the contract at the address specified.
@@ -22,7 +22,7 @@ namespace Lynx.Core.Facade.Interfaces
         /// Gets the list of certificates in the attribute
         /// </summary>
         /// <returns>Certificates</returns>
-        List<Certificate<object>> GetCertificates(Attribute<object> attribute);
+        Dictionary<string, Certificate<object>> GetCertificates(Attribute<object> attribute);
     }
 
 

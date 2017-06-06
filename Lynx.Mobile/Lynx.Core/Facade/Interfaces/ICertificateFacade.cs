@@ -10,7 +10,7 @@ namespace Lynx.Core.Facade.Interfaces
         /// </summary>
         /// <param name="address">The certificate contract address</param>
         /// <returns>The certificate at this address</returns>
-        Certificate<string> GetCertificate(string address);
+        Certificate<object> GetCertificate(string address);
     }
 
 

@@ -3,7 +3,7 @@ namespace Lynx.Core.Models.IDSubsystem
 {
     public class SmartContract
     {
-        private string Address { get; set; }
+        public string Address { get; set; }
         public SmartContract()
         {
         }
