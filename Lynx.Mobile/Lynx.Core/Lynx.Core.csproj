@@ -43,6 +43,7 @@
     <Compile Include="Mappers\IDSubsystem\Strategies\ICertificateMapper.cs" />
     <Compile Include="Mappers\IdentityMap.cs" />
     <Compile Include="Mappers\IDSubsystem\IDMapper.cs" />
+    <Compile Include="Models\Model.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">
