@@ -1,11 +1,11 @@
 ﻿using System;
-namespace Lynx.Core.Models
+namespace Lynx.Core.Models.IDSubsystem
 {
-    public class Watchdog
+    public class Watchdog : SmartContract
     {
         public Watchdog()
         {
-            
+
         }
     }
 }
