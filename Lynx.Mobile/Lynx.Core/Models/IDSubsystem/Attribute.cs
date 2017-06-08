@@ -20,5 +20,12 @@ namespace Lynx.Core.Models.IDSubsystem
         {
             return _certificates[hash];
         }
+
+        public Dictionary<string, Certificate<T>>.KeyCollection GetKeys()
+        {
+            return _certificates.Keys;
+        }
+
+        
     }
 }

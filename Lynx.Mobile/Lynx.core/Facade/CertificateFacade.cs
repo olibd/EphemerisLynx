@@ -7,33 +7,33 @@ using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade
 {
-    internal class CertificateFacade : ICertificateFacade
+    internal class CertificateFacade<T> : Facade, ICertificateFacade<T>
     {
-        private Web3 _web3;
-
-        public CertificateFacade(Web3 web3)
+        public CertificateFacade(string address, string password, Web3 web3) : base(address, password, web3)
         {
-            _web3 = web3;
         }
 
-        public Certificate<object> GetCertificate(string address)
+        public CertificateFacade(string address, string password) : base(address, password, new Web3())
         {
-            Task<Certificate<object>> task = GetCertificateAsync(address);
-            task.Wait();
-            return task.Result;
         }
 
-        private async Task<Certificate<object>> GetCertificateAsync(string address)
+        public async Task<Certificate<T>> GetCertificateAsync(string address)
         {
             CertificateService ethCertificate = new CertificateService(_web3, address);
-            Certificate<object> certificateModel= new Certificate<object>();
-            ICertificateFacade certFacade = new CertificateFacade(_web3);
+            Certificate<T> certificateModel = new Certificate<T>();
 
             certificateModel.Hash = await ethCertificate.HashAsyncCall();
             certificateModel.Location = await ethCertificate.LocationAsyncCall();
             certificateModel.Revoked = await ethCertificate.RevokedAsyncCall();
 
             return certificateModel;
+        }
+
+        public async Task<Certificate<T>> DeployAsync(Certificate<T> cert)
+        {
+            string certAddress = await CertificateService.DeployContractAsync(_web3, _address, cert.Location, cert.Hash, cert.OwningAttribute.Address);
+            cert.Address = certAddress;
+            return cert;
         }
     }
 }
