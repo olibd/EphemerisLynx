@@ -31,6 +31,7 @@
     <Compile Include="Facade\AttributeFacade.cs" />
     <Compile Include="Facade\CertificateFacade.cs" />
     <Compile Include="Facade\Facade.cs" />
+    <Compile Include="Facade\IDFacade.cs" />
     <Compile Include="Facade\Interfaces\IAttributeFacade.cs" />
     <Compile Include="Facade\Interfaces\ICertificateFacade.cs" />
     <Compile Include="Facade\Interfaces\IIDFacade.cs" />

@@ -10,20 +10,20 @@ namespace Lynx.Core.Facade.Interfaces
         /// Creates a new attribute
         /// </summary>
         /// <param name="attribute">The attribute to be deployed. The address fields will be updated with the smart contract addresses.</param>
-        Task <Attribute<T>> DeployAsync(Attribute<T> attribute);
+        Task<Attribute<T>> DeployAsync(Attribute<T> attribute);
 
         /// <summary>
         /// Returns a new Attribute using the data contained in the contract at the address specified.
         /// </summary>
         /// <param name="address">The Attribute contract address</param>
         /// <returns>The Attribute at this address</returns>
-        Task <Attribute<T>> GetAttributeAsync(string address);
+        Task<Attribute<T>> GetAttributeAsync(string address);
 
         /// <summary>
         /// Gets the list of certificates in the attribute
         /// </summary>
         /// <returns>Certificates</returns>
-        Task <Dictionary<string, Certificate<T>>> GetCertificatesAsync(Attribute<T> attribute);
+        Task<Dictionary<string, Certificate<T>>> GetCertificatesAsync(Attribute<T> attribute);
 
         /// <summary>
         /// Adds the certificate to the Attribute
