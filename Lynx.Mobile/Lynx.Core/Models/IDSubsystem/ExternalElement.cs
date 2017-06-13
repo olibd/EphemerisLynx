@@ -1,11 +1,11 @@
 ﻿using System;
 namespace Lynx.Core.Models.IDSubsystem
 {
-    public class ExternalElement<T> : SmartContract
+    public class ExternalElement : SmartContract
     {
         public string Location { get; set; }
         public string Hash { get; set; }
-        public T Content { get; set; }
+        public IContent Content { get; set; }
 
         public ExternalElement()
         {
@@ -22,7 +22,7 @@ namespace Lynx.Core.Models.IDSubsystem
             Hash = hash;
         }
 
-        public ExternalElement(string location, string hash, T content)
+        public ExternalElement(string location, string hash, IContent content)
         {
             Location = location;
             Hash = hash;

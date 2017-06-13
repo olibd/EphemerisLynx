@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade
 {
-    internal class CertificateFacade<T> : Facade, ICertificateFacade<T>
+    internal class CertificateFacade : Facade, ICertificateFacade
     {
         public CertificateFacade(string address, string password, Web3 web3) : base(address, password, web3)
         {
@@ -17,10 +17,10 @@ namespace Lynx.Core.Facade
         {
         }
 
-        public async Task<Certificate<T>> GetCertificateAsync(string address)
+        public async Task<Certificate> GetCertificateAsync(string address)
         {
             CertificateService ethCertificate = new CertificateService(_web3, address);
-            Certificate<T> certificateModel = new Certificate<T>();
+            Certificate certificateModel = new Certificate();
 
             //Populating certificate model with values from the smart contract
             certificateModel.Hash = await ethCertificate.HashAsyncCall();
@@ -30,7 +30,7 @@ namespace Lynx.Core.Facade
             return certificateModel;
         }
 
-        public async Task<Certificate<T>> DeployAsync(Certificate<T> cert)
+        public async Task<Certificate> DeployAsync(Certificate cert)
         {
             string certAddress = await CertificateService.DeployContractAsync(_web3, _address, cert.Location, cert.Hash, cert.OwningAttribute.Address);
             cert.Address = certAddress;

@@ -6,29 +6,24 @@ namespace Lynx.Core.Models.IDSubsystem
     public class ID : Watchdog
     {
 
-        private Dictionary<string, Attribute<Object>> _attributes;
+        private Dictionary<string, Attribute> _attributes;
 
         public ID()
         {
 
         }
 
-        public void AddAttribute<T>(Attribute<T> attr)
+        public void AddAttribute(Attribute attr)
         {
-            Attribute<Object> attributeToAdd = (Attribute<Object>)Convert.ChangeType(attr, typeof(Attribute<Object>));
-            _attributes.Add(attr.Hash, attributeToAdd);
+            _attributes.Add(attr.Hash, attr);
         }
 
-        public Attribute<T> GetAttribute<T>(string hash)
+        public Attribute GetAttribute(string hash)
         {
-            if (_attributes[hash] is Attribute<T>)
-            {
-                return (Attribute<T>)Convert.ChangeType(_attributes[hash], typeof(Attribute<T>));
-            }
-            else return null;
+            return _attributes[hash];
         }
 
-        public Dictionary<string, Attribute<Object>>.KeyCollection GetAttributeKeys()
+        public Dictionary<string, Attribute>.KeyCollection GetAttributeKeys()
         {
             return _attributes.Keys;
         }

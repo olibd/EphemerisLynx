@@ -1,9 +1,9 @@
 ﻿using System;
 namespace Lynx.Core.Models.IDSubsystem
 {
-    public class Certificate<T> : ExternalElement<T>
+    public class Certificate : ExternalElement
     {
         public bool Revoked { get; set; }
-        public Attribute<T> OwningAttribute { get; set; }
+        public Attribute OwningAttribute { get; set; }
     }
 }

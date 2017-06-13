@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using Lynx.Core.Models.IDSubsystem;
-using System;
 using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade.Interfaces
 {
-    interface IIDFacade<T>
+    interface IIDFacade
     {
 
         /// <summary>
@@ -25,7 +24,7 @@ namespace Lynx.Core.Facade.Interfaces
         /// Gets the attributes in the ID contract
         /// <param name="id">The ID</param>
         /// </summary>
-        Task<Dictionary<byte[], Attribute<T>>> GetAttributesAsync(ID id);
+        Task<Dictionary<byte[], Attribute>> GetAttributesAsync(ID id);
 
         /// <summary>
         /// Adds the attribute to the ID
@@ -34,7 +33,7 @@ namespace Lynx.Core.Facade.Interfaces
         /// <param name="key">The key of the attribute to be added</param>
         /// <param name="attribute">The attribute to be added</param>
         /// <returns>The attribute, updated if neccesary</returns>
-        Task<Attribute<T>> AddAttributeAsync(ID id, byte[] key, Attribute<T> attribute);
+        Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute);
     }
 
 

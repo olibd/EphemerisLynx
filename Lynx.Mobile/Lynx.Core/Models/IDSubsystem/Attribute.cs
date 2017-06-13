@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
-    public class Attribute<T> : ExternalElement<T>
+    public class Attribute : ExternalElement
     {
-        private Dictionary<string, Certificate<T>> _certificates;
+        private Dictionary<string, Certificate> _certificates;
 
         public Attribute()
         {
         }
 
-        public void AddCertificate(Certificate<T> attr)
+        public void AddCertificate(Certificate attr)
         {
             _certificates.Add(attr.Hash, attr);
         }
 
-        public Certificate<T> GetCertificate(string hash)
+        public Certificate GetCertificate(string hash)
         {
             return _certificates[hash];
         }
 
-        public Dictionary<string, Certificate<T>>.KeyCollection GetKeys()
+        public Dictionary<string, Certificate>.KeyCollection GetKeys()
         {
             return _certificates.Keys;
         }
