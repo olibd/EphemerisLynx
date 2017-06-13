@@ -1,11 +1,11 @@
 ﻿using System;
+using SQLite;
+
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class SmartContract : Model
     {
-        private string Address { get; set; }
-        public SmartContract()
-        {
-        }
+        [Indexed]
+        public string Address { get; set; }
     }
 }

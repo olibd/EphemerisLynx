@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using SQLiteNetExtensions.Attributes;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class ID : Watchdog
     {
-
-        private Dictionary<string, Attribute<Object>> _attributes;
+        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        public Dictionary<string, Attribute> Attributes { get; set; }
 
         public ID()
         {
-
+            Attributes = new Dictionary<string, Attribute>();
         }
 
-        public void AddAttribute(Attribute<Object> attr)
+        public void AddAttribute(string type, Attribute attr)
         {
-            _attributes.Add(attr.Hash, attr);
+            Attributes.Add(type, attr);
         }
 
-        public Attribute<Object> GetAttribute(string hash)
+        public Attribute GetAttribute(string hash)
         {
-            return _attributes[hash];
+            return Attributes[hash];
         }
     }
 }

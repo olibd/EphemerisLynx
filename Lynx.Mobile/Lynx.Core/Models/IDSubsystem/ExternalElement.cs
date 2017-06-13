@@ -1,32 +1,21 @@
 ﻿using System;
+using SQLite;
+using SQLiteNetExtensions.Attributes;
+
 namespace Lynx.Core.Models.IDSubsystem
 {
-    public class ExternalElement<T> : SmartContract
+    public class ExternalElement : SmartContract
     {
+        [Unique]
         public string Location { get; set; }
+
+        [Indexed, Unique]
         public string Hash { get; set; }
-        public T Content { get; set; }
 
-        public ExternalElement()
-        {
-        }
+        [ForeignKey(typeof(IContent))]
+        private string ContentId { get; set; }
 
-        public ExternalElement(String location)
-        {
-            Location = location;
-        }
-
-        public ExternalElement(string location, string hash)
-        {
-            Location = location;
-            Hash = hash;
-        }
-
-        public ExternalElement(string location, string hash, T content)
-        {
-            Location = location;
-            Hash = hash;
-            Content = content;
-        }
+        [OneToOne(CascadeOperations = CascadeOperation.All)]
+        public IContent Content { get; set; }
     }
 }

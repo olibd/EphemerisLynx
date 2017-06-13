@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using SQLiteNetExtensions.Attributes;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
-    public class Attribute<T> : ExternalElement<T>
+    public class Attribute : ExternalElement
     {
-        private Dictionary<string, Certificate<T>> _certificates;
+        [ForeignKey(typeof(ID))]
+        private int IDMUID { get; set; }
 
-        public Attribute()
+        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        public Dictionary<string, Certificate> Certificates { get; set; }
+
+        public void AddCertificate(Certificate attr)
         {
+            Certificates.Add(attr.Hash, attr);
         }
 
-        public void AddCertificate(Certificate<T> attr)
+        public Certificate GetCertificate(string hash)
         {
-            _certificates.Add(attr.Hash, attr);
-        }
-
-        public Certificate<T> GetCertificate(string hash)
-        {
-            return _certificates[hash];
+            return Certificates[hash];
         }
     }
 }

@@ -38,12 +38,14 @@
     <Compile Include="Models\IDSubsystem\Attribute.cs" />
     <Compile Include="Models\IDSubsystem\Certificate.cs" />
     <Compile Include="Models\IDSubsystem\ExternalElement.cs" />
-    <Compile Include="Mappers\IDSubsystem\Strategies\IIDMapper.cs" />
-    <Compile Include="Mappers\IDSubsystem\Strategies\IAttributeMapper.cs" />
-    <Compile Include="Mappers\IDSubsystem\Strategies\ICertificateMapper.cs" />
+    <Compile Include="Mappers\IDSubsystem\Strategies\IMapper.cs" />
     <Compile Include="Mappers\IdentityMap.cs" />
-    <Compile Include="Mappers\IDSubsystem\IDMapper.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Mappers\IDSubsystem\Mapper.cs" />
+    <Compile Include="Models\IDSubsystem\IContent.cs" />
+    <Compile Include="Models\IDSubsystem\StringContent.cs" />
+    <Compile Include="Models\IDSubsystem\IntContent.cs" />
+    <Compile Include="Models\IDBSerializable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">

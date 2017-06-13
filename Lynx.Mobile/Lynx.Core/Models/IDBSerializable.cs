@@ -1,15 +1,15 @@
 ﻿using System;
-using SQLite;
+using SQLite.Net.Attributes;
 
 namespace Lynx.Core.Models
 {
-    public abstract class Model : IDBSerializable
+    public interface IDBSerializable
     {
         /// <summary>
-        /// Gets or sets the UID
+        /// Gets or sets the UID.
         /// </summary>
         /// <value>The UID.</value>
         [PrimaryKey, AutoIncrement]
-        public int UID { get; set; }
+        int UID { get; set; }
     }
 }
