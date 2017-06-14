@@ -3,12 +3,12 @@ using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using SQLite;
 
-namespace Lynx.Core.Mappers.IDSubsystem
+namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 {
-    public class Mapper<T> : IMapper<T> where T : Model, new()
+    public class Mapper<T> : IMapper<T> where T : IDBSerializable, new()
     {
         private readonly string _dBFilePath;
-        private readonly SQLiteConnection _db;
+        protected readonly SQLiteConnection _db;
         private readonly IdentityMap<int, T> _idMap;
 
         /// <summary>
@@ -24,19 +24,19 @@ namespace Lynx.Core.Mappers.IDSubsystem
         }
 
         /// <summary>
-        /// Get object T given the MUID.
+        /// Get object T given the UID.
         /// </summary>
         /// <returns>The object T.</returns>
-        /// <param name="MUID">MUID.</param>
-        public T Get(int MUID)
+        /// <param name="UID">UID.</param>
+        public virtual T Get(int UID)
         {
             T obj;
 
-            if ((obj = _idMap.Find(MUID)) != null)
+            if ((obj = _idMap.Find(UID)) != null)
                 return obj;
             else
             {
-                obj = _db.Get<T>(MUID);
+                obj = _db.Get<T>(UID);
                 _idMap.Add(obj.UID, obj);
                 return obj;
             }
@@ -47,7 +47,7 @@ namespace Lynx.Core.Mappers.IDSubsystem
         /// </summary>
         /// <returns>The object MUID.</returns>
         /// <param name="obj">Object.</param>
-        public int Save(T obj)
+        public virtual int Save(T obj)
         {
             return SaveToDB(obj);
         }

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using SQLiteNetExtensions.Attributes;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class ID : Watchdog
     {
-        [OneToMany(CascadeOperations = CascadeOperation.All)]
         public Dictionary<string, Attribute> Attributes { get; set; }
 
         public ID()

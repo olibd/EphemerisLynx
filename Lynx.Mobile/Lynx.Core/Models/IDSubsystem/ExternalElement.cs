@@ -1,6 +1,5 @@
 ﻿using System;
 using SQLite;
-using SQLiteNetExtensions.Attributes;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
@@ -12,10 +11,7 @@ namespace Lynx.Core.Models.IDSubsystem
         [Indexed, Unique]
         public string Hash { get; set; }
 
-        [ForeignKey(typeof(IContent))]
-        private string ContentId { get; set; }
-
-        [OneToOne(CascadeOperations = CascadeOperation.All)]
+        [Ignore]
         public IContent Content { get; set; }
     }
 }
