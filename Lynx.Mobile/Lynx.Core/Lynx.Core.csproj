@@ -29,13 +29,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BlockchainFacadeSetup.cs" />
+    <Compile Include="Facade\DummyContentService.cs" />
     <Compile Include="Facade\AttributeFacade.cs" />
     <Compile Include="Facade\CertificateFacade.cs" />
     <Compile Include="Facade\Facade.cs" />
     <Compile Include="Facade\IDFacade.cs" />
     <Compile Include="Facade\Interfaces\IAttributeFacade.cs" />
     <Compile Include="Facade\Interfaces\ICertificateFacade.cs" />
+    <Compile Include="Facade\Interfaces\IContentService.cs" />
     <Compile Include="Facade\Interfaces\IIDFacade.cs" />
+    <Compile Include="Models\IDSubsystem\IContent.cs" />
+    <Compile Include="Models\IDSubsystem\IntContent.cs" />
+    <Compile Include="Models\IDSubsystem\StringContent.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

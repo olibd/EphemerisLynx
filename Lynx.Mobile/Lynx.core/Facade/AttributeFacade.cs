@@ -39,7 +39,7 @@ namespace Lynx.Core.Facade
             //Iterating over certificates and deploying each one
             foreach (string key in attribute.GetKeys())
             {
-                Certificate cert = await certFacade.DeployAsync(attribute.GetCertificate(key));
+                Certificate cert = await _certificateFacade.DeployAsync(attribute.GetCertificate(key));
                 cert = await AddCertificateAsync(attribute, attribute.GetCertificate(key));
 
                 //Adding the newly deployed certificate (with updated address) to the new attribute

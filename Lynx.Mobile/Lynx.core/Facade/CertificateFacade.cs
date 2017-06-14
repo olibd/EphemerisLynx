@@ -27,6 +27,7 @@ namespace Lynx.Core.Facade
             certificateModel.Location = await ethCertificate.LocationAsyncCall();
             certificateModel.Revoked = await ethCertificate.RevokedAsyncCall();
 
+
             return certificateModel;
         }
 
