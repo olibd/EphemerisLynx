@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BlockchainFacadeSetup.cs" />
     <Compile Include="Facade\AttributeFacade.cs" />
     <Compile Include="Facade\CertificateFacade.cs" />
     <Compile Include="Facade\Facade.cs" />

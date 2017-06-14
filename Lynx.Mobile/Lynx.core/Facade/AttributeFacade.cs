@@ -12,18 +12,21 @@ namespace Lynx.Core.Facade
 {
     class AttributeFacade : Facade, IAttributeFacade
     {
-        public AttributeFacade(string address, string password) : base(address, password, new Web3())
+        private ICertificateFacade _certificateFacade;
+
+        public AttributeFacade(string address, string password, ICertificateFacade certificateFacade) : base(address, password, new Web3())
         {
+            _certificateFacade = certificateFacade;
         }
 
-        public AttributeFacade(string address, string password, Web3 web3) : base(address, password, web3)
+        public AttributeFacade(string address, string password, Web3 web3, ICertificateFacade certificateFacade) : base(address, password, web3)
         {
+            _certificateFacade = certificateFacade;
         }
 
         public async Task<Attribute> DeployAsync(Attribute attribute)
         {
             Attribute outAttribute = new Attribute();
-            ICertificateFacade certFacade = new CertificateFacade(_address, _password, _web3);
             string ethAttributeAddress = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, _address);
             AttributeService ethAttribute = new AttributeService(_web3, ethAttributeAddress);
 

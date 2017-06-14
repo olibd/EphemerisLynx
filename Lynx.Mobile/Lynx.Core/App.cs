@@ -12,10 +12,9 @@ namespace Lynx.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
-
             //Register the ID as a Singleton
             Mvx.RegisterSingleton<ID>(() => new ID());
-
+            Mvx.RegisterSingleton(() => new BlockchainFacadeSetup());
             RegisterAppStart<ViewModels.MainViewModel>();
         }
     }

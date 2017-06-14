@@ -13,20 +13,24 @@ namespace Lynx.Core.Facade
 {
     class IDFacade : Facade, IIDFacade
     {
-        string _factoryAddress;
+        private string _factoryAddress;
+        private IAttributeFacade _attributeFacade;
 
-        public IDFacade(string address, string password, string factoryAddress, Web3 web3) : base(address, password, web3)
+        public IDFacade(string address, string password, string factoryAddress, Web3 web3, IAttributeFacade attributeFacade) : base(address, password, web3)
         {
             _factoryAddress = factoryAddress;
+            _attributeFacade = attributeFacade;
         }
 
-        public IDFacade(string address, string password, string factoryAddress) : base(address, password, new Web3())
+        public IDFacade(string address, string password, string factoryAddress, IAttributeFacade attributeFacade) : base(address, password, new Web3())
         {
             _factoryAddress = factoryAddress;
+            _attributeFacade = attributeFacade;
         }
 
-        public IDFacade(string address, string password) : base(address, password, new Web3())
+        public IDFacade(string address, string password, IAttributeFacade attributeFacade) : base(address, password, new Web3())
         {
+            _attributeFacade = attributeFacade;
         }
 
         public async Task<ID> DeployAsync(ID id)
@@ -46,7 +50,6 @@ namespace Lynx.Core.Facade
             newID.Address = controllerAddress;
 
             //Add each attribute from the ID model to the ID smart contract
-            IAttributeFacade ethAttribute = new AttributeFacade(_address, _password, _web3);
             foreach (string key in id.GetAttributeKeys())
             {
                 Attribute attribute = id.GetAttribute(key);
@@ -79,11 +82,10 @@ namespace Lynx.Core.Facade
         public async Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute)
         {
             IDControllerService ethIDCtrl = new IDControllerService(_web3, id.Address);
-            IAttributeFacade AttributeFacade = new AttributeFacade(_address, _password, _web3);
 
             //If the attribute to be added is not yet deployed, deploy it
             if (attribute.Address == "")
-                attribute = await AttributeFacade.DeployAsync(attribute);
+                attribute = await _attributeFacade.DeployAsync(attribute);
 
             await ethIDCtrl.AddAttributeAsync(_address, key, attribute.Address);
 
@@ -101,9 +103,8 @@ namespace Lynx.Core.Facade
                 //Get all attribute keys and addresses for the ID
                 byte[] attributeKey = await ethIdCtrl.GetAttributeKeyAsyncCall(i);
                 string ethAttributeAddress = await ethIdCtrl.GetAttributeAsyncCall(attributeKey);
-                AttributeFacade attributeFacade = new AttributeFacade(_address, _password, _web3);
                 //Get the attribute and add it to the local ID model
-                Attribute newAttribute = await attributeFacade.GetAttributeAsync(ethAttributeAddress);
+                Attribute newAttribute = await _attributeFacade.GetAttributeAsync(ethAttributeAddress);
                 dict.Add(attributeKey, newAttribute);
             }
 
