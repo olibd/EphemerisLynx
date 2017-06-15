@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 {
-    public class AttributeMapper : ExertnalElementMapper<Attribute>
+    public class AttributeMapper : ExternalElementMapper<Attribute>
     {
         public AttributeMapper(string DBFilePath) : base(DBFilePath)
         {
@@ -23,11 +24,12 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 
         private void SaveCertificates(Attribute obj)
         {
-            _db.CreateTable<AttributeCertificateMapping>();
+            if (obj.Certificates == null)
+                return;
 
             foreach (KeyValuePair<string, Certificate> entry in obj.Certificates)
             {
-                Mapper<Certificate> certMapper = new Mapper<Certificate>(_db.DatabasePath);
+                IMapper<Certificate> certMapper = new ExternalElementMapper<Certificate>(_dbFilePath);
                 certMapper.Save(entry.Value);
 
                 AttributeCertificateMapping attrCert = new AttributeCertificateMapping()
@@ -36,7 +38,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                     CertUID = entry.Value.UID
                 };
 
-                Mapper<AttributeCertificateMapping> attrCertMapper = new Mapper<AttributeCertificateMapping>(_db.DatabasePath);
+                IMapper<AttributeCertificateMapping> attrCertMapper = new Mapper<AttributeCertificateMapping>(_dbFilePath);
                 attrCertMapper.Save(attrCert);
             }
         }

@@ -9,6 +9,11 @@ namespace Lynx.Core.Models.IDSubsystem
         [Ignore]
         public Dictionary<string, Certificate> Certificates { get; set; }
 
+        public Attribute()
+        {
+            Certificates = new Dictionary<string, Certificate>();
+        }
+
         public void AddCertificate(Certificate cert)
         {
             Certificates.Add(cert.Hash, cert);

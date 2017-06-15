@@ -46,7 +46,7 @@
     <Compile Include="Models\IDSubsystem\IntContent.cs" />
     <Compile Include="Models\IDBSerializable.cs" />
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\AttributeMapper.cs" />
-    <Compile Include="Mappers\IDSubsystem\SQLiteMappers\ExertnalElementMapper.cs" />
+    <Compile Include="Mappers\IDSubsystem\SQLiteMappers\ExternalElementMapper.cs" />
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\IDMapper.cs" />
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\Mapper.cs" />
   </ItemGroup>

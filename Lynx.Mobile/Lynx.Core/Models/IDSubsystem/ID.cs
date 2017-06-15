@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using SQLite;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class ID : Watchdog
     {
+        [Ignore]
         public Dictionary<string, Attribute> Attributes { get; set; }
 
         public ID()

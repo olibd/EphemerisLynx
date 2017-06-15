@@ -8,7 +8,7 @@ namespace Lynx.Core.Models.IDSubsystem
         [Unique]
         public string Location { get; set; }
 
-        [Indexed, Unique]
+        [Unique]
         public string Hash { get; set; }
 
         [Ignore]

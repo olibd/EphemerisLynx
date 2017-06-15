@@ -19,7 +19,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 
             foreach (KeyValuePair<string, Attribute> entry in obj.Attributes)
             {
-                Mapper<Attribute> attrMapper = new Mapper<Attribute>(_db.DatabasePath);
+                IMapper<Attribute> attrMapper = new AttributeMapper(_dbFilePath);
                 attrMapper.Save(entry.Value);
 
                 IDAttribute idAttr = new IDAttribute()
@@ -28,7 +28,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                     AttrUID = entry.Value.UID
                 };
 
-                Mapper<IDAttribute> idAttrMapper = new Mapper<IDAttribute>(_db.DatabasePath);
+                IMapper<IDAttribute> idAttrMapper = new Mapper<IDAttribute>(_dbFilePath);
                 idAttrMapper.Save(idAttr);
             }
 
