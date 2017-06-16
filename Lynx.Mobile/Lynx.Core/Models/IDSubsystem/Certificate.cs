@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class Certificate : ExternalElement

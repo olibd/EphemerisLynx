@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Lynx.Core.Models.IDSubsystem
 {
-    public class IntContent : IContent
+    public class IntContent : Model, IContent
     {
         public IntContent(int content)
         {

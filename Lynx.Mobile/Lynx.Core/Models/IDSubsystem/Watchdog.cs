@@ -5,7 +5,7 @@ namespace Lynx.Core.Models.IDSubsystem
     {
         public Watchdog()
         {
-            
+
         }
     }
 }

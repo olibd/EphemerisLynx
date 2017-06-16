@@ -1,31 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using SQLite;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class Attribute : ExternalElement
     {
-        private Dictionary<string, Certificate> _certificates;
+        [Ignore]
+        public Dictionary<string, Certificate> Certificates { get; set; }
 
         public Attribute()
         {
+            Certificates = new Dictionary<string, Certificate>();
         }
 
-        public void AddCertificate(Certificate attr)
+        public void AddCertificate(Certificate cert)
         {
-            _certificates.Add(attr.Hash, attr);
+            Certificates.Add(cert.Hash, cert);
         }
 
         public Certificate GetCertificate(string hash)
         {
-            return _certificates[hash];
+            return Certificates[hash];
         }
-
-        public Dictionary<string, Certificate>.KeyCollection GetKeys()
-        {
-            return _certificates.Keys;
-        }
-
-        
     }
 }
