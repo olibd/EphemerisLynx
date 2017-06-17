@@ -50,7 +50,7 @@ namespace Lynx.Core.Facade
             newID.Address = controllerAddress;
 
             //Add each attribute from the ID model to the ID smart contract
-            foreach (string key in id.GetAttributeKeys())
+            foreach (string key in id.Attributes.Keys)
             {
                 Attribute attribute = id.GetAttribute(key);
 
@@ -58,7 +58,7 @@ namespace Lynx.Core.Facade
                 if (attribute == null) continue;
 
                 attribute = await AddAttributeAsync(newID, Encoding.UTF8.GetBytes(key), attribute);
-                newID.AddAttribute(attribute);
+                newID.AddAttribute(key, attribute);
             }
             return id;
         }
@@ -70,9 +70,10 @@ namespace Lynx.Core.Facade
 
             //Get all attributes from the smart contract and add them to the ID model
             Dictionary<byte[], Attribute> attributes = await GetAttributesAsync(newID);
-            foreach (Attribute attr in attributes.Values)
+            foreach (byte[] key in attributes.Keys)
             {
-                newID.AddAttribute(attr);
+                string keyStr = Encoding.UTF8.GetString(key, 0, key.Length);
+                newID.AddAttribute(keyStr, attributes[key]);
             }
 
             return newID;

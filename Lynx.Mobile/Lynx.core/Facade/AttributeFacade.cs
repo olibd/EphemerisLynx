@@ -7,6 +7,7 @@ using eVi.abi.lib.pcl;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using System.Numerics;
+using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 
 namespace Lynx.Core.Facade
@@ -28,9 +29,8 @@ namespace Lynx.Core.Facade
         public async Task<Attribute> DeployAsync(Attribute attribute)
         {
             Attribute outAttribute = new Attribute();
-            string transactionHash = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, _address);
+            string transactionHash = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, _address, new HexBigInteger(800000));
             TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
-            AttributeService ethAttribute = new AttributeService(_web3, receipt.ContractAddress);
 
             //Populating new attribute model with the new address and values passed
             outAttribute.Address = receipt.ContractAddress;
@@ -55,12 +55,14 @@ namespace Lynx.Core.Facade
         {
 
             AttributeService ethAttribute = new AttributeService(_web3, address);
-            Attribute attributeModel = new Attribute();
+            Attribute attributeModel = new Attribute
+            {
+                Address = address,
+                Hash = await ethAttribute.HashAsyncCall(),
+                Location = await ethAttribute.LocationAsyncCall()
+            };
 
             //Populating attribute object with values from the smart contract
-            attributeModel.Address = address;
-            attributeModel.Hash = await ethAttribute.HashAsyncCall();
-            attributeModel.Location = await ethAttribute.LocationAsyncCall();
 
             //Fetching each certificate and adding them to the attribute
             Dictionary<string, Certificate> certificates = await GetCertificatesAsync(attributeModel);

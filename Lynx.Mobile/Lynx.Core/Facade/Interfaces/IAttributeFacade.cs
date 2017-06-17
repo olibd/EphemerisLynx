@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade.Interfaces
 {
-    interface IAttributeFacade
+    public interface IAttributeFacade
     {
         /// <summary>
         /// Creates a new attribute

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade
 {
-    class Facade
+    public class Facade
     {
         protected Web3 _web3;
         protected string _address;

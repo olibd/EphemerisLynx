@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Lynx.Core.Facade.Interfaces
 {
 
-    interface ICertificateFacade
+    public interface ICertificateFacade
     {
         /// <summary>
         /// Returns a new Certificate using the data contained in the contract at the address specified.
