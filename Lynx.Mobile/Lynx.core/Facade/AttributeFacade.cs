@@ -7,10 +7,11 @@ using eVi.abi.lib.pcl;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using System.Numerics;
+using Nethereum.RPC.Eth.DTOs;
 
 namespace Lynx.Core.Facade
 {
-    class AttributeFacade : Facade, IAttributeFacade
+    public class AttributeFacade : Facade, IAttributeFacade
     {
         private ICertificateFacade _certificateFacade;
 
@@ -27,17 +28,18 @@ namespace Lynx.Core.Facade
         public async Task<Attribute> DeployAsync(Attribute attribute)
         {
             Attribute outAttribute = new Attribute();
-            string ethAttributeAddress = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, _address);
-            AttributeService ethAttribute = new AttributeService(_web3, ethAttributeAddress);
+            string transactionHash = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, _address);
+            TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            AttributeService ethAttribute = new AttributeService(_web3, receipt.ContractAddress);
 
             //Populating new attribute model with the new address and values passed
-            outAttribute.Address = ethAttributeAddress;
+            outAttribute.Address = receipt.ContractAddress;
             outAttribute.Content = attribute.Content;
             outAttribute.Hash = attribute.Hash;
             outAttribute.Location = attribute.Location;
 
             //Iterating over certificates and deploying each one
-            foreach (string key in attribute.GetKeys())
+            foreach (string key in attribute.Certificates.Keys)
             {
                 Certificate cert = await _certificateFacade.DeployAsync(attribute.GetCertificate(key));
                 cert = await AddCertificateAsync(attribute, attribute.GetCertificate(key));

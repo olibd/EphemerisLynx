@@ -4,10 +4,12 @@ using Lynx.Core.Models.IDSubsystem;
 using Nethereum.Web3;
 using eVi.abi.lib.pcl;
 using System.Threading.Tasks;
+using Nethereum.Hex.HexTypes;
+using Nethereum.RPC.Eth.DTOs;
 
 namespace Lynx.Core.Facade
 {
-    internal class CertificateFacade : Facade, ICertificateFacade
+    public class CertificateFacade : Facade, ICertificateFacade
     {
         public CertificateFacade(string address, string password, Web3 web3) : base(address, password, web3)
         {
@@ -33,8 +35,9 @@ namespace Lynx.Core.Facade
 
         public async Task<Certificate> DeployAsync(Certificate cert)
         {
-            string certAddress = await CertificateService.DeployContractAsync(_web3, _address, cert.Location, cert.Hash, cert.OwningAttribute.Address);
-            cert.Address = certAddress;
+            string transactionHash = await CertificateService.DeployContractAsync(_web3, _address, cert.Location, cert.Hash, cert.OwningAttribute.Address, new HexBigInteger(600000));
+            TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            cert.Address = receipt.ContractAddress;
             return cert;
         }
     }
