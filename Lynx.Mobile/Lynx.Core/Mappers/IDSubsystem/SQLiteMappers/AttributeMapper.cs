@@ -9,8 +9,10 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 {
     public class AttributeMapper : ExternalElementMapper<Attribute>
     {
-        public AttributeMapper(string DBFilePath) : base(DBFilePath)
+        private IMapper<Certificate> _certMapper;
+        public AttributeMapper(string DBFilePath, IMapper<Certificate> certMapper) : base(DBFilePath)
         {
+            _certMapper = certMapper;
         }
 
         public override int Save(Attribute obj)
@@ -29,8 +31,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 
             foreach (KeyValuePair<string, Certificate> entry in obj.Certificates)
             {
-                IMapper<Certificate> certMapper = new ExternalElementMapper<Certificate>(_dbFilePath);
-                certMapper.Save(entry.Value);
+                _certMapper.Save(entry.Value);
 
                 AttributeCertificateMapping attrCert = new AttributeCertificateMapping()
                 {

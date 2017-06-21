@@ -9,8 +9,10 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 {
     public class IDMapper : Mapper<ID>
     {
-        public IDMapper(string DBFilePath) : base(DBFilePath)
+        private IMapper<Attribute> _attrMapper;
+        public IDMapper(string DBFilePath, IMapper<Attribute> attrMapper) : base(DBFilePath)
         {
+            _attrMapper = attrMapper;
         }
 
         public override int Save(ID obj)
@@ -19,8 +21,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 
             foreach (KeyValuePair<string, Attribute> entry in obj.Attributes)
             {
-                IMapper<Attribute> attrMapper = new AttributeMapper(_dbFilePath);
-                attrMapper.Save(entry.Value);
+                _attrMapper.Save(entry.Value);
 
                 IDAttribute idAttr = new IDAttribute()
                 {

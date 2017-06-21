@@ -10,7 +10,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         private readonly string _dBFilePath;
         private SQLiteConnection _db;
         protected readonly string _dbFilePath;
-        private readonly IdentityMap<int, T> _idMap;
+        private readonly IIdentityMap<int, T> _idMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Lynx.Core.Mappers.IDSubsystem.Mapper`1"/> class.
@@ -19,7 +19,6 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         public Mapper(string DBFilePath)
         {
             _dbFilePath = DBFilePath;
-
             _idMap = new IdentityMap<int, T>();
         }
 
@@ -74,6 +73,10 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                 return _db.Insert(obj);
         }
 
+        /// <summary>
+        /// Connects to table G.
+        /// </summary>
+        /// <typeparam name="G">The 1st type parameter.</typeparam>
         private void ConnectToTable<G>()
         {
             _db = new SQLiteConnection(_dbFilePath);

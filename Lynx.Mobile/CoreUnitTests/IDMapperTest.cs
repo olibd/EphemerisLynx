@@ -68,7 +68,7 @@ namespace CoreUnitTests
             _id.AddAttribute("Age", age);
 
             //_mapper = new IDMapper("/Users/olivier/Downloads/test.db");
-            _mapper = new IDMapper(":memory:");
+            _mapper = new IDMapper(":memory:", new AttributeMapper(":memory:", new ExternalElementMapper<Certificate>(":memory:")));
         }
 
         [Test()]
