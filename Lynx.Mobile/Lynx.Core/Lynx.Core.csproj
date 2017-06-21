@@ -49,6 +49,7 @@
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\ExternalElementMapper.cs" />
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\IDMapper.cs" />
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\Mapper.cs" />
+    <Compile Include="Mappers\IDSubsystem\Strategies\IIdentityMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">

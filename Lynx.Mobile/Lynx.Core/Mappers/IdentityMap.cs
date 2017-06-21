@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lynx.Core.Mappers.IDSubsystem.Strategies;
 
 namespace Lynx.Core.Mappers
 {
-    public class IdentityMap<K, V>
+    public class IdentityMap<K, V> : IIdentityMap<K, V>
     {
         private readonly Dictionary<K, V> _idMap;
 
