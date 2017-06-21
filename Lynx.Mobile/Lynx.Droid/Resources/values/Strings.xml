@@ -2,4 +2,8 @@
 <resources>
 	<string name="hello">Hello World, Click Me!</string>
 	<string name="app_name">Lynx</string>
+	<string name="firstname">Firstname</string>
+	<string name="lastname">Lastname</string>
+	<string name="cell">Cellphone</string>
+	<string name="address">Address</string>
 </resources>
