@@ -50,6 +50,7 @@
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\IDMapper.cs" />
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\Mapper.cs" />
     <Compile Include="Mappers\IDSubsystem\Strategies\IIdentityMap.cs" />
+    <Compile Include="Models\Interactions\BooleanInteraction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvvmCross.Platform">
@@ -93,6 +94,7 @@
     <Folder Include="Mappers\IDSubsystem\" />
     <Folder Include="Mappers\IDSubsystem\Strategies\" />
     <Folder Include="Mappers\IDSubsystem\SQLiteMappers\" />
+    <Folder Include="Models\Interactions\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
