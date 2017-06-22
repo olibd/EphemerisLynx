@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade.Interfaces
 {
-    interface IIDFacade
+    public interface IIDFacade
     {
 
         /// <summary>

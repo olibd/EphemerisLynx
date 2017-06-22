@@ -11,7 +11,7 @@ using System.Numerics;
 
 namespace Lynx.Core.Facade
 {
-    class IDFacade : Facade, IIDFacade
+    public class IDFacade : Facade, IIDFacade
     {
         private string _factoryAddress;
         private IAttributeFacade _attributeFacade;
