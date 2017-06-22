@@ -54,7 +54,7 @@ namespace CoreUnitTests
         }
 
         [Test]
-        public async Task TestAddAndGetCertificates()
+        public async Task TestAddAndGetCertificatesAsync()
         {
             Attribute attr = await DeployAttributeAsync();
 
