@@ -24,6 +24,7 @@ namespace Lynx.Core.Facade
             CertificateService ethCertificate = new CertificateService(_web3, address);
             Certificate certificateModel = new Certificate
             {
+                Address = address,
                 Hash = await ethCertificate.HashAsyncCall(),
                 Location = await ethCertificate.LocationAsyncCall(),
                 Revoked = await ethCertificate.RevokedAsyncCall()
