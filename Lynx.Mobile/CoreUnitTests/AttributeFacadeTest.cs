@@ -6,6 +6,7 @@ using Lynx.Core.Facade;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using NUnit.Framework;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace CoreUnitTests
 {
@@ -50,6 +51,27 @@ namespace CoreUnitTests
 
             Assert.AreEqual(attribute.Hash, "I am an attribute hash");
             Assert.AreEqual(attribute.Location, "I am an attribute location");
+        }
+
+        [Test]
+        public async Task TestAddAndGetCertificates()
+        {
+            Attribute attr = await DeployAttributeAsync();
+
+            Certificate cert = new Certificate()
+            {
+                Hash = "I am a certificate hash",
+                Location = "I am a certificate location",
+                OwningAttribute = attr
+            };
+
+            Certificate newCert = await _attributeFacade.AddCertificateAsync(attr, cert);
+
+            Dictionary<string, Certificate> certs = await _attributeFacade.GetCertificatesAsync(attr);
+            Assert.AreEqual(certs.Count, 1);
+            Assert.AreEqual(newCert.Address, certs.ToArray()[0].Value.Address);
+            Assert.AreEqual(newCert.Location, certs.ToArray()[0].Value.Location);
+
         }
     }
 }
