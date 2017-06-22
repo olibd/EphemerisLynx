@@ -10,7 +10,8 @@ namespace Lynx.Core.Facade.Interfaces
         /// Creates a new attribute
         /// </summary>
         /// <param name="attribute">The attribute to be deployed. The address fields will be updated with the smart contract addresses.</param>
-        Task<Attribute> DeployAsync(Attribute attribute);
+        /// <param name="ownerId">The owner ID's address</param>
+        Task<Attribute> DeployAsync(Attribute attribute, ID ownerId);
 
         /// <summary>
         /// Returns a new Attribute using the data contained in the contract at the address specified.

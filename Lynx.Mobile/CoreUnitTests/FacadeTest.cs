@@ -22,7 +22,7 @@ namespace CoreUnitTests
                 Arguments = "--port 8545"
             };
 
-            _runner.StartTestRPC();
+            //_runner.StartTestRPC();
             //Give TestRPC some time
             Thread.Sleep(2000);
 

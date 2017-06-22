@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ using Lynx.Core.Models.IDSubsystem;
 using System.Numerics;
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
+using Org.BouncyCastle.Crypto.Engines;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Facade
 {
@@ -26,10 +29,25 @@ namespace Lynx.Core.Facade
             _certificateFacade = certificateFacade;
         }
 
-        public async Task<Attribute> DeployAsync(Attribute attribute)
+        public async Task<Attribute> DeployAsync(Attribute attribute, ID owner)
         {
+            string ownerAddress;
+
+            //The ID's address is actually the ID Controller contract so
+            //we need to get the actual ID contract's address
+            if (owner.Address == null)
+            {
+                IDControllerService idc = new IDControllerService(_web3, owner.Address);
+                ownerAddress = await idc.GetIDAsyncCall();
+            }
+            else
+            {
+                ownerAddress = _address;
+            }
+
+
             Attribute outAttribute = new Attribute();
-            string transactionHash = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, _address, new HexBigInteger(800000));
+            string transactionHash = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, ownerAddress, new HexBigInteger(800000));
             TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
             //Populating new attribute model with the new address and values passed

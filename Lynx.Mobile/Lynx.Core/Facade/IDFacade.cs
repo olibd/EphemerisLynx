@@ -36,18 +36,16 @@ namespace Lynx.Core.Facade
         public async Task<ID> DeployAsync(ID id)
         {
             FactoryService factory = new FactoryService(_web3, _factoryAddress);
-            ID newID = new ID();
+            ID newId = new ID();
             Event idCreationEvent = factory.GetEventReturnIDController();
             HexBigInteger filterAddressFrom = await idCreationEvent.CreateFilterAsync(_address);
-
-            string transactionHash = await factory.CreateIDAsync(_address);
-            string transactionHash2 = await factory.CreateIDAsync(_address);
+            await factory.CreateIDAsync(_address, new HexBigInteger(3905820));
 
             var log = await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
 
             string controllerAddress = log[0].Event._controllerAddress;
 
-            newID.Address = controllerAddress;
+            newId.Address = controllerAddress;
 
             //Add each attribute from the ID model to the ID smart contract
             foreach (string key in id.Attributes.Keys)
@@ -57,10 +55,10 @@ namespace Lynx.Core.Facade
                 //Should only happen if the attribute does not match the desired type 
                 if (attribute == null) continue;
 
-                attribute = await AddAttributeAsync(newID, Encoding.UTF8.GetBytes(key), attribute);
-                newID.AddAttribute(key, attribute);
+                attribute = await AddAttributeAsync(newId, Encoding.UTF8.GetBytes(key), attribute);
+                newId.AddAttribute(key, attribute);
             }
-            return id;
+            return newId;
         }
 
         public async Task<ID> GetIDAsync(string address)
@@ -85,8 +83,8 @@ namespace Lynx.Core.Facade
             IDControllerService ethIDCtrl = new IDControllerService(_web3, id.Address);
 
             //If the attribute to be added is not yet deployed, deploy it
-            if (attribute.Address == "")
-                attribute = await _attributeFacade.DeployAsync(attribute);
+            if (attribute.Address == null)
+                attribute = await _attributeFacade.DeployAsync(attribute, id);
 
             await ethIDCtrl.AddAttributeAsync(_address, key, attribute.Address);
 

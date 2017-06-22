@@ -33,13 +33,18 @@ namespace CoreUnitTests
 
         private async Task<Attribute> DeployAttributeAsync()
         {
-            Attribute dummyAttribute = new Attribute()
+            ID dummyId = new ID()
+            {
+                Address = _addressFrom,
+            };
+
+            Attribute attr = new Attribute()
             {
                 Hash = "I am an attribute hash",
                 Location = "I am an attribute location",
             };
 
-            Attribute deployed = await _attributeFacade.DeployAsync(dummyAttribute);
+            Attribute deployed = await _attributeFacade.DeployAsync(attr, dummyId);
             return deployed;
         }
 

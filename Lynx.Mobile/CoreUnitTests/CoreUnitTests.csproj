@@ -117,6 +117,7 @@
     <Compile Include="AttributeFacadeTest.cs" />
     <Compile Include="CertificateFacadeTest.cs" />
     <Compile Include="FacadeTest.cs" />
+    <Compile Include="IDFacadeTest.cs" />
     <Compile Include="IDMapperTest.cs" />
   </ItemGroup>
   <ItemGroup>
