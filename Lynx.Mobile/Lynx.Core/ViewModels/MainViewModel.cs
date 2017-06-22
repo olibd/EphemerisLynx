@@ -1,7 +1,9 @@
 using System;
+using System.Threading.Tasks;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
+using Lynx.Core.Models.Interactions;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
@@ -25,6 +27,8 @@ namespace Lynx.Core.ViewModels
         }
         public ID ID { get; set; }
 
+        public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
+
         public MainViewModel()
         {
         }
@@ -32,6 +36,8 @@ namespace Lynx.Core.ViewModels
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
         public void Init()
         {
+            ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
+
             ID = Mvx.Resolve<ID>();
         }
 
@@ -40,22 +46,38 @@ namespace Lynx.Core.ViewModels
             //TODO: Add starting logic here
         }
 
-        public IMvxCommand DeployIDCommand => new MvxCommand(Deploy);
-        private void Deploy()
+        public IMvxCommand DeployIDCommand => new MvxCommand(DeployConfirm);
+
+        private void DeployConfirm()
         {
-            try
+            BooleanInteraction confirmationRequest = new BooleanInteraction
             {
-                BuildID();
-                IMapper<ID> idMapper = Mvx.Resolve<IMapper<ID>>();
+                Callback = async (bool ok) =>
+                {
+                    if (ok)
+                    {
+                        await Deploy();
+                    }
+                },
 
-                idMapper.Save(ID);
-            }
-            catch (Exception e)
-            {
-                var st = e.StackTrace;
-            }
+                Query = "I confirm that the information supplied is accurate?"
+            };
 
-            SerializedID = "ID UID: " + ID.UID;
+            ConfirmationInteraction.Raise(confirmationRequest);
+        }
+
+        private Task Deploy()
+        {
+
+            BuildID();
+            IMapper<ID> idMapper = Mvx.Resolve<IMapper<ID>>();
+
+            // Create a task and supply a user delegate by using a lambda expression. 
+            return Task.Run(() =>
+           {
+               idMapper.Save(ID);
+               SerializedID = "ID UID: " + ID.UID;
+           });
         }
 
         private void BuildID()
