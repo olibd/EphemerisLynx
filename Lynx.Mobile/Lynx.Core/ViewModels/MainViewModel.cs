@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
@@ -15,6 +16,7 @@ namespace Lynx.Core.ViewModels
 
 
         private string _serializedID = "0";
+        private IIDFacade _idFacade;
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Cell { get; set; }
@@ -60,7 +62,7 @@ namespace Lynx.Core.ViewModels
                     }
                 },
 
-                Query = "I confirm that the information supplied is accurate?"
+                Query = "Do you confirm that the information supplied is accurate?"
             };
 
             ConfirmationInteraction.Raise(confirmationRequest);
@@ -68,16 +70,26 @@ namespace Lynx.Core.ViewModels
 
         private Task Deploy()
         {
-
             BuildID();
-            IMapper<ID> idMapper = Mvx.Resolve<IMapper<ID>>();
+            return DeployToBlockchain().ContinueWith((prevtask) =>
+            {
+                //TODO: add extra logic if the task faulted
+                if (!prevtask.IsFaulted)
+                    SaveIDToDB();
+            });
+        }
 
-            // Create a task and supply a user delegate by using a lambda expression. 
-            return Task.Run(() =>
-           {
-               idMapper.Save(ID);
-               SerializedID = "ID UID: " + ID.UID;
-           });
+        private void SaveIDToDB()
+        {
+            IMapper<ID> idMapper = Mvx.Resolve<IMapper<ID>>();
+            idMapper.Save(ID);
+            SerializedID = "ID UID: " + ID.UID;
+        }
+
+        private Task DeployToBlockchain()
+        {
+            _idFacade = Mvx.Resolve<IIDFacade>();
+            return _idFacade.DeployAsync(ID);
         }
 
         private void BuildID()
