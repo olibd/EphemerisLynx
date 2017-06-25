@@ -22,6 +22,8 @@ namespace Lynx.Core.Facade
         public async Task<Certificate> GetCertificateAsync(string address)
         {
             CertificateService ethCertificate = new CertificateService(_web3, address);
+
+            //Populating certificate model with values from the smart contract
             Certificate certificateModel = new Certificate
             {
                 Address = address,
@@ -29,9 +31,6 @@ namespace Lynx.Core.Facade
                 Location = await ethCertificate.LocationAsyncCall(),
                 Revoked = await ethCertificate.RevokedAsyncCall()
             };
-
-            //Populating certificate model with values from the smart contract
-
 
             return certificateModel;
         }
