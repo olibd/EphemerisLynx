@@ -110,10 +110,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\eVi.abi.lib.pcl\eVi.abi.lib.pcl\eVi.abi.lib.pcl.csproj">
-      <Project>{d53272c3-3ec1-41cc-871d-a435b146678d}</Project>
-      <Name>eVi.abi.lib.pcl</Name>
-    </ProjectReference>
     <Folder Include="Models\" />
     <Folder Include="Models\IDSubsystem\" />
     <Folder Include="Mappers\" />
@@ -121,6 +117,12 @@
     <Folder Include="Mappers\IDSubsystem\Strategies\" />
     <Folder Include="Mappers\IDSubsystem\SQLiteMappers\" />
     <Folder Include="Models\Interactions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\eVi.abi.lib.pcl\eVi.abi.lib.pcl\eVi.abi.lib.pcl.csproj">
+      <Project>{D53272C3-3EC1-41CC-871D-A435B146678D}</Project>
+      <Name>eVi.abi.lib.pcl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

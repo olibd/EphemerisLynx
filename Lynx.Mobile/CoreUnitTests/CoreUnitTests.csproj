@@ -125,13 +125,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\eVi.abi.lib.pcl\eVi.abi.lib.pcl\eVi.abi.lib.pcl.csproj">
-      <Project>{d53272c3-3ec1-41cc-871d-a435b146678d}</Project>
-      <Name>eVi.abi.lib.pcl</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lynx.Core\Lynx.Core.csproj">
       <Project>{43906ED3-CA63-4825-A1FD-5ACAD813C269}</Project>
       <Name>Lynx.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\eVi.abi.lib.pcl\eVi.abi.lib.pcl\eVi.abi.lib.pcl.csproj">
+      <Project>{D53272C3-3EC1-41CC-871D-A435B146678D}</Project>
+      <Name>eVi.abi.lib.pcl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
