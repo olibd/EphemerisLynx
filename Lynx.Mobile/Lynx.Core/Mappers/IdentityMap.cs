@@ -8,6 +8,11 @@ namespace Lynx.Core.Mappers
     {
         private readonly Dictionary<K, V> _idMap;
 
+        public IdentityMap()
+        {
+            _idMap = new Dictionary<K, V>();
+        }
+
         /// <summary>
         /// Find the value for specified key.
         /// </summary>
