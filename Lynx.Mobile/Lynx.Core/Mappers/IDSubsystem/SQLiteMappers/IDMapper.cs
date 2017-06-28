@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
@@ -15,13 +16,13 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             _attrMapper = attrMapper;
         }
 
-        public override int Save(ID obj)
+        public async override Task<int> SaveAsync(ID obj)
         {
-            int baseReturn = base.Save(obj);
+            int baseReturn = await base.SaveAsync(obj);
 
             foreach (KeyValuePair<string, Attribute> entry in obj.Attributes)
             {
-                _attrMapper.Save(entry.Value);
+                await _attrMapper.SaveAsync(entry.Value);
 
                 IDAttribute idAttr = new IDAttribute()
                 {
@@ -30,7 +31,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                 };
 
                 IMapper<IDAttribute> idAttrMapper = new Mapper<IDAttribute>(_dbFilePath);
-                idAttrMapper.Save(idAttr);
+                await idAttrMapper.SaveAsync(idAttr);
             }
 
             return baseReturn;

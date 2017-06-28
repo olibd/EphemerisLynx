@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
 using Newtonsoft.Json;
@@ -15,16 +16,16 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         {
         }
 
-        public override int Save(T obj)
+        public async override Task<int> SaveAsync(T obj)
         {
-            int baseReturn = base.Save(obj);
+            int baseReturn = await base.SaveAsync(obj);
 
-            SaveContent(obj);
+            await SaveContent(obj);
 
             return baseReturn;
         }
 
-        private void SaveContent(T obj)
+        private async Task SaveContent(T obj)
         {
             string content = JsonConvert.SerializeObject(obj.Content);
             ExternalElementContentMapping contentMapping = new ExternalElementContentMapping()
@@ -36,7 +37,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             };
 
             Mapper<ExternalElementContentMapping> contentMapper = new Mapper<ExternalElementContentMapping>(_dbFilePath);
-            contentMapper.Save(contentMapping);
+            await contentMapper.SaveAsync(contentMapping);
         }
 
         private class ExternalElementContentMapping : Model

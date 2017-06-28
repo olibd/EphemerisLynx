@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using SQLite;
@@ -27,24 +28,27 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// </summary>
         /// <returns>The object T.</returns>
         /// <param name="UID">UID.</param>
-        public virtual T Get(int UID)
+        public virtual async Task<T> GetAsync(int UID)
         {
-            ConnectToTable<T>();
+            await ConnectToTableAsync<T>();
 
-            T obj;
+            return await Task.Run(() =>
+            {
+                T obj;
 
-            if ((obj = _idMap.Find(UID)) != null)
-            {
-                _db.Close();
-                return obj;
-            }
-            else
-            {
-                obj = _db.Get<T>(UID);
-                _idMap.Add(obj.UID, obj);
-                _db.Close();
-                return obj;
-            }
+                if ((obj = _idMap.Find(UID)) != null)
+                {
+                    _db.Close();
+                    return obj;
+                }
+                else
+                {
+                    obj = _db.Get<T>(UID);
+                    _idMap.Add(obj.UID, obj);
+                    _db.Close();
+                    return obj;
+                }
+            });
         }
 
         /// <summary>
@@ -52,12 +56,16 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// </summary>
         /// <returns>The object MUID.</returns>
         /// <param name="obj">Object.</param>
-        public virtual int Save(T obj)
+        public virtual async Task<int> SaveAsync(T obj)
         {
-            ConnectToTable<T>();
-            int retUID = SaveToDB(obj);
-            _db.Close();
-            return retUID;
+            await ConnectToTableAsync<T>();
+
+            return await Task.Run(async () =>
+            {
+                int retUID = await SaveToDBAsync(obj);
+                _db.Close();
+                return retUID;
+            });
         }
 
         /// <summary>
@@ -65,23 +73,29 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// </summary>
         /// <returns>The obj UID.</returns>
         /// <param name="obj">Object.</param>
-        private int SaveToDB(T obj)
+        private async Task<int> SaveToDBAsync(T obj)
         {
-            if (_db.Find<T>(obj.UID) != null)
-                return _db.Update(obj);
-            else
-                return _db.Insert(obj);
+            return await Task.Run(() =>
+            {
+                if (_db.Find<T>(obj.UID) != null)
+                    return _db.Update(obj);
+                else
+                    return _db.Insert(obj);
+            });
         }
 
         /// <summary>
         /// Connects to table G.
         /// </summary>
         /// <typeparam name="G">The 1st type parameter.</typeparam>
-        private void ConnectToTable<G>()
+        private async Task ConnectToTableAsync<G>()
         {
-            _db = new SQLiteConnection(_dbFilePath);
-            //Create table if not exist
-            _db.CreateTable<G>();
+            await Task.Run(() =>
+            {
+                _db = new SQLiteConnection(_dbFilePath);
+                //Create table if not exist
+                _db.CreateTable<G>();
+            });
         }
     }
 }

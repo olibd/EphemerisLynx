@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Lynx.Core.Models.IDSubsystem;
 
 namespace Lynx.Core.Mappers.IDSubsystem.Strategies
@@ -10,13 +11,13 @@ namespace Lynx.Core.Mappers.IDSubsystem.Strategies
         /// </summary>
         /// <returns>The save object MUID</returns>
         /// <param name="obj">obj</param>
-        int Save(T obj);
+        Task<int> SaveAsync(T obj);
 
         /// <summary>
         /// Get the object by its MUID.
         /// </summary>
         /// <returns>object</returns>
         /// <param name="MUID">MUID</param>
-        T Get(int MUID);
+        Task<T> GetAsync(int MUID);
     }
 }

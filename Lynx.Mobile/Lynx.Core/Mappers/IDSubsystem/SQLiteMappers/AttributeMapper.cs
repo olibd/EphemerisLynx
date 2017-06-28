@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
@@ -15,23 +16,23 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             _certMapper = certMapper;
         }
 
-        public override int Save(Attribute obj)
+        public async override Task<int> SaveAsync(Attribute obj)
         {
-            int baseReturn = base.Save(obj);
+            int baseReturn = await base.SaveAsync(obj);
 
-            SaveCertificates(obj);
+            await SaveCertificates(obj);
 
             return baseReturn;
         }
 
-        private void SaveCertificates(Attribute obj)
+        private async Task SaveCertificates(Attribute obj)
         {
             if (obj.Certificates == null)
                 return;
 
             foreach (KeyValuePair<string, Certificate> entry in obj.Certificates)
             {
-                _certMapper.Save(entry.Value);
+                await _certMapper.SaveAsync(entry.Value);
 
                 AttributeCertificateMapping attrCert = new AttributeCertificateMapping()
                 {
@@ -40,7 +41,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                 };
 
                 IMapper<AttributeCertificateMapping> attrCertMapper = new Mapper<AttributeCertificateMapping>(_dbFilePath);
-                attrCertMapper.Save(attrCert);
+                await attrCertMapper.SaveAsync(attrCert);
             }
         }
 
