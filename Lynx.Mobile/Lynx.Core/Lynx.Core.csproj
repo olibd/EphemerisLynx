@@ -5,7 +5,6 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{43906ED3-CA63-4825-A1FD-5ACAD813C269}</ProjectGuid>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <UseMSBuildEngine>true</UseMSBuildEngine>
     <OutputType>Library</OutputType>
     <RootNamespace>Lynx.Core</RootNamespace>
     <AssemblyName>Lynx.Core</AssemblyName>
@@ -28,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BlockchainFacadeSetup.cs" />
+    <Compile Include="LynxConfigurationService.cs" />
     <Compile Include="Facade\DummyContentService.cs" />
     <Compile Include="Facade\AttributeFacade.cs" />
     <Compile Include="Facade\CertificateFacade.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="Mappers\IDSubsystem\SQLiteMappers\Mapper.cs" />
     <Compile Include="Mappers\IDSubsystem\Strategies\IIdentityMap.cs" />
     <Compile Include="Models\Interactions\BooleanInteraction.cs" />
+    <Compile Include="ILynxConfigurationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">

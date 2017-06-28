@@ -23,8 +23,10 @@ namespace Lynx.Core
             Mvx.RegisterType<IMapper<Certificate>>(() => new ExternalElementMapper<Certificate>(":memory:"));
             Mvx.RegisterType<IMapper<Attribute>>(() => new AttributeMapper(":memory:", Mvx.Resolve<IMapper<Certificate>>()));
             Mvx.RegisterType<IMapper<ID>>(() => new IDMapper(":memory:", Mvx.Resolve<IMapper<Attribute>>()));
-            //Register the BlockchainFacadeSetup (this will likely get reworked) as a Singleton
-            Mvx.RegisterSingleton<BlockchainFacadeSetup>(() => new BlockchainFacadeSetup());
+
+            //Configure the the eth node
+            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode(null, null, "0x1FD8397e8108ada12eC07976D92F773364ba46e7", "http://10.0.1.11:8082");
+
             //Register the dummy ContentService as a singleton, temp solution
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
             RegisterAppStart<ViewModels.MainViewModel>();
