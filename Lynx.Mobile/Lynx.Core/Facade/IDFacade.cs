@@ -36,7 +36,6 @@ namespace Lynx.Core.Facade
         public async Task<ID> DeployAsync(ID id)
         {
             FactoryService factory = new FactoryService(_web3, _factoryAddress);
-            ID newId = new ID();
             Event idCreationEvent = factory.GetEventReturnIDController();
             HexBigInteger filterAddressFrom = await idCreationEvent.CreateFilterAsync(_address);
             await factory.CreateIDAsync(_address, new HexBigInteger(3905820));
@@ -45,20 +44,20 @@ namespace Lynx.Core.Facade
 
             string controllerAddress = log[0].Event._controllerAddress;
 
-            newId.Address = controllerAddress;
+            id.Address = controllerAddress;
+
+            Dictionary<string, Attribute> updatedAttributes = new Dictionary<string, Attribute>();
 
             //Add each attribute from the ID model to the ID smart contract
             foreach (string key in id.Attributes.Keys)
             {
                 Attribute attribute = id.GetAttribute(key);
 
-                //Should only happen if the attribute does not match the desired type 
-                if (attribute == null) continue;
-
-                attribute = await AddAttributeAsync(newId, Encoding.UTF8.GetBytes(key), attribute);
-                newId.AddAttribute(key, attribute);
+                attribute = await AddAttributeAsync(id, Encoding.UTF8.GetBytes(key), attribute);
+                updatedAttributes.Add(key, attribute);
             }
-            return newId;
+            id.Attributes = updatedAttributes;
+            return id;
         }
 
         public async Task<ID> GetIDAsync(string address)
@@ -86,7 +85,7 @@ namespace Lynx.Core.Facade
             if (attribute.Address == null)
                 attribute = await _attributeFacade.DeployAsync(attribute, id);
 
-            await ethIDCtrl.AddAttributeAsync(_address, key, attribute.Address);
+            await ethIDCtrl.AddAttributeAsync(_address, key, attribute.Address, new HexBigInteger(3905820));
 
             return attribute;
         }

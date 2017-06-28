@@ -33,10 +33,7 @@ namespace CoreUnitTests
 
         private async Task<Attribute> DeployAttributeAsync()
         {
-            ID dummyId = new ID()
-            {
-                Address = _addressFrom,
-            };
+            ID dummyId = new ID();
 
             Attribute attr = new Attribute()
             {

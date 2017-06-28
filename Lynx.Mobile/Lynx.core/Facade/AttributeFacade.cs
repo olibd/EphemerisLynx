@@ -35,7 +35,7 @@ namespace Lynx.Core.Facade
 
             //The ID's address is actually the ID Controller contract so
             //we need to get the actual ID contract's address
-            if (owner.Address == null)
+            if (owner.Address != null)
             {
                 IDControllerService idc = new IDControllerService(_web3, owner.Address);
                 ownerAddress = await idc.GetIDAsyncCall();
@@ -46,27 +46,21 @@ namespace Lynx.Core.Facade
             }
 
 
-            Attribute outAttribute = new Attribute();
             string transactionHash = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, ownerAddress, new HexBigInteger(800000));
             TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
             //Populating new attribute model with the new address and values passed
-            outAttribute.Address = receipt.ContractAddress;
-            outAttribute.Content = attribute.Content;
-            outAttribute.Hash = attribute.Hash;
-            outAttribute.Location = attribute.Location;
+            attribute.Address = receipt.ContractAddress;
 
             //Iterating over certificates and deploying each one
             foreach (string key in attribute.Certificates.Keys)
             {
                 Certificate cert = await _certificateFacade.DeployAsync(attribute.GetCertificate(key));
                 cert = await AddCertificateAsync(attribute, attribute.GetCertificate(key));
-
-                //Adding the newly deployed certificate (with updated address) to the new attribute
-                outAttribute.AddCertificate(cert);
+                attribute.Certificates[key] = cert;
             }
 
-            return outAttribute;
+            return attribute;
         }
 
         public async Task<Attribute> GetAttributeAsync(string address)

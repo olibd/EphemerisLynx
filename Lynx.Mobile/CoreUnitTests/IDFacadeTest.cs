@@ -7,9 +7,9 @@ using Lynx.Core.Facade;
 using Lynx.Core.Facade.Interfaces;
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
+using Nethereum.ABI.Encoders;
 using NUnit.Framework;
 using Lynx.Core.Models.IDSubsystem;
-using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace CoreUnitTests
 {
@@ -42,8 +42,16 @@ namespace CoreUnitTests
         [Test]
         public async Task TestDeploy()
         {
-            ID deployed = await _idFacade.DeployAsync(new ID());
-            Assert.NotNull(deployed.Address);
+            Attribute attribute = new Attribute()
+            {
+                Location = "I am an atribute location",
+                Hash = "I am an attribute hash"
+            };
+            ID id = new ID();
+            id.AddAttribute("test type", attribute);
+            id = await _idFacade.DeployAsync(id);
+            Assert.NotNull(id.Address);
+            Assert.NotNull(attribute.Address);
         }
 
         [Test]
@@ -56,7 +64,11 @@ namespace CoreUnitTests
                 Hash = "I am an attribute hash"
             };
 
-            Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, new byte[] {1, 2, 3, 4}, attribute);
+            Bytes32TypeEncoder Encoder = new Bytes32TypeEncoder();
+            Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, Encoder.Encode("key"), attribute);
+
+            ID newId = await _idFacade.GetIDAsync(deployed.Address);
+            Assert.AreEqual(1, newId.Attributes.Count);
         }
 
     }
