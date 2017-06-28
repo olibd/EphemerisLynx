@@ -8,7 +8,7 @@ using Lynx.Core.Models.IDSubsystem;
 using NUnit.Framework;
 using Org.BouncyCastle.Asn1.Ocsp;
 
-namespace CoreUnitTests
+namespace CoreUnitTests.PCL
 {
     [TestFixture]
     class AttributeFacadeTest : FacadeTest

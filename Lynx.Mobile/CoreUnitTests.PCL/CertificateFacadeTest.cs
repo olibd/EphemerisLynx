@@ -9,9 +9,8 @@ using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Facade;
 using Lynx.Core.Facade.Interfaces;
 using Nethereum.Web3;
-using Nethereum.TestRPCRunner;
 
-namespace CoreUnitTests
+namespace CoreUnitTests.PCL
 {
     [TestFixture]
     public class CertificateFacadeTest : FacadeTest
@@ -64,7 +63,7 @@ namespace CoreUnitTests
         [TearDown]
         protected void Teardown()
         {
-            _runner.StopTestRPC();
+
         }
     }
 }

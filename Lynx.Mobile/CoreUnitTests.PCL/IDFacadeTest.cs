@@ -11,7 +11,7 @@ using Nethereum.ABI.Encoders;
 using NUnit.Framework;
 using Lynx.Core.Models.IDSubsystem;
 
-namespace CoreUnitTests
+namespace CoreUnitTests.PCL
 {
     class IDFacadeTest : FacadeTest
     {
