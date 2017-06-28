@@ -26,6 +26,7 @@ namespace Lynx.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::ModernHttpClient.Resource.String.library_name = global::Lynx.Droid.Resource.String.library_name;
 			global::MvvmCross.Binding.Droid.Resource.Attribute.MvxBind = global::Lynx.Droid.Resource.Attribute.MvxBind;
 			global::MvvmCross.Binding.Droid.Resource.Attribute.MvxDropDownItemTemplate = global::Lynx.Droid.Resource.Attribute.MvxDropDownItemTemplate;
 			global::MvvmCross.Binding.Droid.Resource.Attribute.MvxGroupItemTemplate = global::Lynx.Droid.Resource.Attribute.MvxGroupItemTemplate;
@@ -3063,11 +3064,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f090012
 			public const int abc_toolbar_collapse_description = 2131296274;
 			
-			// aapt resource value: 0x7f09002e
-			public const int address = 2131296302;
+			// aapt resource value: 0x7f09002f
+			public const int address = 2131296303;
 			
-			// aapt resource value: 0x7f09002a
-			public const int app_name = 2131296298;
+			// aapt resource value: 0x7f09002b
+			public const int app_name = 2131296299;
 			
 			// aapt resource value: 0x7f090021
 			public const int appbar_scrolling_view_behavior = 2131296289;
@@ -3075,20 +3076,23 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f090022
 			public const int bottom_sheet_behavior = 2131296290;
 			
-			// aapt resource value: 0x7f09002d
-			public const int cell = 2131296301;
+			// aapt resource value: 0x7f09002e
+			public const int cell = 2131296302;
 			
 			// aapt resource value: 0x7f090023
 			public const int character_counter_pattern = 2131296291;
 			
-			// aapt resource value: 0x7f09002b
-			public const int firstname = 2131296299;
+			// aapt resource value: 0x7f09002c
+			public const int firstname = 2131296300;
+			
+			// aapt resource value: 0x7f09002a
+			public const int hello = 2131296298;
+			
+			// aapt resource value: 0x7f09002d
+			public const int lastname = 2131296301;
 			
 			// aapt resource value: 0x7f090029
-			public const int hello = 2131296297;
-			
-			// aapt resource value: 0x7f09002c
-			public const int lastname = 2131296300;
+			public const int library_name = 2131296297;
 			
 			// aapt resource value: 0x7f090024
 			public const int password_toggle_content_description = 2131296292;

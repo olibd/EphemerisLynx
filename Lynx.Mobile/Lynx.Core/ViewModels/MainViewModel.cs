@@ -13,8 +13,6 @@ namespace Lynx.Core.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
-
-
         private string _serializedID = "0";
         private IIDFacade _idFacade;
         public string Firstname { get; set; }
@@ -30,10 +28,6 @@ namespace Lynx.Core.ViewModels
         public ID ID { get; set; }
 
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
-
-        public MainViewModel()
-        {
-        }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
         public void Init()
@@ -68,28 +62,25 @@ namespace Lynx.Core.ViewModels
             ConfirmationInteraction.Raise(confirmationRequest);
         }
 
-        private Task Deploy()
+        private async Task Deploy()
         {
             BuildID();
-            return DeployToBlockchain().ContinueWith((prevtask) =>
-            {
-                //TODO: add extra logic if the task faulted
-                if (!prevtask.IsFaulted)
-                    SaveIDToDB();
-            });
+
+            await DeployToBlockchain();
+            await SaveIDToDB();
         }
 
-        private void SaveIDToDB()
+        private async Task SaveIDToDB()
         {
             IMapper<ID> idMapper = Mvx.Resolve<IMapper<ID>>();
-            idMapper.Save(ID);
+            await idMapper.SaveAsync(ID);
             SerializedID = "ID UID: " + ID.UID;
         }
 
-        private Task DeployToBlockchain()
+        private async Task DeployToBlockchain()
         {
             _idFacade = Mvx.Resolve<IIDFacade>();
-            return _idFacade.DeployAsync(ID);
+            var id = await _idFacade.DeployAsync(ID);
         }
 
         private void BuildID()
@@ -97,21 +88,29 @@ namespace Lynx.Core.ViewModels
             //create some dummy attributes
             Attribute firstname = new Attribute()
             {
-                Content = new StringContent(Firstname)
+                Content = new StringContent(Firstname),
+                Hash = "hash" + Firstname,
+                Location = "Location" + Firstname,
             };
 
             Attribute lastname = new Attribute()
             {
+                Hash = "hash" + Lastname,
+                Location = "Location" + Lastname,
                 Content = new StringContent(Lastname)
             };
 
             Attribute cell = new Attribute()
             {
+                Hash = "hash" + Cell,
+                Location = "Location" + Cell,
                 Content = new StringContent(Cell)
             };
 
             Attribute address = new Attribute()
             {
+                Hash = "hash" + Address,
+                Location = "Location" + Address,
                 Content = new StringContent(Address)
             };
 
