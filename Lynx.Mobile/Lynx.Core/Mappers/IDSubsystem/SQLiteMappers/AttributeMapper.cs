@@ -16,6 +16,11 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             _certMapper = certMapper;
         }
 
+        /// <summary>
+        /// Save the specified Attribute.
+        /// </summary>
+        /// <returns>The object UID.</returns>
+        /// <param name="obj">Object.</param>
         public async override Task<int> SaveAsync(Attribute obj)
         {
             int baseReturn = await base.SaveAsync(obj);
@@ -24,12 +29,17 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 
             return baseReturn;
         }
-
+        /// <summary>
+        /// Parse the attribute object and serializes the Certificates objects.
+        /// </summary>
+        /// <returns>Task</returns>
+        /// <param name="obj">Object.</param>
         private async Task SaveCertificates(Attribute obj)
         {
             if (obj.Certificates == null)
                 return;
 
+            //for each certificate in the attribute
             foreach (KeyValuePair<string, Certificate> entry in obj.Certificates)
             {
                 await _certMapper.SaveAsync(entry.Value);
@@ -45,6 +55,11 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             }
         }
 
+        /// <summary>
+        /// Attribute-certificate mapping. Creates a one to many relationship in
+        /// the DB between an attribute and its certificates. Does not create
+        /// foreign key.
+        /// </summary>
         private class AttributeCertificateMapping : Model
         {
             private int _attrUID;
@@ -70,6 +85,12 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                 }
             }
 
+            /// <summary>
+            /// Computes the relationship identifier.
+            /// </summary>
+            /// <returns>The relationship identifier.</returns>
+            /// <param name="attrID">Attr identifier.</param>
+            /// <param name="certID">Cert identifier.</param>
             private int ComputeRelationshipID(int attrID, int certID)
             {
                 return int.Parse(attrID + "" + certID);

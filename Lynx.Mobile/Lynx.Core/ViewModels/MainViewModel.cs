@@ -44,6 +44,9 @@ namespace Lynx.Core.ViewModels
 
         public IMvxCommand DeployIDCommand => new MvxCommand(DeployConfirm);
 
+        /// <summary>
+        /// Ask for user confirmation of deployment then deploys.
+        /// </summary>
         private void DeployConfirm()
         {
             BooleanInteraction confirmationRequest = new BooleanInteraction

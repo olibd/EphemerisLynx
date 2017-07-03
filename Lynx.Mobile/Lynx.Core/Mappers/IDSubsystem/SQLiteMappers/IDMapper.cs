@@ -16,6 +16,11 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             _attrMapper = attrMapper;
         }
 
+        /// <summary>
+        /// Save the specified ID.
+        /// </summary>
+        /// <returns>The object UID.</returns>
+        /// <param name="obj">Object.</param>
         public async override Task<int> SaveAsync(ID obj)
         {
             int baseReturn = await base.SaveAsync(obj);
@@ -37,6 +42,12 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             return baseReturn;
         }
 
+        /// <summary>
+        /// This private classes create a one to many relationship table in the 
+        /// database when serializing an ID to the database. It will contain
+        /// the UID of the attribute and of the ID. It does not support foreing
+        /// keys.
+        /// </summary>
         private class IDAttribute : Model
         {
             private int _iDUID;
@@ -62,6 +73,12 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                 }
             }
 
+            /// <summary>
+            /// Computes the relationship identifier (primary key).
+            /// </summary>
+            /// <returns>The relationship identifier.</returns>
+            /// <param name="idUID">Identifier uid.</param>
+            /// <param name="attrUID">Attr uid.</param>
             private int ComputeRelationshipID(int idUID, int attrUID)
             {
                 return int.Parse(idUID + "" + attrUID);

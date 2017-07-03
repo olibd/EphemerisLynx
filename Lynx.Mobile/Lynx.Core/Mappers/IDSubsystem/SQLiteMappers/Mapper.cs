@@ -54,7 +54,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// <summary>
         /// Save the specified obj.
         /// </summary>
-        /// <returns>The object MUID.</returns>
+        /// <returns>The object UID.</returns>
         /// <param name="obj">Object.</param>
         public virtual async Task<int> SaveAsync(T obj)
         {

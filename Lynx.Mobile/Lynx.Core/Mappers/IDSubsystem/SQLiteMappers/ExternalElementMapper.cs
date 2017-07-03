@@ -16,6 +16,11 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         {
         }
 
+        /// <summary>
+        /// Save the specified ExternalElement.
+        /// </summary>
+        /// <returns>The object UID.</returns>
+        /// <param name="obj">Object.</param>
         public async override Task<int> SaveAsync(T obj)
         {
             int baseReturn = await base.SaveAsync(obj);
@@ -25,9 +30,16 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             return baseReturn;
         }
 
+        /// <summary>
+        /// Saves the extrenal element content.
+        /// </summary>
+        /// <returns>Task</returns>
+        /// <param name="obj">Object.</param>
         private async Task SaveContent(T obj)
         {
+            //Serialize the content as a JSON string
             string content = JsonConvert.SerializeObject(obj.Content);
+
             ExternalElementContentMapping contentMapping = new ExternalElementContentMapping()
             {
                 ExtUID = obj.UID,
@@ -40,6 +52,10 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             await contentMapper.SaveAsync(contentMapping);
         }
 
+        /// <summary>
+        /// External element content mapping. This class creates a one to one
+        /// mapping between then external element and its content.
+        /// </summary>
         private class ExternalElementContentMapping : Model
         {
             private int _extUID;
