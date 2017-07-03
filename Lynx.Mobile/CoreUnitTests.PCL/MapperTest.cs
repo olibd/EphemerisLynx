@@ -19,7 +19,7 @@ namespace CoreUnitTests
             Assert.AreEqual(primaryKey, t.UID);
         }
 
-        [Ignore("failing")]
+        [Ignore("Feature unimplemented in model classes")]
         [Test]
         public virtual async Task TestGetAsync()
         {
