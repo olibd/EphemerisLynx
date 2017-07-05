@@ -37,8 +37,6 @@ namespace Lynx.Droid.Views
         {
             var comfirmationRequest = eventArgs.Value;
             // show dialog
-            //var status = await Show
-
 
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
