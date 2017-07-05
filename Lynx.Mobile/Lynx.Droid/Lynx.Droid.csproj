@@ -135,6 +135,7 @@
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="DebugTrace.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Views\IDView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -157,6 +158,9 @@
     <AndroidResource Include="Resources\drawable\splash.png" />
     <AndroidResource Include="Resources\values\theme.xml" />
     <AndroidResource Include="Resources\values\id.xml" />
+    <AndroidResource Include="Resources\layout\IDView.xml" />
+    <AndroidResource Include="Resources\layout\AttributeView.xml" />
+    <AndroidResource Include="Resources\layout\ExternalElement.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />

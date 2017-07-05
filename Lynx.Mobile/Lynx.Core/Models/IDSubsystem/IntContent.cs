@@ -9,5 +9,10 @@ namespace Lynx.Core.Models.IDSubsystem
         }
 
         public object Content { get; set; }
+
+        public override string ToString()
+        {
+            return "" + (int)Content;
+        }
     }
 }
