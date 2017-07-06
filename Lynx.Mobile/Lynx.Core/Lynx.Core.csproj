@@ -62,6 +62,7 @@
     <Compile Include="Models\Interactions\BooleanInteraction.cs" />
     <Compile Include="ILynxConfigurationService.cs" />
     <Compile Include="ViewModels\IDViewModel.cs" />
+    <Compile Include="ValueConverters\ContentToStringConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
@@ -121,6 +122,7 @@
     <Folder Include="Mappers\IDSubsystem\Strategies\" />
     <Folder Include="Mappers\IDSubsystem\SQLiteMappers\" />
     <Folder Include="Models\Interactions\" />
+    <Folder Include="ValueConverters\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\eVi.abi.lib.pcl\eVi.abi.lib.pcl\eVi.abi.lib.pcl.csproj">

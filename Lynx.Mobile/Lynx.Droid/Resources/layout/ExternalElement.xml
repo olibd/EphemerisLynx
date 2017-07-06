@@ -8,5 +8,5 @@
         android:id="@+id/AttrDescription"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        local:MvxBind="Text Content" />
+        local:MvxBind="Text Content, Converter=ContentToString" />
 </LinearLayout>

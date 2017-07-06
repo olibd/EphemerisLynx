@@ -5,14 +5,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <TextView
-        android:id="@+id/AttrText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="attrView" />
-    <TextView
         android:id="@+id/AttrDescription"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         local:MvxBind="Text Description" />
     <include
         layout="@layout/externalelement" />
