@@ -126,6 +126,18 @@
     <Reference Include="OkHttp">
       <HintPath>..\packages\modernhttpclient.2.4.2\lib\MonoAndroid\OkHttp.dll</HintPath>
     </Reference>
+    <Reference Include="FastAndroidCamera">
+      <HintPath>..\packages\FastAndroidCamera.2.0.0\lib\MonoAndroid403\FastAndroidCamera.dll</HintPath>
+    </Reference>
+    <Reference Include="ZXing.Net.Mobile.Core">
+      <HintPath>..\packages\ZXing.Net.Mobile.2.2.9\lib\MonoAndroid403\ZXing.Net.Mobile.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.portable">
+      <HintPath>..\packages\ZXing.Net.Mobile.2.2.9\lib\MonoAndroid403\zxing.portable.dll</HintPath>
+    </Reference>
+    <Reference Include="ZXingNetMobile">
+      <HintPath>..\packages\ZXing.Net.Mobile.2.2.9\lib\MonoAndroid403\ZXingNetMobile.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -136,6 +148,7 @@
     <Compile Include="DebugTrace.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Views\IDView.cs" />
+    <Compile Include="ValueConverters\StringToBitmapQrCodeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -161,9 +174,11 @@
     <AndroidResource Include="Resources\layout\IDView.xml" />
     <AndroidResource Include="Resources\layout\AttributeView.xml" />
     <AndroidResource Include="Resources\layout\ExternalElement.xml" />
+    <AndroidResource Include="Resources\layout\ImageIDAddressView.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
+    <Folder Include="ValueConverters\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lynx.Core\Lynx.Core.csproj">
