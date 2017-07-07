@@ -26,6 +26,8 @@ namespace Lynx.Droid.Converters
                 Margin = 0,
                 PureBarcode = false
             };
+
+            //Define error correction level
             encOptions.Hints.Add(ZXing.EncodeHintType.ERROR_CORRECTION, ZXing.QrCode.Internal.ErrorCorrectionLevel.H);
 
             bcw.Options = encOptions;
