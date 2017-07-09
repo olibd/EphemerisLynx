@@ -8,7 +8,7 @@ namespace Lynx.Droid
         Label = "Lynx.Droid"
         , MainLauncher = true
         , Icon = "@mipmap/icon"
-        , Theme = "@style/Theme.Splash"
+        , Theme = "@style/Lynx.Splash"
         , NoHistory = true
         , ScreenOrientation = ScreenOrientation.Portrait)]
     public class SplashScreen : MvxSplashScreenActivity

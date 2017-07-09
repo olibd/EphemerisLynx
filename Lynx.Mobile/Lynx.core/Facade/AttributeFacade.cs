@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Nethereum.Web3;
+using eVi.abi.lib.pcl;
+using Lynx.Core.Facade.Interfaces;
+using Lynx.Core.Models.IDSubsystem;
+using System.Numerics;
+using Nethereum.Hex.HexTypes;
+using Nethereum.RPC.Eth.DTOs;
+using Org.BouncyCastle.Crypto.Engines;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+
+namespace Lynx.Core.Facade
+{
+    public class AttributeFacade : Facade, IAttributeFacade
+    {
+        private ICertificateFacade _certificateFacade;
+        private IContentService _contentService;
+
+        //TODO in the constructors: unlock account with the provided password
+
+        public AttributeFacade(string address, string password, ICertificateFacade certificateFacade, IContentService contentService) : base(address, password, new Web3())
+        {
+            _certificateFacade = certificateFacade;
+            _contentService = contentService;
+        }
+
+        public AttributeFacade(string address, string password, Web3 web3, ICertificateFacade certificateFacade, IContentService contentService) : base(address, password, web3)
+        {
+            _certificateFacade = certificateFacade;
+            _contentService = contentService;
+        }
+
+        public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
+        {
+            string transactionHash = await AttributeService.DeployContractAsync(Web3, Address, attribute.Location, attribute.Hash, owner, new HexBigInteger(800000));
+            TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+
+            //Populating the attribute model with the new address
+            attribute.Address = receipt.ContractAddress;
+
+            //Iterating over certificates and deploying each one
+            foreach (string key in attribute.Certificates.Keys)
+            {
+                Certificate cert = await _certificateFacade.DeployAsync(attribute.Certificates[key]);
+                await AddCertificateAsync(attribute, cert);
+            }
+
+            return attribute;
+        }
+
+        public async Task<Attribute> GetAttributeAsync(string address)
+        {
+
+            AttributeService ethAttribute = new AttributeService(Web3, address);
+
+            //Populating attribute object with values from the smart contract
+            Attribute attributeModel = new Attribute
+            {
+                Address = address,
+                Hash = await ethAttribute.HashAsyncCall(),
+                Location = await ethAttribute.LocationAsyncCall()
+            };
+
+            //Fetch the content of the attribute
+            attributeModel.Content = _contentService.GetContent(attributeModel.Location, attributeModel.Hash);
+
+            //Fetching each certificate and adding them to the attribute
+            Dictionary<string, Certificate> certificates = await GetCertificatesAsync(attributeModel);
+            foreach (Certificate cert in certificates.Values)
+            {
+                attributeModel.AddCertificate(cert);
+            }
+
+
+            return attributeModel;
+        }
+
+
+        public async Task<Dictionary<string, Certificate>> GetCertificatesAsync(Attribute attribute)
+        {
+            Dictionary<string, Certificate> certs = new Dictionary<string, Certificate>();
+            AttributeService ethAttribute = new AttributeService(Web3, attribute.Address);
+
+            //Getting the number of certificates in the attribute
+            BigInteger certCount = await ethAttribute.CertificateCountAsyncCall();
+
+            //Getting each certificate and adding it to the returned dictionary
+            for (BigInteger i = new BigInteger(0); i < certCount; i++)
+            {
+                string certKey = await ethAttribute.CertificateKeysAsyncCall(i);
+                string certAddress = await ethAttribute.CertificatesAsyncCall(certKey);
+
+                Certificate cert = await _certificateFacade.GetCertificateAsync(certAddress);
+                certs.Add(certKey, cert);
+            }
+            return certs;
+        }
+
+        public async Task<Certificate> AddCertificateAsync(Attribute attribute, Certificate cert)
+        {
+            //If the certificate is not deployed, deploy it
+            if (cert.Address == null)
+            {
+                cert = await _certificateFacade.DeployAsync(cert);
+            }
+
+            //Add the certificate to the attribute
+            AttributeService ethAttribute = new AttributeService(Web3, attribute.Address);
+            await ethAttribute.AddCertificateAsync(Address, cert.Address);
+
+            return cert;
+        }
+    }
+}
