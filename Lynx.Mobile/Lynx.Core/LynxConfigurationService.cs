@@ -1,4 +1,4 @@
-﻿using Lynx.Core.Facade;
+using Lynx.Core.Facade;
 using System.Threading.Tasks;
 using Lynx.Core.Facade.Interfaces;
 using MvvmCross.Platform;
@@ -25,8 +25,10 @@ namespace Lynx.Core
             RpcClient Client = new RpcClient(new Uri(ClientUrl));
             Web3 web3 = new Web3(rpcEndpoint);
             string addressFrom = (web3.Eth.Accounts.SendRequestAsync().Result)[0];
-            Mvx.RegisterSingleton<ICertificateFacade>(() => new CertificateFacade(addressFrom, "", web3));
-            Mvx.RegisterSingleton<IAttributeFacade>(() => new AttributeFacade(addressFrom, "", web3, Mvx.Resolve<ICertificateFacade>()));
+
+            Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
+            Mvx.RegisterSingleton<ICertificateFacade>(() => new CertificateFacade(addressFrom, "", web3, Mvx.Resolve<IContentService>()));
+            Mvx.RegisterSingleton<IAttributeFacade>(() => new AttributeFacade(addressFrom, "", web3, Mvx.Resolve<ICertificateFacade>(), Mvx.Resolve<IContentService>()));
             Mvx.RegisterSingleton<IIDFacade>(() => new IDFacade(addressFrom, "", factoryContract, web3, Mvx.Resolve<IAttributeFacade>()));
         }
     }

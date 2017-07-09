@@ -8,31 +8,33 @@ namespace Lynx.Core.Facade.Interfaces
     {
 
         /// <summary>
-        /// Create a new ID contract as well as all attached attributes/models
+        /// Deploys and populates ID and IDController contracts from a local ID object
         /// </summary>
-        /// <returns>The ID, updated with the address (and all child object's addresses)</returns>
+        /// <param name="id">The ID to deploy</param>
+        /// <returns>The ID, with any attached Attributes or Certificates, with updated Address fields</returns>
         Task<ID> DeployAsync(ID id);
 
         /// <summary>
-        /// Populates a new ID using the data at the Ethereum address specified
+        /// Fetches an ID from the blockchain
         /// </summary>
-        /// <param name="address">The ID contract's address</param>
-        /// <returns>The ID at this address</returns>
+        /// <param name="address">The address of the ID to be fetched</param>
+        /// <returns>A new ID populated with data from the blockchain (and attached Attributes and Certificates)</returns>
         Task<ID> GetIDAsync(string address);
 
         /// <summary>
-        /// Gets the attributes in the ID contract
-        /// <param name="id">The ID</param>
+        /// Fetches the dictionary of attributes attached to an ID
         /// </summary>
-        Task<Dictionary<byte[], Attribute>> GetAttributesAsync(ID id);
+        /// <param name="ID">the ID to be queried</param>
+        /// <returns>A dictionary representing the attribute mapping in the smart contract</returns>
+        Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id);
 
         /// <summary>
-        /// Adds the attribute to the ID
+        /// Adds an attribute to an ID
         /// </summary>
-        /// <param name="id">The ID to which we want to add the attribute</param>
-        /// <param name="key">The key of the attribute to be added</param>
-        /// <param name="attribute">The attribute to be added</param>
-        /// <returns>The attribute, updated if neccesary</returns>
+        /// <param name="id">The ID to which to add the attribute</param>
+        /// <param name="key">The key under which to store the attribute</param>
+        /// <param name="attribute">The attribute to add</param>
+        /// <returns>The attribute with updated Address field (if necessary)</returns>
         Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute);
     }
 

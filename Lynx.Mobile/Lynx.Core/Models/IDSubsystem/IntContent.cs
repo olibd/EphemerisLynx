@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class IntContent : Model, IContent

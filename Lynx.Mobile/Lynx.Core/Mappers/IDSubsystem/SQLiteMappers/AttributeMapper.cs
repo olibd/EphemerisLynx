@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
@@ -44,12 +44,15 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             {
                 await _certMapper.SaveAsync(entry.Value);
 
+                //Create the one to many mapping between an attributes and its
+                //certificates
                 AttributeCertificateMapping attrCert = new AttributeCertificateMapping()
                 {
                     AttrUID = obj.UID,
                     CertUID = entry.Value.UID
                 };
 
+                //save the mapping
                 IMapper<AttributeCertificateMapping> attrCertMapper = new Mapper<AttributeCertificateMapping>(_dbFilePath);
                 await attrCertMapper.SaveAsync(attrCert);
             }

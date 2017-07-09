@@ -7,17 +7,17 @@ namespace Lynx.Core.Facade.Interfaces
     public interface ICertificateFacade
     {
         /// <summary>
-        /// Returns a new Certificate using the data contained in the contract at the address specified.
+        /// Fetches a certificate from the blockchain
         /// </summary>
-        /// <param name="address">The certificate contract address</param>
-        /// <returns>The certificate at this address</returns>
+        /// <param name="address">The address of the certificate to be fetched</param>
+        /// <returns>A new certificate populated with data from the blockchain</returns>
         Task<Certificate> GetCertificateAsync(string address);
 
         /// <summary>
-        /// Deploys the certificate to the blockchain
+        /// Deploys a certificate to the blockchain
         /// </summary>
         /// <param name="cert">The certificate to be deployed</param>
-        /// <returns>The updated certificate object (containing the address)</returns>
+        /// <returns>The deployed certificate, with updated Address field</returns>
         Task<Certificate> DeployAsync(Certificate cert);
     }
 

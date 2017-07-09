@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using SQLite;
 
@@ -8,6 +8,7 @@ namespace Lynx.Core.Models.IDSubsystem
     {
         [Ignore]
         public Dictionary<string, Attribute> Attributes { get; set; }
+        public string ControllerAddress { get; set; }
 
         public ID()
         {

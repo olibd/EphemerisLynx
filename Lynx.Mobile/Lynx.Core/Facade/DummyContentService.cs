@@ -4,7 +4,7 @@ using Lynx.Core.Models.IDSubsystem;
 
 namespace Lynx.Core.Facade
 {
-    class DummyContentService : IContentService
+    public class DummyContentService : IContentService
     {
         //Simple early implementation. Returns the location a content.
         public IContent GetContent(string location, string hash)

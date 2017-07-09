@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,8 +20,8 @@ namespace CoreUnitTests.PCL
         public void Setup()
         {
             SetupAsync().Wait();
-            _certFacade = new CertificateFacade(_addressFrom, "", _web3);
-            _attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade);
+            _certFacade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
+            _attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade, new DummyContentService());
         }
 
         [Test]
@@ -33,15 +33,13 @@ namespace CoreUnitTests.PCL
 
         private async Task<Attribute> DeployAttributeAsync()
         {
-            ID dummyId = new ID();
-
             Attribute attr = new Attribute()
             {
                 Hash = "I am an attribute hash",
                 Location = "I am an attribute location",
             };
 
-            Attribute deployed = await _attributeFacade.DeployAsync(attr, dummyId);
+            Attribute deployed = await _attributeFacade.DeployAsync(attr, _addressFrom);
             return deployed;
         }
 
