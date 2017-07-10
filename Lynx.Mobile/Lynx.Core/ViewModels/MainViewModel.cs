@@ -89,7 +89,7 @@ namespace Lynx.Core.ViewModels
         private async Task DeployToBlockchain()
         {
             _idFacade = Mvx.Resolve<IIDFacade>();
-            var id = await _idFacade.DeployAsync(ID);
+            await _idFacade.DeployAsync(ID);
         }
 
         private void BuildID()
