@@ -35,8 +35,7 @@ namespace Lynx.Droid.Views
 
         private void OnInteractionRequested(object sender, MvxValueEventArgs<BooleanInteraction> eventArgs)
         {
-            var comfirmationRequest = eventArgs.Value;
-            // show dialog
+            BooleanInteraction confirmationRequest = eventArgs.Value;
 
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
