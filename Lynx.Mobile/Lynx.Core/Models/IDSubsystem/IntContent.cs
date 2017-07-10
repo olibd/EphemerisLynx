@@ -12,7 +12,7 @@ namespace Lynx.Core.Models.IDSubsystem
 
         public override string ToString()
         {
-            return "" + (int)Content;
+            return ((int)Content).ToString();
         }
     }
 }
