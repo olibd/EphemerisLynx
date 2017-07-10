@@ -2,5 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.ephemeris.lynx">
 	<uses-sdk android:minSdkVersion="10" />
 	<application android:allowBackup="true" android:icon="@mipmap/icon" android:label="@string/app_name">
+		<activity android:name="md5a2b84a153249d3af81f7b6150c7e6e77.IDView" />
 	</application>
 </manifest>

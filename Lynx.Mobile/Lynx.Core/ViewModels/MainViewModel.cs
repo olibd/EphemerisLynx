@@ -5,6 +5,7 @@ using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.Models.Interactions;
+using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
@@ -19,15 +20,19 @@ namespace Lynx.Core.ViewModels
         public string Lastname { get; set; }
         public string Cell { get; set; }
         public string Address { get; set; }
-
         public string SerializedID
         {
             get { return _serializedID; }
             set { SetProperty(ref _serializedID, value); }
         }
         public ID ID { get; set; }
-
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
+        private readonly IMvxNavigationService _navigationService;
+
+        public MainViewModel(IMvxNavigationService navigationService)
+        {
+            _navigationService = navigationService;
+        }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
         public void Init()
@@ -56,6 +61,7 @@ namespace Lynx.Core.ViewModels
                     if (ok)
                     {
                         await Deploy();
+                        await _navigationService.Navigate<IDViewModel>();
                     }
                 },
 
@@ -91,6 +97,7 @@ namespace Lynx.Core.ViewModels
             //create some dummy attributes
             Attribute firstname = new Attribute()
             {
+                Description = "Firstname",
                 Content = new StringContent(Firstname),
                 Hash = "hash" + Firstname,
                 Location = "Location" + Firstname,
@@ -98,6 +105,7 @@ namespace Lynx.Core.ViewModels
 
             Attribute lastname = new Attribute()
             {
+                Description = "Lastname",
                 Hash = "hash" + Lastname,
                 Location = "Location" + Lastname,
                 Content = new StringContent(Lastname)
@@ -105,6 +113,7 @@ namespace Lynx.Core.ViewModels
 
             Attribute cell = new Attribute()
             {
+                Description = "Cell",
                 Hash = "hash" + Cell,
                 Location = "Location" + Cell,
                 Content = new StringContent(Cell)
@@ -112,15 +121,16 @@ namespace Lynx.Core.ViewModels
 
             Attribute address = new Attribute()
             {
+                Description = "Address",
                 Hash = "hash" + Address,
                 Location = "Location" + Address,
                 Content = new StringContent(Address)
             };
 
-            ID.AddAttribute("Firstname", firstname);
-            ID.AddAttribute("Lastname", lastname);
-            ID.AddAttribute("Cell", cell);
-            ID.AddAttribute("Address", address);
+            ID.AddAttribute(firstname.Description, firstname);
+            ID.AddAttribute(lastname.Description, lastname);
+            ID.AddAttribute(cell.Description, cell);
+            ID.AddAttribute(address.Description, address);
         }
     }
 }

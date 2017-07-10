@@ -1,4 +1,4 @@
-﻿using Lynx.Core.Facade;
+using Lynx.Core.Facade;
 using System.Threading.Tasks;
 using Lynx.Core.Facade.Interfaces;
 using MvvmCross.Platform;

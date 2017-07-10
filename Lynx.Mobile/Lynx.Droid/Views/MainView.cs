@@ -35,14 +35,14 @@ namespace Lynx.Droid.Views
 
         private void OnInteractionRequested(object sender, MvxValueEventArgs<BooleanInteraction> eventArgs)
         {
-            var confirmationRequest = eventArgs.Value;
+            BooleanInteraction confirmationRequest = eventArgs.Value;
 
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
             alert.SetTitle("Confirmation Needed")
-                 .SetMessage(confirmationRequest.Query)
-                 .SetPositiveButton("I Confirm!", (senderAlert, e) => confirmationRequest.Callback(true))
-                 .SetNegativeButton("I'll check again", (senderAlert, e) => confirmationRequest.Callback(false));
+                 .SetMessage(comfirmationRequest.Query)
+                 .SetPositiveButton("I Confirm!", (senderAlert, e) => comfirmationRequest.Callback(true))
+                 .SetNegativeButton("I'll check again", (senderAlert, e) => comfirmationRequest.Callback(false));
 
             alert.Show();
         }
