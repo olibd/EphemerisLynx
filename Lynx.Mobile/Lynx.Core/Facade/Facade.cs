@@ -9,15 +9,15 @@ namespace Lynx.Core.Facade
 {
     public class Facade
     {
-        protected Web3 _web3;
-        protected string _address;
-        protected string _password;
+        protected Web3 Web3 { get; }
+        protected string Address { get; }
+        protected string Password { get; }
 
         public Facade(string address, string password, Web3 web3)
         {
-            _web3 = web3;
-            _address = address;
-            _password = password;
+            Web3 = web3;
+            Address = address;
+            Password = password;
         }
     }
 }

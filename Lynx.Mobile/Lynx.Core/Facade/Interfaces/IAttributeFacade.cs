@@ -7,30 +7,33 @@ namespace Lynx.Core.Facade.Interfaces
     public interface IAttributeFacade
     {
         /// <summary>
-        /// Creates a new attribute
+        /// Deploys an attribute to the blockchain and all attached Certificates
         /// </summary>
-        /// <param name="attribute">The attribute to be deployed. The address fields will be updated with the smart contract addresses.</param>
-        /// <param name="ownerId">The owner ID's address</param>
-        Task<Attribute> DeployAsync(Attribute attribute, ID ownerId);
+        /// <param name="attribute">The attribute to be deployed</param>
+        /// <param name="owner">The address that will own the attribute.</param>
+        /// <returns>The deployed attribute, with updated Address field (and Certificates with updated Address fields)</returns>
+        Task<Attribute> DeployAsync(Attribute attribute, string owner);
 
         /// <summary>
-        /// Returns a new Attribute using the data contained in the contract at the address specified.
+        /// Fetches an attribute from the blockchain
         /// </summary>
-        /// <param name="address">The Attribute contract address</param>
-        /// <returns>The Attribute at this address</returns>
+        /// <param name="address">The address of the attribute to be fetched</param>
+        /// <returns>A new attribute populated with data from the blockchain</returns>
         Task<Attribute> GetAttributeAsync(string address);
 
         /// <summary>
-        /// Gets the list of certificates in the attribute
+        /// Fetches the dictionary of certificates attached to an attribute
         /// </summary>
-        /// <returns>Certificates</returns>
+        /// <param name="attribute">The attribute to be queried</param>
+        /// <returns>A dictionary representing the certificate mapping in the smart contract</returns>
         Task<Dictionary<string, Certificate>> GetCertificatesAsync(Attribute attribute);
 
         /// <summary>
-        /// Adds the certificate to the Attribute
+        /// Adds a certificate to an attribute
         /// </summary>
-        /// <param name="key">The key under which to add the certificate</param>
+        /// <param name="attribute">The attribute to which to add the certificate</param>
         /// <param name="cert">The certificate to add</param>
+        /// <returns>The certificate with updated Address field (if necessary)</returns>
         Task<Certificate> AddCertificateAsync(Attribute attribute, Certificate cert);
     }
 

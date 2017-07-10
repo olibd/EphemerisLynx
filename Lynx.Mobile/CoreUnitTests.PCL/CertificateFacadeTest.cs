@@ -21,7 +21,7 @@ namespace CoreUnitTests.PCL
         public void Setup()
         {
             SetupAsync().Wait();
-            _facade = new CertificateFacade(_addressFrom, "", _web3);
+            _facade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
         }
 
         [Test]

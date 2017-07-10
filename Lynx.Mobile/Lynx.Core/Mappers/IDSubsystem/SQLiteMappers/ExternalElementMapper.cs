@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -40,14 +40,17 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             //Serialize the content as a JSON string
             string content = JsonConvert.SerializeObject(obj.Content);
 
+            //Define the one to one mapping between the object and its content
             ExternalElementContentMapping contentMapping = new ExternalElementContentMapping()
             {
                 ExtUID = obj.UID,
+                //save the serialized data directly in the mapping
                 SerilizedContent = content,
                 ExtType = obj.GetType().ToString(),
                 ContentType = obj.Content.GetType().ToString()
             };
 
+            //save the mapping to the database
             Mapper<ExternalElementContentMapping> contentMapper = new Mapper<ExternalElementContentMapping>(_dbFilePath);
             await contentMapper.SaveAsync(contentMapping);
         }

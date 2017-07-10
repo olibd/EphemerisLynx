@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using SQLite;
 
@@ -19,11 +19,6 @@ namespace Lynx.Core.Models.IDSubsystem
         public void AddCertificate(Certificate cert)
         {
             Certificates.Add(cert.Hash, cert);
-        }
-
-        public Certificate GetCertificate(string hash)
-        {
-            return Certificates[hash];
         }
     }
 }

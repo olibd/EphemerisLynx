@@ -27,8 +27,8 @@ namespace CoreUnitTests.PCL
             Task<string> deployFactory = DeployFactory();
             deployFactory.Wait();
 
-            _certFacade = new CertificateFacade(_addressFrom, "", _web3);
-            _attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade);
+            _certFacade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
+            _attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade, new DummyContentService());
             _idFacade = new IDFacade(_addressFrom, "", deployFactory.Result, _web3, _attributeFacade);
         }
 
@@ -64,10 +64,10 @@ namespace CoreUnitTests.PCL
                 Hash = "I am an attribute hash"
             };
 
-            Bytes32TypeEncoder Encoder = new Bytes32TypeEncoder();
-            Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, Encoder.Encode("key"), attribute);
+            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
+            Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, encoder.Encode("key"), attribute);
 
-            ID newId = await _idFacade.GetIDAsync(deployed.Address);
+            ID newId = await _idFacade.GetIDAsync(deployed.ControllerAddress);
             Assert.AreEqual(1, newId.Attributes.Count);
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace Lynx.Core.Models.IDSubsystem
 {
     public class IntContent : Model, IContent
@@ -12,7 +12,7 @@ namespace Lynx.Core.Models.IDSubsystem
 
         public override string ToString()
         {
-            return "" + (int)Content;
+            return ((int)Content).ToString();
         }
     }
 }

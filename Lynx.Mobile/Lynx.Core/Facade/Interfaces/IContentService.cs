@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.Facade.Interfaces
 {
-    interface IContentService
+    public interface IContentService
     {
         /// <summary>
         /// Fetch the content from the remote URL, verify its hash and return the content if it matches

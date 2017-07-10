@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using Nethereum.Web3;
@@ -11,17 +12,20 @@ namespace Lynx.Core.Facade
 {
     public class CertificateFacade : Facade, ICertificateFacade
     {
-        public CertificateFacade(string address, string password, Web3 web3) : base(address, password, web3)
+        private IContentService _contentService;
+        public CertificateFacade(string address, string password, Web3 web3, IContentService contentService) : base(address, password, web3)
         {
+            _contentService = contentService;
         }
 
-        public CertificateFacade(string address, string password) : base(address, password, new Web3())
+        public CertificateFacade(string address, string password, IContentService contentService) : base(address, password, new Web3())
         {
+            _contentService = contentService;
         }
 
         public async Task<Certificate> GetCertificateAsync(string address)
         {
-            CertificateService ethCertificate = new CertificateService(_web3, address);
+            CertificateService ethCertificate = new CertificateService(Web3, address);
 
             //Populating certificate model with values from the smart contract
             Certificate certificateModel = new Certificate
@@ -29,16 +33,19 @@ namespace Lynx.Core.Facade
                 Address = address,
                 Hash = await ethCertificate.HashAsyncCall(),
                 Location = await ethCertificate.LocationAsyncCall(),
-                Revoked = await ethCertificate.RevokedAsyncCall()
+                Revoked = await ethCertificate.RevokedAsyncCall(),
             };
+
+            certificateModel.Content = _contentService.GetContent(certificateModel.Location, certificateModel.Hash);
 
             return certificateModel;
         }
 
         public async Task<Certificate> DeployAsync(Certificate cert)
         {
-            string transactionHash = await CertificateService.DeployContractAsync(_web3, _address, cert.Location, cert.Hash, cert.OwningAttribute.Address, new HexBigInteger(600000));
-            TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            //Standard Ethereum contract deploy and get address
+            string transactionHash = await CertificateService.DeployContractAsync(Web3, Address, cert.Location, cert.Hash, cert.OwningAttribute.Address, new HexBigInteger(600000));
+            TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
             cert.Address = receipt.ContractAddress;
             return cert;
         }

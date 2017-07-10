@@ -18,46 +18,35 @@ namespace Lynx.Core.Facade
     public class AttributeFacade : Facade, IAttributeFacade
     {
         private ICertificateFacade _certificateFacade;
+        private IContentService _contentService;
 
-        public AttributeFacade(string address, string password, ICertificateFacade certificateFacade) : base(address, password, new Web3())
+        //TODO in the constructors: unlock account with the provided password
+
+        public AttributeFacade(string address, string password, ICertificateFacade certificateFacade, IContentService contentService) : base(address, password, new Web3())
         {
             _certificateFacade = certificateFacade;
+            _contentService = contentService;
         }
 
-        public AttributeFacade(string address, string password, Web3 web3, ICertificateFacade certificateFacade) : base(address, password, web3)
+        public AttributeFacade(string address, string password, Web3 web3, ICertificateFacade certificateFacade, IContentService contentService) : base(address, password, web3)
         {
             _certificateFacade = certificateFacade;
+            _contentService = contentService;
         }
 
-        public async Task<Attribute> DeployAsync(Attribute attribute, ID owner)
+        public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
         {
-            string ownerAddress;
+            string transactionHash = await AttributeService.DeployContractAsync(Web3, Address, attribute.Location, attribute.Hash, owner, new HexBigInteger(800000));
+            TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
-            //The ID's address is actually the ID Controller contract so
-            //we need to get the actual ID contract's address
-            if (owner.Address != null)
-            {
-                IDControllerService idc = new IDControllerService(_web3, owner.Address);
-                ownerAddress = await idc.GetIDAsyncCall();
-            }
-            else
-            {
-                ownerAddress = _address;
-            }
-
-
-            string transactionHash = await AttributeService.DeployContractAsync(_web3, _address, attribute.Location, attribute.Hash, ownerAddress, new HexBigInteger(800000));
-            TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
-
-            //Populating new attribute model with the new address and values passed
+            //Populating the attribute model with the new address
             attribute.Address = receipt.ContractAddress;
 
             //Iterating over certificates and deploying each one
             foreach (string key in attribute.Certificates.Keys)
             {
-                Certificate cert = await _certificateFacade.DeployAsync(attribute.GetCertificate(key));
-                cert = await AddCertificateAsync(attribute, attribute.GetCertificate(key));
-                attribute.Certificates[key] = cert;
+                Certificate cert = await _certificateFacade.DeployAsync(attribute.Certificates[key]);
+                await AddCertificateAsync(attribute, cert);
             }
 
             return attribute;
@@ -66,7 +55,9 @@ namespace Lynx.Core.Facade
         public async Task<Attribute> GetAttributeAsync(string address)
         {
 
-            AttributeService ethAttribute = new AttributeService(_web3, address);
+            AttributeService ethAttribute = new AttributeService(Web3, address);
+
+            //Populating attribute object with values from the smart contract
             Attribute attributeModel = new Attribute
             {
                 Address = address,
@@ -74,7 +65,8 @@ namespace Lynx.Core.Facade
                 Location = await ethAttribute.LocationAsyncCall()
             };
 
-            //Populating attribute object with values from the smart contract
+            //Fetch the content of the attribute
+            attributeModel.Content = _contentService.GetContent(attributeModel.Location, attributeModel.Hash);
 
             //Fetching each certificate and adding them to the attribute
             Dictionary<string, Certificate> certificates = await GetCertificatesAsync(attributeModel);
@@ -83,7 +75,6 @@ namespace Lynx.Core.Facade
                 attributeModel.AddCertificate(cert);
             }
 
-            //TODO: Fetch content from location and create Content object
 
             return attributeModel;
         }
@@ -91,10 +82,10 @@ namespace Lynx.Core.Facade
 
         public async Task<Dictionary<string, Certificate>> GetCertificatesAsync(Attribute attribute)
         {
-            ICertificateFacade certFacade = new CertificateFacade(_address, _password, _web3);
             Dictionary<string, Certificate> certs = new Dictionary<string, Certificate>();
-            AttributeService ethAttribute = new AttributeService(_web3, attribute.Address);
-            //Getting the amount of certificates in the attribute
+            AttributeService ethAttribute = new AttributeService(Web3, attribute.Address);
+
+            //Getting the number of certificates in the attribute
             BigInteger certCount = await ethAttribute.CertificateCountAsyncCall();
 
             //Getting each certificate and adding it to the returned dictionary
@@ -103,7 +94,7 @@ namespace Lynx.Core.Facade
                 string certKey = await ethAttribute.CertificateKeysAsyncCall(i);
                 string certAddress = await ethAttribute.CertificatesAsyncCall(certKey);
 
-                Certificate cert = await certFacade.GetCertificateAsync(certAddress);
+                Certificate cert = await _certificateFacade.GetCertificateAsync(certAddress);
                 certs.Add(certKey, cert);
             }
             return certs;
@@ -114,13 +105,12 @@ namespace Lynx.Core.Facade
             //If the certificate is not deployed, deploy it
             if (cert.Address == null)
             {
-                ICertificateFacade certFacade = new CertificateFacade(_address, _password, _web3);
-                cert = await certFacade.DeployAsync(cert);
+                cert = await _certificateFacade.DeployAsync(cert);
             }
 
             //Add the certificate to the attribute
-            AttributeService ethAttribute = new AttributeService(_web3, attribute.Address);
-            await ethAttribute.AddCertificateAsync(_address, cert.Address);
+            AttributeService ethAttribute = new AttributeService(Web3, attribute.Address);
+            await ethAttribute.AddCertificateAsync(Address, cert.Address);
 
             return cert;
         }

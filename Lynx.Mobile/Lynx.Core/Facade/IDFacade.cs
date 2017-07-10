@@ -8,6 +8,7 @@ using Lynx.Core.Models.IDSubsystem;
 using eVi.abi.lib.pcl;
 using Nethereum.Hex.HexTypes;
 using System.Numerics;
+using Nethereum.ABI.Encoders;
 
 namespace Lynx.Core.Facade
 {
@@ -35,75 +36,83 @@ namespace Lynx.Core.Facade
 
         public async Task<ID> DeployAsync(ID id)
         {
-            FactoryService factory = new FactoryService(_web3, _factoryAddress);
-            Event idCreationEvent = factory.GetEventReturnIDController();
-            HexBigInteger filterAddressFrom = await idCreationEvent.CreateFilterAsync(_address);
-            await factory.CreateIDAsync(_address, new HexBigInteger(3905820));
+            FactoryService factory = new FactoryService(Web3, _factoryAddress);
+            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
 
-            var log = await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
+            //Use the provided Factory address to create an ID + IDController
+            Event idCreationEvent = factory.GetEventReturnIDController();
+            HexBigInteger filterAddressFrom = await idCreationEvent.CreateFilterAsync(Address);
+            await factory.CreateIDAsync(Address, new HexBigInteger(3905820));
+
+            List<EventLog<ReturnIDControllerEventDTO>> log = await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
 
             string controllerAddress = log[0].Event._controllerAddress;
+            IDControllerService idcService = new IDControllerService(Web3, controllerAddress);
 
-            id.Address = controllerAddress;
+            id.ControllerAddress = controllerAddress;
+            id.Address = await idcService.GetIDAsyncCall();
 
-            Dictionary<string, Attribute> updatedAttributes = new Dictionary<string, Attribute>();
 
             //Add each attribute from the ID model to the ID smart contract
             foreach (string key in id.Attributes.Keys)
             {
                 Attribute attribute = id.GetAttribute(key);
-
-                attribute = await AddAttributeAsync(id, Encoding.UTF8.GetBytes(key), attribute);
-                updatedAttributes.Add(key, attribute);
+                await AddAttributeAsync(id, encoder.Encode(key), attribute);
             }
-            id.Attributes = updatedAttributes;
             return id;
         }
 
+        //This function will only be used to create the initial ID object on login
         public async Task<ID> GetIDAsync(string address)
         {
-            ID newID = new ID();
-            newID.Address = address;
+            IDControllerService idcService = new IDControllerService(Web3, address);
 
-            //Get all attributes from the smart contract and add them to the ID model
-            Dictionary<byte[], Attribute> attributes = await GetAttributesAsync(newID);
-            foreach (byte[] key in attributes.Keys)
+            ID newID = new ID
             {
-                string keyStr = Encoding.UTF8.GetString(key, 0, key.Length);
-                newID.AddAttribute(keyStr, attributes[key]);
+                ControllerAddress = address,
+                Address = await idcService.GetIDAsyncCall()
+            };
+
+            //Get all attributes from the smart contract and add them to the ID object
+            Dictionary<string, Attribute> attributes = await GetAttributesAsync(newID);
+            foreach (string key in attributes.Keys)
+            {
+                newID.AddAttribute(key, attributes[key]);
             }
 
             return newID;
-
         }
 
         public async Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute)
         {
-            IDControllerService ethIDCtrl = new IDControllerService(_web3, id.Address);
+            IDControllerService idcService = new IDControllerService(Web3, id.ControllerAddress);
 
             //If the attribute to be added is not yet deployed, deploy it
             if (attribute.Address == null)
-                attribute = await _attributeFacade.DeployAsync(attribute, id);
+                attribute = await _attributeFacade.DeployAsync(attribute, id.Address);
 
-            await ethIDCtrl.AddAttributeAsync(_address, key, attribute.Address, new HexBigInteger(3905820));
+
+            await idcService.AddAttributeAsync(Address, key, attribute.Address, new HexBigInteger(3905820));
 
             return attribute;
         }
 
-        public async Task<Dictionary<byte[], Attribute>> GetAttributesAsync(ID id)
+        public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id)
         {
-            IDControllerService ethIdCtrl = new IDControllerService(_web3, id.Address);
-            Dictionary<byte[], Attribute> dict = new Dictionary<byte[], Attribute>();
+            IDControllerService idcService = new IDControllerService(Web3, id.ControllerAddress);
+            Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
 
-            BigInteger attributes = await ethIdCtrl.AttributeCountAsyncCall();
+            BigInteger attributes = await idcService.AttributeCountAsyncCall();
             for (BigInteger i = 0; i < attributes; i++)
             {
                 //Get all attribute keys and addresses for the ID
-                byte[] attributeKey = await ethIdCtrl.GetAttributeKeyAsyncCall(i);
-                string ethAttributeAddress = await ethIdCtrl.GetAttributeAsyncCall(attributeKey);
-                //Get the attribute and add it to the local ID model
+                byte[] attributeKey = await idcService.GetAttributeKeyAsyncCall(i);
+
+                string ethAttributeAddress = await idcService.GetAttributeAsyncCall(attributeKey);
+                //Get the attribute and add it to the dict
                 Attribute newAttribute = await _attributeFacade.GetAttributeAsync(ethAttributeAddress);
-                dict.Add(attributeKey, newAttribute);
+                string keyStr = Encoding.UTF8.GetString(attributeKey, 0, attributeKey.Length);
+                dict.Add(keyStr, newAttribute);
             }
 
             return dict;
