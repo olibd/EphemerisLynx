@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade.Interfaces
 {
-    interface IVerifier
+    interface IVerifier : ISession
     {
         /// <summary>
         /// The Syn object populated by ProcessSyn
@@ -26,5 +26,6 @@ namespace Lynx.Core.Facade.Interfaces
         /// <param name="privateKey">The user's Ethereum private key</param>
         /// <param name="publicKey">The user's Ethereum public key</param>
         void Acknowledge(string privateKey, string publicKey);
+
     }
 }

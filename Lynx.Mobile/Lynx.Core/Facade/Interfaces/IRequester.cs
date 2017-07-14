@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lynx.Core.Facade.Interfaces
 {
-    interface IRequester
+    interface IRequester : ISession
     {
         /// <summary>
         /// The Ack object populated by ProcessAck
@@ -34,9 +34,5 @@ namespace Lynx.Core.Facade.Interfaces
         /// <param name="attributes">The attributes to transmit</param>
         void SendAttributes(List<Attribute> attributes);
 
-        /// <summary>
-        /// Closes the session
-        /// </summary>
-        void Close();
     }
 }
