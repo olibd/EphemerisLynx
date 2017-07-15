@@ -63,6 +63,12 @@
     <Compile Include="ILynxConfigurationService.cs" />
     <Compile Include="ViewModels\IDViewModel.cs" />
     <Compile Include="ValueConverters\ContentToStringConverter.cs" />
+    <Compile Include="Services\Interfaces\IAck.cs" />
+    <Compile Include="Services\Interfaces\IHandshakePayload.cs" />
+    <Compile Include="Services\Interfaces\IRequester.cs" />
+    <Compile Include="Services\Interfaces\ISession.cs" />
+    <Compile Include="Services\Interfaces\ISyn.cs" />
+    <Compile Include="Services\Interfaces\IVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
