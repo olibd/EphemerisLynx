@@ -71,9 +71,6 @@
     <Compile Include="Services\Interfaces\IVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.BouncyCastle.1.8.1.1\lib\portable-net4+sl5+wp8+win8+wpa81\crypto.dll</HintPath>
-    </Reference>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EdjCase.JsonRpc.Client.1.0.5\lib\portable45-net45+win8+wpa81\EdjCase.JsonRpc.Client.dll</HintPath>
     </Reference>
@@ -124,6 +121,12 @@
     </Reference>
     <Reference Include="ZXingNetMobile">
       <HintPath>..\packages\ZXing.Net.Mobile.2.2.9\lib\portable-net45+netcore45+wpa81+wp8\ZXingNetMobile.dll</HintPath>
+    </Reference>
+    <Reference Include="crypto">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.1.1\lib\portable-net4+sl5+wp8+win8+wpa81\crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="PubnubPCL">
+      <HintPath>..\packages\PubnubPCL.4.0.2.0\lib\portable45-net45+win8+wpa81\PubnubPCL.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
