@@ -1,4 +1,4 @@
-﻿namespace Lynx.Core.Facade.Interfaces
+﻿namespace Lynx.Core.Services.Interfaces
 {
     interface ISyn : IHandshakePayload
     {

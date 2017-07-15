@@ -1,6 +1,6 @@
 ﻿using Lynx.Core.Models.IDSubsystem;
 
-namespace Lynx.Core.Facade.Interfaces
+namespace Lynx.Core.Services.Interfaces
 {
     interface IAck : IHandshakePayload
     {
