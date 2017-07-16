@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.Services.Interfaces
 {
-    interface ISession
+    public interface ISession
     {
         /// <summary>
         /// Opens a session using the specified address

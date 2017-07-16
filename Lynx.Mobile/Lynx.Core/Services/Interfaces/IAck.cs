@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.Services.Interfaces
 {
-    interface IAck : IHandshakePayload
+    public interface IAck : IHandshakePayload
     {
         /// <summary>
         /// The verifier's name (for identification purposes)

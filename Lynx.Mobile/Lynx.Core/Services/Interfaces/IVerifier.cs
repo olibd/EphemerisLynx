@@ -1,6 +1,6 @@
 ﻿namespace Lynx.Core.Services.Interfaces
 {
-    interface IVerifier
+    public interface IVerifier
     {
         /// <summary>
         /// The Syn object populated by ProcessSyn

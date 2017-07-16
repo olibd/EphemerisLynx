@@ -1,6 +1,6 @@
 ﻿namespace Lynx.Core.Services.Interfaces
 {
-    interface ISyn : IHandshakePayload
+    public interface ISyn : IHandshakePayload
     {
         /// <summary>
         /// The address allowing the verifier to connect back to the requester

@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.Services.Interfaces
 {
-    interface IHandshakePayload
+    public interface IHandshakePayload
     {
         /// <summary>
         /// The ID of the user sending the packet

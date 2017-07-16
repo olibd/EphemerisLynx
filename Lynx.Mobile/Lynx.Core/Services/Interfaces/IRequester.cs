@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Lynx.Core.Services.Interfaces
 {
-    interface IRequester
+    public interface IRequester
     {
         /// <summary>
         /// The Ack object populated by ProcessAck
