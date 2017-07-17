@@ -69,6 +69,9 @@
     <Compile Include="Services\Interfaces\ISession.cs" />
     <Compile Include="Services\Interfaces\ISyn.cs" />
     <Compile Include="Services\Interfaces\IVerifier.cs" />
+    <Compile Include="Services\Requester.cs" />
+    <Compile Include="Services\Interfaces\IAccountService.cs" />
+    <Compile Include="Services\AccountService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
