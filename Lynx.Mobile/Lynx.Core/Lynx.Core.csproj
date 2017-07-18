@@ -64,7 +64,7 @@
     <Compile Include="ViewModels\IDViewModel.cs" />
     <Compile Include="ValueConverters\ContentToStringConverter.cs" />
     <Compile Include="Services\Interfaces\IAck.cs" />
-    <Compile Include="Services\Interfaces\IHandshakePayload.cs" />
+    <Compile Include="Services\Interfaces\IHandshakeToken.cs" />
     <Compile Include="Services\Interfaces\IRequester.cs" />
     <Compile Include="Services\Interfaces\ISession.cs" />
     <Compile Include="Services\Interfaces\ISyn.cs" />
@@ -72,6 +72,12 @@
     <Compile Include="Services\Requester.cs" />
     <Compile Include="Services\Interfaces\IAccountService.cs" />
     <Compile Include="Services\AccountService.cs" />
+    <Compile Include="Services\Syn.cs" />
+    <Compile Include="Services\Interfaces\IToken.cs" />
+    <Compile Include="Services\Ack.cs" />
+    <Compile Include="Services\HandshakeToken.cs" />
+    <Compile Include="Services\Interfaces\ITokenCryptoService.cs" />
+    <Compile Include="Services\Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">

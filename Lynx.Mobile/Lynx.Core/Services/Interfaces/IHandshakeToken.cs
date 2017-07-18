@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.Services.Interfaces
 {
-    public interface IHandshakePayload
+    public interface IHandshakeToken : IToken
     {
         /// <summary>
         /// The ID of the user sending the packet
@@ -13,5 +13,10 @@ namespace Lynx.Core.Services.Interfaces
         /// The Ethereum public key of the user sending the handshake
         /// </summary>
         string PublicKey { get; set; }
+
+        /// <summary>
+        /// The Ethereum public key of the user sending the handshake
+        /// </summary>
+        bool Encrypted { get; set; }
     }
 }
