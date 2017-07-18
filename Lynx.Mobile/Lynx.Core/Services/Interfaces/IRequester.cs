@@ -13,17 +13,16 @@ namespace Lynx.Core.Services.Interfaces
         /// <summary>
         /// Creates a verification request SYN from the user's ID and encodes it into a JSON string
         /// </summary>
-        /// <param name="privateKey">The user's Ethereum private key</param>
-        /// <param name="publicKey">The user's Ethereum public key</param>
+        /// <param name="account">The user's Ethereum account</param>m>
         /// <returns>A JSON string representing the SYN payload</returns>
-        string CreateSyn(string privateKey, string publicKey);
+        string CreateEncodedSyn(IAccountService account);
 
         /// <summary>
         /// Parses a JSON-encoded ACK and verifies its integrity.
         /// </summary>
         /// <param name="ack">The JSON-encoded ACK</param>
         /// <returns>The Ack object</returns>
-        IAck ProcessAck(string ack);
+        IAck ProcessEncodedAck(string ack);
 
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the verifier for certification

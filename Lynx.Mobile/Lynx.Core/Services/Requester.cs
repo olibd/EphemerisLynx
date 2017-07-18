@@ -1,25 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.Services.Interfaces;
 
 namespace Lynx.Core.Services
 {
     public class Requester : IRequester
     {
+        private ISession _session;
+        private ID id;
         public Requester()
         {
         }
 
         public IAck Ack { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public string CreateSyn(string privateKey, string publicKey)
+        public string CreateEncodedSyn(IAccountService account)
         {
-            throw new NotImplementedException();
+            ISyn syn = new Syn()
+            {
+                Encrypted = false,
+                PublicKey = account.PublicKey(),
+                NetworkAddress = _session.Open(),
+                Id = id
+            };
 
 
         }
 
-        public IAck ProcessAck(string ack)
+        public IAck ProcessEncodedAck(string ack)
         {
             throw new NotImplementedException();
         }
