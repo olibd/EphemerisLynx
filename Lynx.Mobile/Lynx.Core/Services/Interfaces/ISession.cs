@@ -32,4 +32,5 @@ namespace Lynx.Core.Services.Interfaces
         /// </summary>
         event EventHandler<string> OnMessageReceived;
     }
+
 }
