@@ -12,13 +12,13 @@ using PubnubApi;
 
 namespace Lynx.Core.Services
 {
-    class Session : ISession
+    public class Session : ISession
     {
         private readonly Pubnub _pubNub;
 
         private string _channel;
 
-        public Session()
+        public Session(EventHandler<string> messageEventHandler)
         {
             PNConfiguration pubNubConfig = new PNConfiguration()
             {
@@ -27,10 +27,13 @@ namespace Lynx.Core.Services
             };
 
             _pubNub = new Pubnub(pubNubConfig);
-            _pubNub.AddListener(new PubnubCallback(OnMessageReceived));
+            AddMessageReceptionHandler(messageEventHandler);
         }
 
-        public event EventHandler<string> OnMessageReceived;
+        public void AddMessageReceptionHandler(EventHandler<string> handler)
+        {
+            _pubNub.AddListener(new PubnubCallback(handler));
+        }
 
         public void Close()
         {
@@ -85,6 +88,7 @@ namespace Lynx.Core.Services
                     }
                     ));
         }
+
 
         private string GenerateChannelName()
         {

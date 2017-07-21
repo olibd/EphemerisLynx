@@ -28,9 +28,10 @@ namespace Lynx.Core.Services.Interfaces
         void Send(string message);
 
         /// <summary>
-        /// Event fires whenever a message is received from the other peer. The argument is the received message.
+        /// Add an event handler for incoming messages
         /// </summary>
-        event EventHandler<string> OnMessageReceived;
+        /// <param name="handler">The event handler function - signature should be (object sender, string arg)</param>
+        void AddMessageReceptionHandler(EventHandler<string> handler);
     }
 
 }
