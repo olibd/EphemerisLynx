@@ -13,12 +13,12 @@ namespace Lynx.Core.Services
         {
             get
             {
-                return Payload["netAddr"];
+                return GetFromPayload("netAddr");
             }
 
             set
             {
-                Payload["netAddr"] = value;
+                SetOnPayload("netAddr", value);
             }
         }
     }

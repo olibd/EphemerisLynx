@@ -18,7 +18,7 @@ namespace Lynx.Core.Services
 
             set
             {
-                Payload["name"] = JsonConvert.SerializeObject(value);
+                SetOnPayload("name", JsonConvert.SerializeObject(value));
                 _name = value;
             }
         }

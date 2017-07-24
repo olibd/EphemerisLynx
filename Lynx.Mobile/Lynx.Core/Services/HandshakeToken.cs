@@ -19,7 +19,7 @@ namespace Lynx.Core.Services
 
             set
             {
-                Payload["idAddr"] = value.Address;
+                SetOnPayload("idAddr", value.Address);
                 _id = value;
             }
         }
@@ -28,12 +28,12 @@ namespace Lynx.Core.Services
         {
             get
             {
-                return Header["pubkey"];
+                return GetFromHeader("pubkey");
             }
 
             set
             {
-                Header["pubkey"] = value;
+                SetOnHeader("pubkey", value);
             }
         }
 
@@ -41,12 +41,12 @@ namespace Lynx.Core.Services
         {
             get
             {
-                return Boolean.Parse(Header["pubkey"]);
+                return Boolean.Parse(GetFromHeader("encrypted"));
             }
 
             set
             {
-                Header["pubkey"] = value.ToString();
+                SetOnHeader("encrypted", value.ToString());
             }
         }
     }

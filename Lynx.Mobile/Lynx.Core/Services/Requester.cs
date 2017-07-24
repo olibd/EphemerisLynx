@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.Services.Interfaces;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Services
 {
@@ -9,8 +10,11 @@ namespace Lynx.Core.Services
     {
         private ISession _session;
         private ID id;
-        public Requester()
+        private ITokenCryptoService<ISyn> _tokenCryptoService;
+
+        public Requester(ITokenCryptoService<ISyn> tokenCryptoService)
         {
+            _tokenCryptoService = tokenCryptoService;
         }
 
         public IAck Ack { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -25,7 +29,9 @@ namespace Lynx.Core.Services
                 Id = id
             };
 
+            _tokenCryptoService.Sign(syn, account.PrivateKeyAsByteArray());
 
+            return syn.GetEncodedToken();
         }
 
         public IAck ProcessEncodedAck(string ack)

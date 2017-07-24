@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Services.Interfaces
 {

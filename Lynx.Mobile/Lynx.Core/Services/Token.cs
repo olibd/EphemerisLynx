@@ -23,52 +23,57 @@ namespace Lynx.Core.Services
                 _signature = value;
             }
         }
-
-        public string GetEncodedToken
-        {
-            get
-            {
-                string header = JsonConvert.SerializeObject(Header);
-                header = Base64Encode(header);
-                string payload = JsonConvert.SerializeObject(Payload);
-                payload = Base64Encode(payload);
-
-                return header + "." + payload + Signature != null || Signature.Equals("") ? "." + Signature : "";
-            }
-        }
-
         private Dictionary<string, string> _header;
-        public Dictionary<string, string> Header
-        {
-            get
-            {
-                return _header;
-            }
-            set
-            {
-                Contract.Ensures(!_signedAndlocked);
-                _header = value;
-            }
-        }
-
         private Dictionary<string, string> _payload;
-        public Dictionary<string, string> Payload
+
+        public string GetEncodedToken()
         {
-            get
-            {
-                return _payload;
-            }
-            set
-            {
-                Contract.Ensures(!_signedAndlocked);
-                _payload = value;
-            }
+            return GetUnsignedEncodedToken() + Signature != null || Signature.Equals("") ? "." + Signature : "";
         }
 
         private string Base64Encode(string plainText)
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
+        }
+
+        public void SetOnHeader(string key, string val)
+        {
+            Contract.Ensures(!_signedAndlocked);
+            _header.Add(key, val);
+        }
+
+        public void SetOnPayload(string key, string val)
+        {
+            Contract.Ensures(!_signedAndlocked);
+            _payload.Add(key, val);
+        }
+
+        public string GetFromHeader(string key)
+        {
+            return _header[key];
+        }
+
+        public string GetFromPayload(string key)
+        {
+            return _payload[key];
+        }
+
+        public string GetEncodedHeader()
+        {
+            string header = JsonConvert.SerializeObject(_header);
+            return Base64Encode(header);
+        }
+
+        public string GetEncodedPayload()
+        {
+            string payload = JsonConvert.SerializeObject(_payload);
+            return Base64Encode(payload);
+        }
+
+        public string GetUnsignedEncodedToken()
+        {
+            return GetEncodedHeader() + "." + GetEncodedPayload();
         }
     }
 }

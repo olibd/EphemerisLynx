@@ -5,9 +5,14 @@ namespace Lynx.Core.Services.Interfaces
 {
     public interface IToken
     {
-        Dictionary<string, string> Header { get; set; }
-        Dictionary<string, string> Payload { get; set; }
-        string GetEncodedToken { get; }
+        void SetOnHeader(string key, string val);
+        void SetOnPayload(string key, string val);
+        string GetFromHeader(string key);
+        string GetFromPayload(string key);
+        string GetEncodedHeader();
+        string GetEncodedPayload();
+        string GetUnsignedEncodedToken();
+        string GetEncodedToken();
         string Signature { get; set; }
     }
 }

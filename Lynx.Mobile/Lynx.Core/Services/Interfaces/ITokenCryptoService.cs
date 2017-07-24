@@ -3,7 +3,7 @@ namespace Lynx.Core.Services.Interfaces
 {
     public interface ITokenCryptoService<T> where T : IToken
     {
-        T Sign(T token);
-        String EncryptAndSign(T token);
+        void Sign(T token, byte[] privkey);
+        string EncryptAndSign(T token, byte[] privkey);
     }
 }
