@@ -42,59 +42,5 @@ namespace Lynx.Core.Services
             return _signer.VerifySignature(signature);
         }
 
-        public byte[] GetSharedSecretValue(bool isEncrypt = true)
-        {
-            ECDHCBasicAgreement eLacAgreement = new ECDHCBasicAgreement();
-            eLacAgreement.Init(asymmetricCipherKeyPair.Private);
-            ECDHCBasicAgreement acAgreement = new ECDHCBasicAgreement();
-            acAgreement.Init(asymmetricCipherKeyPairA.Private);
-            BigInteger eLA = eLacAgreement.CalculateAgreement(asymmetricCipherKeyPairA.Public);
-            BigInteger a = acAgreement.CalculateAgreement(asymmetricCipherKeyPair.Public);
-            if (eLA.Equals(a) && !isEncrypt)
-            {
-                return eLA.ToByteArray();
-            }
-            if (eLA.Equals(a) && isEncrypt)
-            {
-                return a.ToByteArray();
-            }
-            return null;
-        }
-
-        public byte[] DeriveSymmetricKeyFromSharedSecret(byte[] sharedSecret)
-        {
-            ECDHKekGenerator egH = new ECDHKekGenerator(DigestUtilities.GetDigest("SHA256"));
-            egH.Init(new DHKdfParameters(NistObjectIdentifiers.Aes, sharedSecret.Length, sharedSecret));
-            byte[] symmetricKey = new byte[DigestUtilities.GetDigest("SHA256").GetDigestSize()];
-            egH.GenerateBytes(symmetricKey, 0, symmetricKey.Length);
-
-            return symmetricKey;
-        }
-
-        public byte[] Encrypt(byte[] data, byte[] derivedKey)
-        {
-            byte[] output = null;
-            try
-            {
-                KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DES", derivedKey);
-                IBufferedCipher cipher = CipherUtilities.GetCipher("DES/ECB/ISO7816_4PADDING");
-                cipher.Init(true, keyparam);
-                try
-                {
-                    output = cipher.DoFinal(data);
-                    return output;
-                }
-                catch (System.Exception ex)
-                {
-                    throw new CryptoException("Invalid Data");
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            return output;
-        }
     }
 }
