@@ -26,6 +26,25 @@ namespace Lynx.Core.Services
         private Dictionary<string, string> _header;
         private Dictionary<string, string> _payload;
 
+        protected Token()
+        {
+            _header = new Dictionary<string, string>();
+            _payload = new Dictionary<string, string>();
+        }
+
+        protected Token(string encodedToken)
+        {
+            string[] splittedEncodedToken = encodedToken.Split('.');
+            string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
+            string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
+            string sig = splittedEncodedToken[1];
+
+            _header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
+            _payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
+
+            Signature = sig;
+        }
+
         public string GetEncodedToken()
         {
             return GetUnsignedEncodedToken() + Signature != null || Signature.Equals("") ? "." + Signature : "";
@@ -33,8 +52,14 @@ namespace Lynx.Core.Services
 
         private string Base64Encode(string plainText)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            byte[] plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
+        }
+
+        private string Base64Decode(string encodedText)
+        {
+            byte[] plainTextBytes = Convert.FromBase64String(encodedText);
+            return System.Text.Encoding.UTF8.GetString(plainTextBytes, 0, plainTextBytes.Length);
         }
 
         public void SetOnHeader(string key, string val)
