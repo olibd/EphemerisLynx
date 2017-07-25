@@ -3,10 +3,10 @@ namespace Lynx.Core.Services.Interfaces
 {
     public interface IAccountService
     {
-        string PrivateKey();
-        string PublicKey();
-        byte[] PrivateKeyAsByteArray();
-        byte[] PublicKeyAsByteArray();
-        string accountAddress();
+        string PrivateKey { get; }
+        string PublicKey { get; }
+        byte[] GetPrivateKeyAsByteArray();
+        byte[] GetPublicKeyAsByteArray();
+        string AccountAddress();
     }
 }
