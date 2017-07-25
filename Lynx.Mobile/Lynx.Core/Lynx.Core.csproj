@@ -142,6 +142,9 @@
     <Reference Include="PubnubPCL">
       <HintPath>..\packages\PubnubPCL.4.0.2.0\lib\portable45-net45+win8+wpa81\PubnubPCL.dll</HintPath>
     </Reference>
+    <Reference Include="NBitcoin">
+      <HintPath>..\packages\NBitcoin.4.0.0.11\lib\netstandard1.1\NBitcoin.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
