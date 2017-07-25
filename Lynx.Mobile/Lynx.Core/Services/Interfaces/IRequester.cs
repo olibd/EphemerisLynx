@@ -14,9 +14,8 @@ namespace Lynx.Core.Services.Interfaces
         /// <summary>
         /// Creates a verification request SYN from the user's ID and encodes it into a JSON string
         /// </summary>
-        /// <param name="account">The user's Ethereum account</param>m>
         /// <returns>A JSON string representing the SYN payload</returns>
-        string CreateEncodedSyn(IAccountService account);
+        string CreateEncodedSyn();
 
         /// <summary>
         /// Parses a JSON-encoded ACK and verifies its integrity.

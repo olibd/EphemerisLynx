@@ -10,26 +10,27 @@ namespace Lynx.Core.Services
     {
         private ISession _session;
         private ID id;
-        private ITokenCryptoService<ISyn> _tokenCryptoService;
+        private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
+        private IAccountService _accountService;
 
-        public Requester(ITokenCryptoService<ISyn> tokenCryptoService)
+        public Requester(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService)
         {
             _tokenCryptoService = tokenCryptoService;
         }
 
-        public IAck Ack { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IAck Ack { get; set; }
 
-        public string CreateEncodedSyn(IAccountService account)
+        public string CreateEncodedSyn()
         {
             ISyn syn = new Syn()
             {
                 Encrypted = false,
-                PublicKey = account.PublicKey(),
+                PublicKey = _accountService.PublicKey,
                 NetworkAddress = _session.Open(),
                 Id = id
             };
 
-            _tokenCryptoService.Sign(syn, account.PrivateKeyAsByteArray());
+            _tokenCryptoService.Sign(syn, _accountService.GetPrivateKeyAsByteArray());
 
             return syn.GetEncodedToken();
         }

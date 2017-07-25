@@ -5,5 +5,6 @@ namespace Lynx.Core.Services.Interfaces
     {
         void Sign(T token, byte[] privkey);
         string EncryptAndSign(T token, byte[] privkey);
+        bool Verify(T token, byte[] pubkey);
     }
 }
