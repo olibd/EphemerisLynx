@@ -1,6 +1,7 @@
 ﻿using System;
 using Lynx.Core.Services.Interfaces;
 using Org.BouncyCastle.Asn1.Nist;
+using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Agreement;
@@ -11,7 +12,7 @@ using Org.BouncyCastle.Security;
 
 namespace Lynx.Core.Services
 {
-    public class SECP256K1CryptoService : ISECP256K1CryptoService
+    public class SECP256K1CryptoService : ICryptoService
     {
         private string _curveName = "secp256k1";
         private X9ECParameters _ecP;
@@ -20,7 +21,7 @@ namespace Lynx.Core.Services
 
         public SECP256K1CryptoService()
         {
-            _ecP = NistNamedCurves.GetByName(_curveName);
+            _ecP = SecNamedCurves.GetByName(_curveName);
             _ecSpec = new ECDomainParameters(_ecP.Curve, _ecP.G, _ecP.N, _ecP.H, _ecP.GetSeed());
         }
 
