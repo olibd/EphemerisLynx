@@ -81,6 +81,8 @@
     <Compile Include="Services\TokenCryptoService.cs" />
     <Compile Include="Services\Interfaces\ICryptoService.cs" />
     <Compile Include="Services\SECP256K1CryptoService.cs" />
+    <Compile Include="Services\Verifier.cs" />
+    <Compile Include="Services\SignatureDoesntMatchException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
