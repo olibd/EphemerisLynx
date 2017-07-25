@@ -39,6 +39,7 @@
     <Compile Include="AttributeMapperTest.cs" />
     <Compile Include="ExternalElementMapperTest.cs" />
     <Compile Include="IdentityMapTest.cs" />
+    <Compile Include="TokenCryptoServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
