@@ -1,25 +1,13 @@
 ﻿using System;
 using System.Text;
 using Lynx.Core.Services.Interfaces;
-using NBitcoin.BouncyCastle;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Nist;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.Sec;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Math.EC;
-using Org.BouncyCastle.Security;
 
 namespace Lynx.Core.Services
 {
     public class TokenCryptoService<T> : ITokenCryptoService<T> where T : IToken
     {
-        private ISECP256K1CryptoService _secp256k1CryptoService;
-        public TokenCryptoService(ISECP256K1CryptoService secp256k1CryptoService)
+        private ICryptoService _secp256k1CryptoService;
+        public TokenCryptoService(ICryptoService secp256k1CryptoService)
         {
             _secp256k1CryptoService = secp256k1CryptoService;
         }
@@ -29,7 +17,7 @@ namespace Lynx.Core.Services
             throw new NotImplementedException();
         }
 
-        public bool verify(T token, byte[] pubkey)
+        public bool Verify(T token, byte[] pubkey)
         {
             byte[] unsignedEncodedToken = Encoding.UTF8.GetBytes(token.GetUnsignedEncodedToken());
             byte[] signature = Encoding.UTF8.GetBytes(token.Signature);
