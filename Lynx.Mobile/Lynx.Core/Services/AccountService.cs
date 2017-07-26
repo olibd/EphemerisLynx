@@ -1,5 +1,8 @@
 ﻿using System;
 using Lynx.Core.Services.Interfaces;
+using NBitcoin;
+using NBitcoin.Crypto;
+using NBitcoin.DataEncoders;
 using Nethereum.Core.Signing.Crypto;
 
 namespace Lynx.Core.Services
@@ -42,8 +45,19 @@ namespace Lynx.Core.Services
         public byte[] GetPublicKeyAsByteArray()
         {
             byte[] privK = GetPrivateKeyAsByteArray();
-            var eckey = new NBitcoin.Crypto.ECKey(privK, true);
-            return EthECKey.GetPubKeyNoPrefix(eckey);
+            ECKey eckey = new ECKey(privK, true);
+
+            byte[] noPrefixPubKey = EthECKey.GetPubKeyNoPrefix(eckey);
+            byte[] tag1 = new byte[1] { 4 };
+            return CombineByteArrays(new byte[1] { 4 }, noPrefixPubKey);
+        }
+
+        private byte[] CombineByteArrays(byte[] first, byte[] second)
+        {
+            byte[] ret = new byte[first.Length + second.Length];
+            Buffer.BlockCopy(first, 0, ret, 0, first.Length);
+            Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
+            return ret;
         }
     }
 }

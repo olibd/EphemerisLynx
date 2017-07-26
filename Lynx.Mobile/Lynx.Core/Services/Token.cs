@@ -47,7 +47,7 @@ namespace Lynx.Core.Services
 
         public string GetEncodedToken()
         {
-            return GetUnsignedEncodedToken() + Signature != null || Signature.Equals("") ? "." + Signature : "";
+            return GetUnsignedEncodedToken() + (Signature == null || Signature.Equals("") ? "" : "." + Signature);
         }
 
         private string Base64Encode(string plainText)

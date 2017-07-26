@@ -17,7 +17,7 @@ namespace CoreUnitTests.PCL
         [SetUp]
         public void Setup()
         {
-            _tCS = new TokenCryptoService<IToken>(new SECP256K1CryptoService());
+            _tCS = new TokenCryptoService<IToken>();
 
             _account = new AccountService("9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769");
             _account2 = new AccountService("cbbeecc0d2d9ec5991733fc168f6908fda9613cf37c95e8e524e3a62b5d7b161");
