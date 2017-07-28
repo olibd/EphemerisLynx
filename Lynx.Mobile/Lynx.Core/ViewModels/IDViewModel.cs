@@ -5,6 +5,8 @@ using Lynx.Core.Models.IDSubsystem;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using MvvmCross.Core.Navigation;
+using System.Threading.Tasks;
 
 namespace Lynx.Core.ViewModels
 {
@@ -12,6 +14,14 @@ namespace Lynx.Core.ViewModels
     {
         public ID ID { get; set; }
         public List<Attribute> Attributes { get; set; }
+        private IMvxNavigationService _navigationService;
+
+        public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
+
+        public IDViewModel(IMvxNavigationService navigationService)
+        {
+            _navigationService = navigationService;
+        }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
         public void Init()
@@ -23,6 +33,11 @@ namespace Lynx.Core.ViewModels
         public override void Start()
         {
             //TODO: Add starting logic here
+        }
+
+        private async void RequestVerification()
+        {
+            await _navigationService.Navigate<VerificationRequestViewModel>();
         }
     }
 }
