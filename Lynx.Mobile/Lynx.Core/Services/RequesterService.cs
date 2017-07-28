@@ -6,16 +6,17 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Services
 {
-    public class Requester : IRequester
+    public class RequesterService : IRequesterService
     {
         private ISession _session;
         private ID id;
         private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
         private IAccountService _accountService;
 
-        public Requester(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService)
+        public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService)
         {
             _tokenCryptoService = tokenCryptoService;
+            _accountService = accountService;
         }
 
         public IAck Ack { get; set; }

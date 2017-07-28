@@ -65,11 +65,11 @@
     <Compile Include="ValueConverters\ContentToStringConverter.cs" />
     <Compile Include="Services\Interfaces\IAck.cs" />
     <Compile Include="Services\Interfaces\IHandshakeToken.cs" />
-    <Compile Include="Services\Interfaces\IRequester.cs" />
+    <Compile Include="Services\Interfaces\IRequesterService.cs" />
     <Compile Include="Services\Interfaces\ISession.cs" />
     <Compile Include="Services\Interfaces\ISyn.cs" />
     <Compile Include="Services\Interfaces\IVerifier.cs" />
-    <Compile Include="Services\Requester.cs" />
+    <Compile Include="Services\RequesterService.cs" />
     <Compile Include="Services\Interfaces\IAccountService.cs" />
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\Syn.cs" />
@@ -83,6 +83,7 @@
     <Compile Include="Services\SECP256K1CryptoService.cs" />
     <Compile Include="Services\Verifier.cs" />
     <Compile Include="Services\SignatureDoesntMatchException.cs" />
+    <Compile Include="ViewModels\VerificationRequestViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">

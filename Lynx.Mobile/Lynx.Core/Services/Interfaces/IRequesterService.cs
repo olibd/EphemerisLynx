@@ -4,7 +4,7 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Services.Interfaces
 {
-    public interface IRequester
+    public interface IRequesterService
     {
         /// <summary>
         /// The Ack object populated by ProcessAck
