@@ -9,14 +9,16 @@ namespace Lynx.Core.Services
     public class RequesterService : IRequesterService
     {
         private ISession _session;
-        private ID id;
+        private ID _id;
         private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
         private IAccountService _accountService;
 
-        public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService)
+        public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id)
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
+            _session = new PubNubSession(new EventHandler<string>((sender, e) => ProcessEncodedAck(e)));
+            _id = id;
         }
 
         public IAck Ack { get; set; }
@@ -28,7 +30,7 @@ namespace Lynx.Core.Services
                 Encrypted = false,
                 PublicKey = _accountService.PublicKey,
                 NetworkAddress = _session.Open(),
-                Id = id
+                Id = _id
             };
 
             _tokenCryptoService.Sign(syn, _accountService.GetPrivateKeyAsByteArray());
