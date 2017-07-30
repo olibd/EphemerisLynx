@@ -12,13 +12,13 @@ using PubnubApi;
 
 namespace Lynx.Core.Services
 {
-    public class Session : ISession
+    public class PubNubSession : ISession
     {
         private readonly Pubnub _pubNub;
 
         private string _channel;
 
-        public Session(EventHandler<string> messageEventHandler)
+        public PubNubSession(EventHandler<string> messageEventHandler)
         {
             PNConfiguration pubNubConfig = new PNConfiguration()
             {
@@ -41,7 +41,7 @@ namespace Lynx.Core.Services
                 throw new Exception("Trying to open a connection while one already exists");
 
             _pubNub.Unsubscribe<string>()
-                .Channels(new[] {_channel})
+                .Channels(new[] { _channel })
                 .Execute();
 
             _channel = "";
@@ -60,7 +60,7 @@ namespace Lynx.Core.Services
             _channel = channelName;
 
             _pubNub.Subscribe<string>()
-                .Channels(new[] {_channel})
+                .Channels(new[] { _channel })
                 .Execute();
         }
 
