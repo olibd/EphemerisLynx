@@ -17,12 +17,16 @@ namespace Lynx.Core.Services
 
         }
 
-        public AccountService(string privKey)
+        public AccountService(string privateKey)
         {
-            _privateKey = privKey;
+            _privateKey = privateKey;
         }
 
-        public string AccountAddress()
+        /// <summary>
+        /// Gets the etheruem account public address in LOWERCASE
+        /// </summary>
+        /// <returns>The account address.</returns>
+        public string GetAccountAddress()
         {
             return EthECKey.GetPublicAddress(_privateKey);
         }

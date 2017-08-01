@@ -7,6 +7,6 @@ namespace Lynx.Core.Services.Interfaces
         string PublicKey { get; }
         byte[] GetPrivateKeyAsByteArray();
         byte[] GetPublicKeyAsByteArray();
-        string AccountAddress();
+        string GetAccountAddress();
     }
 }
