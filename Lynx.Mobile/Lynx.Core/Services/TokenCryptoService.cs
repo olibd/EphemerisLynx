@@ -23,7 +23,7 @@ namespace Lynx.Core.Services
         public void Sign(T token, byte[] privkey)
         {
             Key k = new Key(privkey);
-            token.Signature = k.SignMessage(token.GetEncodedToken());
+            token.SignAndLock(k.SignMessage(token.GetEncodedToken()));
         }
     }
 }

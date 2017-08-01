@@ -13,6 +13,8 @@ namespace Lynx.Core.Services.Interfaces
         string GetEncodedPayload();
         string GetUnsignedEncodedToken();
         string GetEncodedToken();
-        string Signature { get; set; }
+        string Signature { get; }
+        void SignAndLock(string signature);
+        bool Locked { get; }
     }
 }

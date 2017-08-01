@@ -16,13 +16,8 @@ namespace Lynx.Core.Services
             {
                 return _signature;
             }
-            set
-            {
-                Contract.Ensures(!_signedAndlocked);
-                _signedAndlocked = true;
-                _signature = value;
-            }
         }
+        public bool Locked { get { return _signedAndlocked; } }
         private Dictionary<string, string> _header;
         private Dictionary<string, string> _payload;
 
@@ -37,12 +32,22 @@ namespace Lynx.Core.Services
             string[] splittedEncodedToken = encodedToken.Split('.');
             string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
             string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
-            string sig = splittedEncodedToken[1];
+            //if the token is signed, restore the signature
+            if (splittedEncodedToken.Length == 3)
+            {
+                string sig = splittedEncodedToken[2];
+                _signature = sig;
+            }
 
             _header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
             _payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
+        }
 
-            Signature = sig;
+        public void SignAndLock(string signature)
+        {
+            Contract.Ensures(!_signedAndlocked);
+            _signedAndlocked = true;
+            _signature = signature;
         }
 
         public string GetEncodedToken()
