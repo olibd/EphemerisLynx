@@ -40,6 +40,12 @@
     <Compile Include="ExternalElementMapperTest.cs" />
     <Compile Include="IdentityMapTest.cs" />
     <Compile Include="TokenCryptoServiceTest.cs" />
+    <Compile Include="AccountServiceTest.cs" />
+    <Compile Include="TokenTest.cs" />
+    <Compile Include="HandshakeTokenTest.cs" />
+    <Compile Include="SynTest.cs" />
+    <Compile Include="AckTest.cs" />
+    <Compile Include="RequesterServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
