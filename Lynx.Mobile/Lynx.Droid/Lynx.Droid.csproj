@@ -150,6 +150,7 @@
     <Compile Include="Views\IDView.cs" />
     <Compile Include="ValueConverters\StringToBitmapQrCodeConverter.cs" />
     <Compile Include="Views\VerificationRequestView.cs" />
+    <Compile Include="Views\Callbacks\BottomSheetInvalidateParentCallback.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -181,6 +182,7 @@
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
     <Folder Include="ValueConverters\" />
+    <Folder Include="Views\Callbacks\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lynx.Core\Lynx.Core.csproj">
