@@ -17,7 +17,7 @@ namespace Lynx.Core.Services
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
-            _session = new PubnubSession(new EventHandler<string>((sender, e) => ProcessEncodedAck(e)));
+            _session = new PubNubSession(new EventHandler<string>((sender, e) => ProcessEncodedAck(e)));
             _id = id;
         }
 

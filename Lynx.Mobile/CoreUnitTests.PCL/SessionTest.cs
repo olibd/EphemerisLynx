@@ -13,7 +13,7 @@ using Java.Lang;
 namespace CoreUnitTests
 {
     [TestFixture]
-    public class SessionTest 
+    public class SessionTest
     {
         private ISession _session1;
         private ISession _session2;
@@ -30,15 +30,15 @@ namespace CoreUnitTests
             string messageReceived = "";
             string message = "This is a test message";
 
-            _session1 = new PubnubSession(delegate{});
-            _session2 = new PubnubSession(
-                delegate(object sender, string eventArgs)
+            _session1 = new PubNubSession(delegate { });
+            _session2 = new PubNubSession(
+                delegate (object sender, string eventArgs)
                 {
                     resetEvent.Set();
                     messageReceived = eventArgs;
                 }
             );
-;
+            ;
             string sessionKey = _session1.Open();
             _session2.Open(sessionKey);
 

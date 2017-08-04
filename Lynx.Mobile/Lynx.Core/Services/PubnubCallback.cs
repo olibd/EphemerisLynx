@@ -7,11 +7,11 @@ using PubnubApi;
 
 namespace Lynx.Core.Services
 {
-    class PubnubCallback : SubscribeCallback
+    class PubNubCallback : SubscribeCallback
     {
         private event EventHandler<string> MessageReceived;
 
-        public PubnubCallback(EventHandler<string> eventHandler)
+        public PubNubCallback(EventHandler<string> eventHandler)
         {
             MessageReceived += eventHandler;
         }
