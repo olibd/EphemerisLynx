@@ -30,8 +30,8 @@ namespace CoreUnitTests
             string messageReceived = "";
             string message = "This is a test message";
 
-            _session1 = new Session(delegate{});
-            _session2 = new Session(
+            _session1 = new PubnubSession(delegate{});
+            _session2 = new PubnubSession(
                 delegate(object sender, string eventArgs)
                 {
                     resetEvent.Set();
