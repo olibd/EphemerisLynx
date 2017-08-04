@@ -39,6 +39,7 @@
     <Compile Include="Facade\Interfaces\IIDFacade.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ConnectOperationImpossibleException.cs" />
     <Compile Include="Services\PubnubCallback.cs" />
     <Compile Include="Services\PubNubSession.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
