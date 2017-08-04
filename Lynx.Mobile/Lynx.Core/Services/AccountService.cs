@@ -10,7 +10,7 @@ namespace Lynx.Core.Services
     public class AccountService : IAccountService
     {
 
-        private string _privateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
+        private readonly string _privateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
 
         public AccountService()
         {
