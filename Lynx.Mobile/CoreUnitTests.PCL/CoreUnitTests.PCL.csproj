@@ -39,11 +39,9 @@
     <Compile Include="AttributeMapperTest.cs" />
     <Compile Include="ExternalElementMapperTest.cs" />
     <Compile Include="IdentityMapTest.cs" />
+    <Compile Include="SECP256K1CryptoServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.6.1\lib\portable-net45+win8+wp8+wpa81\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
@@ -61,6 +59,9 @@
     </Reference>
     <Reference Include="Nethereum.Portable">
       <HintPath>..\packages\Nethereum.Portable.1.0.6\lib\portable45-net45+win8+wpa81\Nethereum.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.6.1\lib\portable-net45+win8+wp8+wpa81\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
