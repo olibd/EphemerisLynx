@@ -10,11 +10,10 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Math.EC;
-using System.Linq;
 
 namespace Lynx.Core.Services
 {
-	public class SECP256K1CryptoService : ISECP256K1CryptoService
+	public class SECP256K1CryptoService : IECCCryptoService
 	{
 		private string _curveName = "secp256k1";
 		private X9ECParameters _ecP;
@@ -45,30 +44,34 @@ namespace Lynx.Core.Services
 			return _signer.VerifySignature(signature);
 		}
 
-		public ECPublicKeyParameters GeneratePublicKey(byte[] publickey)
+		private ECPublicKeyParameters GeneratePublicKey(byte[] pubkey)
         {
 			FpCurve c = (FpCurve)_ecP.Curve;
-			ECPoint point = _ecSpec.Curve.DecodePoint(publickey);
+			ECPoint point = _ecSpec.Curve.DecodePoint(pubkey);
 			ECPublicKeyParameters publicKey = new ECPublicKeyParameters("ECDH", point, _ecSpec);
 			return publicKey;
 		}
 
-		public ECPrivateKeyParameters GeneratePrivateKey(BigInteger q)
-		{
-			ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("ECDH", q, _ecSpec);
+		private ECPrivateKeyParameters GeneratePrivateKey(byte[] privkey)
+        {
+            ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("ECDH", new BigInteger(privkey), _ecSpec);
 			return privateKey;
 		}
 
-		public byte[] GetSharedSecretValue(ECPrivateKeyParameters privatekey, ECPublicKeyParameters publickey)
+		private byte[] GetSharedSecretValue(ECPublicKeyParameters publicKey, ECPrivateKeyParameters privateKey)
 		{
 			ECDHCBasicAgreement eLacAgreement = new ECDHCBasicAgreement();
-			eLacAgreement.Init(privatekey);
-			BigInteger eLA = eLacAgreement.CalculateAgreement(publickey);
+			eLacAgreement.Init(privateKey);
+			BigInteger eLA = eLacAgreement.CalculateAgreement(publicKey);
 			return eLA.ToByteArray();
 		}
 
-		//From that shared secret key, generate an encryption key
-		public byte[] DeriveSymmetricKeyFromSharedSecret(byte[] sharedSecret)
+		/// <summary>
+        /// Derives the symmetric key from the shared secret.
+        /// </summary>
+        /// <returns>The symmetric key.</returns>
+        /// <param name="sharedSecret">Shared secret.</param>
+		private byte[] DeriveSymmetricKeyFromSharedSecret(byte[] sharedSecret)
 		{
 			Org.BouncyCastle.Crypto.Agreement.Kdf.ECDHKekGenerator egH =
 				   new ECDHKekGenerator(DigestUtilities.GetDigest("SHA256"));
@@ -78,9 +81,13 @@ namespace Lynx.Core.Services
 			return symmetricKey;
 		}
 
-		public byte[] Encrypt(byte[] data, byte[] derivedKey)
+		public byte[] Encrypt(byte[] data, byte[] pubkey, byte[] privkey)
 		{
 			byte[] output = null;
+            ECPublicKeyParameters publicKey = GeneratePublicKey(pubkey);
+            ECPrivateKeyParameters privateKey = GeneratePrivateKey(privkey);
+            byte[] sharedSecret = GetSharedSecretValue(publicKey, privateKey);
+            byte[] derivedKey = DeriveSymmetricKeyFromSharedSecret(sharedSecret);
 			try
 			{
 				KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DES", derivedKey);
@@ -103,9 +110,13 @@ namespace Lynx.Core.Services
 			return output;
 		}
 
-		public byte[] Decrypt(byte[] cipherData, byte[] derivedKey)
+		public byte[] Decrypt(byte[] cipherData, byte[] pubkey, byte[] privkey)
 		{
 			byte[] output = null;
+			ECPublicKeyParameters publicKey = GeneratePublicKey(pubkey);
+			ECPrivateKeyParameters privateKey = GeneratePrivateKey(privkey);
+			byte[] sharedSecret = GetSharedSecretValue(publicKey, privateKey);
+			byte[] derivedKey = DeriveSymmetricKeyFromSharedSecret(sharedSecret);
 			try
 			{
 				KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DES", derivedKey);

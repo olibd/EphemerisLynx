@@ -18,10 +18,10 @@ namespace Lynx.Core.Services
 {
     public class TokenCryptoService<T> : ITokenCryptoService<T> where T : IToken
     {
-        private ISECP256K1CryptoService _secp256k1CryptoService;
-        public TokenCryptoService(ISECP256K1CryptoService secp256k1CryptoService)
+        private IECCCryptoService _ieccCryptoService;
+        public TokenCryptoService(IECCCryptoService ieccCryptoService)
         {
-            _secp256k1CryptoService = secp256k1CryptoService;
+            _ieccCryptoService = ieccCryptoService;
         }
 
         public string EncryptAndSign(T token, byte[] privkey)
@@ -33,7 +33,7 @@ namespace Lynx.Core.Services
         {
             byte[] unsignedEncodedToken = Encoding.UTF8.GetBytes(token.GetUnsignedEncodedToken());
             byte[] signature = Encoding.UTF8.GetBytes(token.Signature);
-            return _secp256k1CryptoService.VerifySignedData(unsignedEncodedToken, signature, pubkey);
+            return _ieccCryptoService.VerifySignedData(unsignedEncodedToken, signature, pubkey);
         }
 
         public void Sign(T token, byte[] privkey)
@@ -42,7 +42,7 @@ namespace Lynx.Core.Services
             //period so the range is ASCII which is a subset of utf-8 and 
             //Encoding.ASCII is not a class within the namespace
             byte[] encodedToken = Encoding.UTF8.GetBytes(token.GetEncodedToken());
-            byte[] signature = _secp256k1CryptoService.GetDataSignature(encodedToken, privkey);
+            byte[] signature = _ieccCryptoService.GetDataSignature(encodedToken, privkey);
             token.Signature = Encoding.UTF8.GetString(signature, 0, signature.Length);
         }
     }

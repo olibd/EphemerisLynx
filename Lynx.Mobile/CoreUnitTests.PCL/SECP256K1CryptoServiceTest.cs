@@ -1,13 +1,6 @@
 ﻿using System;
 using Lynx.Core.Services;
 using NUnit.Framework;
-using System.Threading.Tasks;
-using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Asn1.Sec;
-using Org.BouncyCastle.Math.EC;
-using System.Linq;
 
 namespace CoreUnitTests.PCL
 {
@@ -26,13 +19,12 @@ namespace CoreUnitTests.PCL
 			0x09, 0xb8, 0x44, 0x4d, 0xb6, 0x16, 0x79, 0xab,
 			0xb1, 0xd8, 0x6f, 0x85, 0xc0, 0x38, 0xa5, 0x8c
 		};
-		static private byte[] privbytes = {
+		static private byte[] privkey = {
 		   0x16, 0x26, 0x07, 0x83, 0xe4, 0x0b, 0x16, 0x73,
 		   0x16, 0x73, 0x62, 0x2a, 0xc8, 0xa5, 0xb0, 0x45,
 		   0xfc, 0x3e, 0xa4, 0xaf, 0x70, 0xf7, 0x27, 0xf3,
 		   0xf9, 0xe9, 0x2b, 0xdd, 0x3a, 0x1d, 0xdc, 0x42
 		};
-        private BigInteger privkey = new BigInteger(privbytes);
 		private byte[] data = {
 		   0x16, 0x26, 0x07, 0x83, 0xe4, 0x0b, 0x16, 0x73,
 		   0x16, 0x73, 0x62, 0x2a, 0xc8, 0xa5, 0xb0, 0x45,
@@ -43,14 +35,10 @@ namespace CoreUnitTests.PCL
 		[Test]
 		public void TestEncryptAndDecrypt()
 		{
-            ECPublicKeyParameters pub = _cryptoService.GeneratePublicKey(pubkey);
-            ECPrivateKeyParameters priv = _cryptoService.GeneratePrivateKey(privkey);
-            byte[] sharedSecret = _cryptoService.GetSharedSecretValue(priv, pub);
-            byte[] symKey = _cryptoService.DeriveSymmetricKeyFromSharedSecret(sharedSecret);
-            byte[] cipherData = _cryptoService.Encrypt(data, symKey);
+            byte[] cipherData = _cryptoService.Encrypt(data, pubkey, privkey);
             Assert.AreNotEqual(null, cipherData);
             Assert.AreNotEqual(data, cipherData);
-            byte[] decryptedData = _cryptoService.Decrypt(cipherData, symKey);
+            byte[] decryptedData = _cryptoService.Decrypt(cipherData, pubkey, privkey);
             Assert.AreEqual(data, decryptedData);
 		}
 
