@@ -8,7 +8,6 @@ using Lynx.Core.Services.Interfaces;
 using Lynx.Core.Services;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using Java.Lang;
 
 namespace CoreUnitTests
 {
@@ -42,7 +41,7 @@ namespace CoreUnitTests
             string sessionKey = _session1.Open();
             _session2.Open(sessionKey);
 
-            Thread.Sleep(2000);
+            Task.Delay(2000).Wait();
 
             _session1.Send(message);
             resetEvent.WaitOne(5000);

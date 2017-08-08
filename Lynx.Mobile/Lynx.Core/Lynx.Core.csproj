@@ -41,7 +41,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConnectOperationImpossibleException.cs" />
     <Compile Include="Services\PubnubCallback.cs" />
-    <Compile Include="Services\PubNubSession.cs" />
+    <Compile Include="Services\PubnubSession.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Models\IDSubsystem\Watchdog.cs" />
