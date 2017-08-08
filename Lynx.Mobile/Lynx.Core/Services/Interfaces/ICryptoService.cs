@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace Lynx.Core.Services.Interfaces
 {
     public interface IECCCryptoService

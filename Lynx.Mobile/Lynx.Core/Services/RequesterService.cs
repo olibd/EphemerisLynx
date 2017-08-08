@@ -6,30 +6,34 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Services
 {
-    public class Requester : IRequester
+    public class RequesterService : IRequesterService
     {
         private ISession _session;
-        private ID id;
-        private ITokenCryptoService<ISyn> _tokenCryptoService;
+        private ID _id;
+        private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
+        private IAccountService _accountService;
 
-        public Requester(ITokenCryptoService<ISyn> tokenCryptoService)
+        public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id)
         {
             _tokenCryptoService = tokenCryptoService;
+            _accountService = accountService;
+            _session = new PubNubSession(new EventHandler<string>((sender, e) => ProcessEncodedAck(e)));
+            _id = id;
         }
 
-        public IAck Ack { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IAck Ack { get; set; }
 
-        public string CreateEncodedSyn(IAccountService account)
+        public string CreateEncodedSyn()
         {
             ISyn syn = new Syn()
             {
                 Encrypted = false,
-                PublicKey = account.PublicKey(),
+                PublicKey = _accountService.PublicKey,
                 NetworkAddress = _session.Open(),
-                Id = id
+                Id = _id
             };
 
-            _tokenCryptoService.Sign(syn, account.PrivateKeyAsByteArray());
+            _tokenCryptoService.Sign(syn, _accountService.GetPrivateKeyAsByteArray());
 
             return syn.GetEncodedToken();
         }

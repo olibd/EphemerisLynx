@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -29,10 +29,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AttributeFacadeTest.cs" />
-    <Compile Include="CertificateFacadeTest.cs" />
-    <Compile Include="FacadeTest.cs" />
-    <Compile Include="IDFacadeTest.cs" />
+    <Compile Include="SessionTest.cs" />
+    <None Include="AttributeFacadeTest.cs" />
+    <None Include="CertificateFacadeTest.cs" />
+    <None Include="FacadeTest.cs" />
+    <None Include="IDFacadeTest.cs" />
     <Compile Include="Canary.cs" />
     <Compile Include="MapperTest.cs" />
     <Compile Include="IDMapperTest.cs" />
@@ -40,8 +41,21 @@
     <Compile Include="ExternalElementMapperTest.cs" />
     <Compile Include="IdentityMapTest.cs" />
     <Compile Include="SECP256K1CryptoServiceTest.cs" />
+    <Compile Include="TokenCryptoServiceTest.cs" />
+    <Compile Include="AccountServiceTest.cs" />
+    <Compile Include="TokenTest.cs" />
+    <Compile Include="HandshakeTokenTest.cs" />
+    <Compile Include="SynTest.cs" />
+    <Compile Include="AckTest.cs" />
+    <Compile Include="RequesterServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.6.1\lib\portable-net45+win8+wp8+wpa81\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Android">
+      <HintPath>D:\Visual Studio\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v6.0\Mono.Android.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
@@ -59,9 +73,6 @@
     </Reference>
     <Reference Include="Nethereum.Portable">
       <HintPath>..\packages\Nethereum.Portable.1.0.6\lib\portable45-net45+win8+wpa81\Nethereum.Portable.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.6.1\lib\portable-net45+win8+wp8+wpa81\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

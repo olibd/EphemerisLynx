@@ -1,5 +1,8 @@
 ﻿using System;
 using Lynx.Core.Services.Interfaces;
+using NBitcoin;
+using NBitcoin.Crypto;
+using NBitcoin.DataEncoders;
 using Nethereum.Core.Signing.Crypto;
 
 namespace Lynx.Core.Services
@@ -14,31 +17,51 @@ namespace Lynx.Core.Services
 
         }
 
-        public string accountAddress()
+        public AccountService(string privateKey)
+        {
+            _privateKey = privateKey;
+        }
+
+        /// <summary>
+        /// Gets the etheruem account public address in LOWERCASE
+        /// </summary>
+        /// <returns>The account address.</returns>
+        public string GetAccountAddress()
         {
             return EthECKey.GetPublicAddress(_privateKey);
         }
 
-        public string PrivateKey()
+        public string PrivateKey
         {
-            return _privateKey;
+            get { return _privateKey; }
         }
 
-        public byte[] PrivateKeyAsByteArray()
+        public byte[] GetPrivateKeyAsByteArray()
         {
             return Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(_privateKey);
         }
 
-        public string PublicKey()
+        public string PublicKey
         {
-            return Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHexCompact(PublicKeyAsByteArray());
+            get { return Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHexCompact(GetPublicKeyAsByteArray()); }
         }
 
-        public byte[] PublicKeyAsByteArray()
+        public byte[] GetPublicKeyAsByteArray()
         {
-            byte[] privK = PrivateKeyAsByteArray();
-            var eckey = new NBitcoin.Crypto.ECKey(privK, true);
-            return EthECKey.GetPubKeyNoPrefix(eckey);
+            byte[] privK = GetPrivateKeyAsByteArray();
+            ECKey eckey = new ECKey(privK, true);
+
+            byte[] noPrefixPubKey = EthECKey.GetPubKeyNoPrefix(eckey);
+            byte[] tag1 = new byte[1] { 4 };
+            return CombineByteArrays(new byte[1] { 4 }, noPrefixPubKey);
+        }
+
+        private byte[] CombineByteArrays(byte[] first, byte[] second)
+        {
+            byte[] ret = new byte[first.Length + second.Length];
+            Buffer.BlockCopy(first, 0, ret, 0, first.Length);
+            Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
+            return ret;
         }
     }
 }

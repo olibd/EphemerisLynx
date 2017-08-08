@@ -9,6 +9,7 @@ using MvvmCross.Platform.Core;
 
 namespace Lynx.Droid.Views
 {
+    [Activity(Label = "View for IDViewModel")]
     public class IDView : MvxActivity
     {
         protected override void OnCreate(Bundle bundle)

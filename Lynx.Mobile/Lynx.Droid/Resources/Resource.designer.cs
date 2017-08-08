@@ -2952,10 +2952,13 @@ namespace Lynx.Droid
 			public const int support_simple_spinner_dropdown_item = 2130968642;
 			
 			// aapt resource value: 0x7f040043
-			public const int zxingscanneractivitylayout = 2130968643;
+			public const int VerificationRequestView = 2130968643;
 			
 			// aapt resource value: 0x7f040044
-			public const int zxingscannerfragmentlayout = 2130968644;
+			public const int zxingscanneractivitylayout = 2130968644;
+			
+			// aapt resource value: 0x7f040045
+			public const int zxingscannerfragmentlayout = 2130968645;
 			
 			static Layout()
 			{

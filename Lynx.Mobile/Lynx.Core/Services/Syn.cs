@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using Lynx.Core.Facade;
-using Lynx.Core.Models.IDSubsystem;
-using Lynx.Core.Services.Interfaces;
-using Newtonsoft.Json;
+﻿using Lynx.Core.Services.Interfaces;
 
 namespace Lynx.Core.Services
 {
     public class Syn : HandshakeToken, ISyn
     {
+        public Syn() : base()
+        {
+
+        }
+
+        public Syn(string token) : base(token)
+        {
+
+        }
+
         public string NetworkAddress
         {
             get

@@ -49,5 +49,15 @@ namespace Lynx.Core.Services
                 SetOnHeader("encrypted", value.ToString());
             }
         }
+
+        protected HandshakeToken() : base()
+        {
+
+        }
+
+        protected HandshakeToken(string token) : base(token)
+        {
+            //TODO: Handle encrypted tokens
+        }
     }
 }

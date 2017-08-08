@@ -1,18 +1,8 @@
-﻿using System;
+using System;
 using System.Text;
 using Lynx.Core.Services.Interfaces;
-using NBitcoin.BouncyCastle;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Nist;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.Sec;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Math.EC;
-using Org.BouncyCastle.Security;
+using NBitcoin;
+using NBitcoin.DataEncoders;
 
 namespace Lynx.Core.Services
 {
@@ -29,7 +19,7 @@ namespace Lynx.Core.Services
             throw new NotImplementedException();
         }
 
-        public bool verify(T token, byte[] pubkey)
+        public bool Verify(T token, byte[] pubkey)
         {
             byte[] unsignedEncodedToken = Encoding.UTF8.GetBytes(token.GetUnsignedEncodedToken());
             byte[] signature = Encoding.UTF8.GetBytes(token.Signature);

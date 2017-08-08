@@ -149,6 +149,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Views\IDView.cs" />
     <Compile Include="ValueConverters\StringToBitmapQrCodeConverter.cs" />
+    <Compile Include="Views\VerificationRequestView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -175,6 +176,7 @@
     <AndroidResource Include="Resources\layout\AttributeView.xml" />
     <AndroidResource Include="Resources\layout\ExternalElement.xml" />
     <AndroidResource Include="Resources\layout\ImageIDAddressView.xml" />
+    <AndroidResource Include="Resources\layout\VerificationRequestView.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />

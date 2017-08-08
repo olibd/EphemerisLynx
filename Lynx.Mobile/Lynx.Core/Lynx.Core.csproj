@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,6 +39,9 @@
     <Compile Include="Facade\Interfaces\IIDFacade.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ConnectOperationImpossibleException.cs" />
+    <Compile Include="Services\PubnubCallback.cs" />
+    <Compile Include="Services\PubnubSession.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Models\IDSubsystem\Watchdog.cs" />
@@ -65,11 +68,11 @@
     <Compile Include="ValueConverters\ContentToStringConverter.cs" />
     <Compile Include="Services\Interfaces\IAck.cs" />
     <Compile Include="Services\Interfaces\IHandshakeToken.cs" />
-    <Compile Include="Services\Interfaces\IRequester.cs" />
+    <Compile Include="Services\Interfaces\IRequesterService.cs" />
     <Compile Include="Services\Interfaces\ISession.cs" />
     <Compile Include="Services\Interfaces\ISyn.cs" />
     <Compile Include="Services\Interfaces\IVerifier.cs" />
-    <Compile Include="Services\Requester.cs" />
+    <Compile Include="Services\RequesterService.cs" />
     <Compile Include="Services\Interfaces\IAccountService.cs" />
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\Syn.cs" />
@@ -79,8 +82,11 @@
     <Compile Include="Services\Interfaces\ITokenCryptoService.cs" />
     <Compile Include="Services\Token.cs" />
     <Compile Include="Services\TokenCryptoService.cs" />
-    <Compile Include="Services\Interfaces\ISECP256K1CryptoService.cs" />
+    <Compile Include="Services\Interfaces\ICryptoService.cs" />
     <Compile Include="Services\SECP256K1CryptoService.cs" />
+    <Compile Include="Services\Verifier.cs" />
+    <Compile Include="Services\SignatureDoesntMatchException.cs" />
+    <Compile Include="ViewModels\VerificationRequestViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
@@ -101,8 +107,8 @@
     <Reference Include="MvvmCross.Localization">
       <HintPath>..\packages\MvvmCross.Binding.5.0.1\lib\portable-net45+win+wpa81+wp80\MvvmCross.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Nethereum.Portable, Version=1.0.6239.26382, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nethereum.Portable.1.0.6\lib\portable45-net45+win8+wpa81\Nethereum.Portable.dll</HintPath>
+    <Reference Include="PubnubPCL, Version=4.0.2.0, Culture=neutral, PublicKeyToken=dc66f52ce6619f44, processorArchitecture=MSIL">
+      <HintPath>..\packages\PubnubPCL.4.0.2.0\lib\portable45-net45+win8+wpa81\PubnubPCL.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
@@ -137,24 +143,18 @@
     <Reference Include="crypto">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.1.1\lib\portable-net4+sl5+wp8+win8+wpa81\crypto.dll</HintPath>
     </Reference>
-    <Reference Include="PubnubPCL">
-      <HintPath>..\packages\PubnubPCL.4.0.2.0\lib\portable45-net45+win8+wpa81\PubnubPCL.dll</HintPath>
+    <Reference Include="NBitcoin">
+      <HintPath>..\packages\NBitcoin.4.0.0.11\lib\netstandard1.1\NBitcoin.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Portable">
+      <HintPath>..\packages\Nethereum.Portable.1.0.6\lib\portable45-net45+win8+wpa81\Nethereum.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Models\IDSubsystem\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="Mappers\IDSubsystem\" />
-    <Folder Include="Mappers\IDSubsystem\Strategies\" />
-    <Folder Include="Mappers\IDSubsystem\SQLiteMappers\" />
-    <Folder Include="Models\Interactions\" />
-    <Folder Include="ValueConverters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\eVi.abi.lib.pcl\eVi.abi.lib.pcl\eVi.abi.lib.pcl.csproj">
       <Project>{D53272C3-3EC1-41CC-871D-A435B146678D}</Project>
