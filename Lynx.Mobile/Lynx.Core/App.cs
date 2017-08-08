@@ -6,6 +6,8 @@ using Lynx.Core.Models.IDSubsystem;
 using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using Lynx.Core.Services.Interfaces;
+using Lynx.Core.Services;
 
 namespace Lynx.Core
 {
@@ -19,13 +21,14 @@ namespace Lynx.Core
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
             Mvx.RegisterSingleton<ID>(() => new ID());
+            Mvx.RegisterSingleton<ITokenCryptoService<IHandshakeToken>>(() => new TokenCryptoService<IHandshakeToken>());
 
             Mvx.RegisterType<IMapper<Certificate>>(() => new ExternalElementMapper<Certificate>(":memory:"));
             Mvx.RegisterType<IMapper<Attribute>>(() => new AttributeMapper(":memory:", Mvx.Resolve<IMapper<Certificate>>()));
             Mvx.RegisterType<IMapper<ID>>(() => new IDMapper(":memory:", Mvx.Resolve<IMapper<Attribute>>()));
 
             //Configure the the eth node
-            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode(null, null, "0x1FD8397e8108ada12eC07976D92F773364ba46e7", "http://50331dbc.ngrok.io");
+            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode(null, null, "0x1FD8397e8108ada12eC07976D92F773364ba46e7", "http://2b9cebd0.ngrok.io");
 
             //Register the dummy ContentService as a singleton, temp solution
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
