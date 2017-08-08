@@ -16,7 +16,7 @@ namespace CoreUnitTests.PCL
         public override void Setup()
         {
             base.Setup();
-            _session = new PubnubSession(new EventHandler<string>((sender, e) => ProcessEncodedAck(e)));
+            _session = new PubNubSession(new EventHandler<string>((sender, e) => ProcessEncodedAck(e)));
 
             _payload.Add("netAddr", _session.Open());
 
