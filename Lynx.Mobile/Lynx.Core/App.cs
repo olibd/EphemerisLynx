@@ -21,7 +21,7 @@ namespace Lynx.Core
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
             Mvx.RegisterSingleton<ID>(() => new ID());
-            Mvx.RegisterSingleton<ITokenCryptoService<IHandshakeToken>>(() => new TokenCryptoService<IHandshakeToken>());
+            Mvx.RegisterSingleton<ITokenCryptoService<IHandshakeToken>>(() => new TokenCryptoService<IHandshakeToken>(Mvx.Resolve<IECCCryptoService>()));
 
             Mvx.RegisterType<IMapper<Certificate>>(() => new ExternalElementMapper<Certificate>(":memory:"));
             Mvx.RegisterType<IMapper<Attribute>>(() => new AttributeMapper(":memory:", Mvx.Resolve<IMapper<Certificate>>()));

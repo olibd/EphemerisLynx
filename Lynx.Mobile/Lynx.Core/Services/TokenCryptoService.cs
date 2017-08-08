@@ -33,7 +33,7 @@ namespace Lynx.Core.Services
             //Encoding.ASCII is not a class within the namespace
             byte[] encodedToken = Encoding.UTF8.GetBytes(token.GetEncodedToken());
             byte[] signature = _ieccCryptoService.GetDataSignature(encodedToken, privkey);
-            token.Signature = Encoding.UTF8.GetString(signature, 0, signature.Length);
+            token.SignAndLock(Encoding.UTF8.GetString(signature, 0, signature.Length));
         }
     }
 }
