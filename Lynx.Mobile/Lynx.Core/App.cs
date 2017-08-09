@@ -1,3 +1,6 @@
+using Lynx.Core.Communications.Packets.Interfaces;
+using Lynx.Core.Crypto;
+using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Mappers.IDSubsystem.SQLiteMappers;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Facade.Interfaces;
@@ -6,11 +9,6 @@ using Lynx.Core.Models.IDSubsystem;
 using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
-using Lynx.Core.Services.Interfaces;
-using Lynx.Core.Services;
-using Lynx.Core.Services.Communications.Packets.Interfaces;
-using Lynx.Core.Services.Crypto;
-using Lynx.Core.Services.Crypto.Interfaces;
 
 namespace Lynx.Core
 {

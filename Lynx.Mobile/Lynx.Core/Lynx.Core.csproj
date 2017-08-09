@@ -39,9 +39,9 @@
     <Compile Include="Facade\Interfaces\IIDFacade.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Communications\ConnectOperationImpossibleException.cs" />
-    <Compile Include="Services\Communications\PubnubCallback.cs" />
-    <Compile Include="Services\Communications\PubnubSession.cs" />
+    <Compile Include="Communications\ConnectOperationImpossibleException.cs" />
+    <Compile Include="Communications\PubnubCallback.cs" />
+    <Compile Include="Communications\PubnubSession.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Models\IDSubsystem\Watchdog.cs" />
@@ -66,26 +66,26 @@
     <Compile Include="ILynxConfigurationService.cs" />
     <Compile Include="ViewModels\IDViewModel.cs" />
     <Compile Include="ValueConverters\ContentToStringConverter.cs" />
-    <Compile Include="Services\Communications\Packets\Interfaces\IAck.cs" />
-    <Compile Include="Services\Communications\Packets\Interfaces\IHandshakeToken.cs" />
-    <Compile Include="Services\PeerVerification\Interfaces\IRequesterService.cs" />
-    <Compile Include="Services\Communications\Interfaces\ISession.cs" />
-    <Compile Include="Services\Communications\Packets\Interfaces\ISyn.cs" />
-    <Compile Include="Services\PeerVerification\Interfaces\IVerifier.cs" />
-    <Compile Include="Services\PeerVerification\RequesterService.cs" />
-    <Compile Include="Services\Interfaces\IAccountService.cs" />
-    <Compile Include="Services\AccountService.cs" />
-    <Compile Include="Services\Communications\Packets\Syn.cs" />
-    <Compile Include="Services\Communications\Packets\Interfaces\IToken.cs" />
-    <Compile Include="Services\Communications\Packets\Ack.cs" />
-    <Compile Include="Services\Communications\Packets\HandshakeToken.cs" />
-    <Compile Include="Services\Crypto\Interfaces\ITokenCryptoService.cs" />
-    <Compile Include="Services\Communications\Packets\Token.cs" />
-    <Compile Include="Services\Crypto\TokenCryptoService.cs" />
-    <Compile Include="Services\Crypto\Interfaces\ICryptoService.cs" />
-    <Compile Include="Services\Crypto\SECP256K1CryptoService.cs" />
-    <Compile Include="Services\PeerVerification\Verifier.cs" />
-    <Compile Include="Services\Crypto\SignatureDoesntMatchException.cs" />
+    <Compile Include="Communications\Packets\Interfaces\IAck.cs" />
+    <Compile Include="Communications\Packets\Interfaces\IHandshakeToken.cs" />
+    <Compile Include="PeerVerification\Interfaces\IRequesterService.cs" />
+    <Compile Include="Communications\Interfaces\ISession.cs" />
+    <Compile Include="Communications\Packets\Interfaces\ISyn.cs" />
+    <Compile Include="PeerVerification\Interfaces\IVerifier.cs" />
+    <Compile Include="PeerVerification\RequesterService.cs" />
+    <Compile Include="Interfaces\IAccountService.cs" />
+    <Compile Include="AccountService.cs" />
+    <Compile Include="Communications\Packets\Syn.cs" />
+    <Compile Include="Communications\Packets\Interfaces\IToken.cs" />
+    <Compile Include="Communications\Packets\Ack.cs" />
+    <Compile Include="Communications\Packets\HandshakeToken.cs" />
+    <Compile Include="Crypto\Interfaces\ITokenCryptoService.cs" />
+    <Compile Include="Communications\Packets\Token.cs" />
+    <Compile Include="Crypto\TokenCryptoService.cs" />
+    <Compile Include="Crypto\Interfaces\ICryptoService.cs" />
+    <Compile Include="Crypto\SECP256K1CryptoService.cs" />
+    <Compile Include="PeerVerification\Verifier.cs" />
+    <Compile Include="Crypto\SignatureDoesntMatchException.cs" />
     <Compile Include="ViewModels\VerificationRequestViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,18 +128,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\portable-net45+win8+wpa81+wp8\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="ModernHttpClient">
-      <HintPath>..\packages\modernhttpclient.2.4.2\lib\Portable-Net45+WinRT45+WP8+WPA81\ModernHttpClient.dll</HintPath>
-    </Reference>
-    <Reference Include="ZXing.Net.Mobile.Core">
-      <HintPath>..\packages\ZXing.Net.Mobile.2.2.9\lib\portable-net45+netcore45+wpa81+wp8\ZXing.Net.Mobile.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="zxing.portable">
-      <HintPath>..\packages\ZXing.Net.Mobile.2.2.9\lib\portable-net45+netcore45+wpa81+wp8\zxing.portable.dll</HintPath>
-    </Reference>
-    <Reference Include="ZXingNetMobile">
-      <HintPath>..\packages\ZXing.Net.Mobile.2.2.9\lib\portable-net45+netcore45+wpa81+wp8\ZXingNetMobile.dll</HintPath>
-    </Reference>
     <Reference Include="crypto">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.1.1\lib\portable-net4+sl5+wp8+win8+wpa81\crypto.dll</HintPath>
     </Reference>
@@ -152,7 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
