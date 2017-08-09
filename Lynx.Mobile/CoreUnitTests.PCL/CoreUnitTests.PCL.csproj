@@ -40,6 +40,7 @@
     <Compile Include="AttributeMapperTest.cs" />
     <Compile Include="ExternalElementMapperTest.cs" />
     <Compile Include="IdentityMapTest.cs" />
+    <Compile Include="SECP256K1CryptoServiceTest.cs" />
     <Compile Include="TokenCryptoServiceTest.cs" />
     <Compile Include="AccountServiceTest.cs" />
     <Compile Include="TokenTest.cs" />
@@ -49,11 +50,11 @@
     <Compile Include="RequesterServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Mono.Android">
-      <HintPath>D:\Visual Studio\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v6.0\Mono.Android.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.6.1\lib\portable-net45+win8+wp8+wpa81\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Android">
+      <HintPath>D:\Visual Studio\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v6.0\Mono.Android.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>

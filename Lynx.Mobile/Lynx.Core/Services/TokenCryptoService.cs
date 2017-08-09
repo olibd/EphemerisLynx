@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Lynx.Core.Services.Interfaces;
 using NBitcoin;
@@ -8,6 +8,11 @@ namespace Lynx.Core.Services
 {
     public class TokenCryptoService<T> : ITokenCryptoService<T> where T : IToken
     {
+        private IECCCryptoService _ieccCryptoService;
+        public TokenCryptoService(IECCCryptoService ieccCryptoService)
+        {
+            _ieccCryptoService = ieccCryptoService;
+        }
 
         public string EncryptAndSign(T token, byte[] privkey)
         {
@@ -16,14 +21,19 @@ namespace Lynx.Core.Services
 
         public bool Verify(T token, byte[] pubkey)
         {
-            PubKey pubk = new PubKey(pubkey);
-            return pubk.VerifyMessage(token.GetUnsignedEncodedToken(), token.Signature);
+            byte[] unsignedEncodedToken = Encoding.UTF8.GetBytes(token.GetUnsignedEncodedToken());
+            byte[] signature = Encoding.UTF8.GetBytes(token.Signature);
+            return _ieccCryptoService.VerifySignedData(unsignedEncodedToken, signature, pubkey);
         }
 
         public void Sign(T token, byte[] privkey)
         {
-            Key k = new Key(privkey);
-            token.SignAndLock(k.SignMessage(token.GetEncodedToken()));
+            //UTF8 because the token is mostly base64 concatenated with a 
+            //period so the range is ASCII which is a subset of utf-8 and 
+            //Encoding.ASCII is not a class within the namespace
+            byte[] encodedToken = Encoding.UTF8.GetBytes(token.GetEncodedToken());
+            byte[] signature = _ieccCryptoService.GetDataSignature(encodedToken, privkey);
+            token.SignAndLock(Encoding.UTF8.GetString(signature, 0, signature.Length));
         }
     }
 }
