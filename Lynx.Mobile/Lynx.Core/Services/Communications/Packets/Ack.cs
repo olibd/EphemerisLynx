@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Lynx.Core.Models.IDSubsystem;
-using Lynx.Core.Services.Interfaces;
+﻿using Lynx.Core.Models.IDSubsystem;
+using Lynx.Core.Services.Communications.Packets.Interfaces;
 using Newtonsoft.Json;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.Communications.Packets
 {
     public class Ack : HandshakeToken, IAck
     {

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Threading.Tasks;
-using Lynx.Core.Services.Interfaces;
-using Nethereum.ABI.Encoders;
+using Lynx.Core.Services.Communications.Interfaces;
 using Nethereum.ABI.Util;
 using Nethereum.KeyStore.Crypto;
 using PubnubApi;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.Communications
 {
     public class PubNubSession : ISession
     {

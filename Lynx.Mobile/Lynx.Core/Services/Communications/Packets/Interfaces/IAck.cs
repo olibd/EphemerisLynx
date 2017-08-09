@@ -1,6 +1,6 @@
 ﻿using Lynx.Core.Models.IDSubsystem;
 
-namespace Lynx.Core.Services.Interfaces
+namespace Lynx.Core.Services.Communications.Packets.Interfaces
 {
     public interface IAck : IHandshakeToken
     {

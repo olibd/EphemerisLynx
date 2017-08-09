@@ -1,5 +1,6 @@
 ﻿using System;
 using Lynx.Core.Services.Interfaces;
+using Lynx.Core.Services.PeerVerification.Interfaces;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 

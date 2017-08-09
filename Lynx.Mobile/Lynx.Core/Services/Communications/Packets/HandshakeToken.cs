@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Lynx.Core.Models.IDSubsystem;
-using Lynx.Core.Services.Interfaces;
-using Newtonsoft.Json;
-using System.Diagnostics.Contracts;
+using Lynx.Core.Services.Communications.Packets.Interfaces;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.Communications.Packets
 {
     public abstract class HandshakeToken : Token, IHandshakeToken
     {

@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Lynx.Core.Services.Interfaces;
 using Lynx.Core.Services;
+using Lynx.Core.Services.Communications;
+using Lynx.Core.Services.Communications.Interfaces;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 

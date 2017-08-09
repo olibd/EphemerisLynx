@@ -8,6 +8,9 @@ using MvvmCross.Platform.IoC;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using Lynx.Core.Services.Interfaces;
 using Lynx.Core.Services;
+using Lynx.Core.Services.Communications.Packets.Interfaces;
+using Lynx.Core.Services.Crypto;
+using Lynx.Core.Services.Crypto.Interfaces;
 
 namespace Lynx.Core
 {

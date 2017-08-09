@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lynx.Core.Models.IDSubsystem;
+using Lynx.Core.Services.Communications;
+using Lynx.Core.Services.Communications.Interfaces;
+using Lynx.Core.Services.Communications.Packets;
+using Lynx.Core.Services.Communications.Packets.Interfaces;
+using Lynx.Core.Services.Crypto.Interfaces;
 using Lynx.Core.Services.Interfaces;
+using Lynx.Core.Services.PeerVerification.Interfaces;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.PeerVerification
 {
     public class RequesterService : IRequesterService
     {

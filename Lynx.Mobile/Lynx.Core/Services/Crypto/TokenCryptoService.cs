@@ -1,10 +1,9 @@
 using System;
 using System.Text;
-using Lynx.Core.Services.Interfaces;
-using NBitcoin;
-using NBitcoin.DataEncoders;
+using Lynx.Core.Services.Communications.Packets.Interfaces;
+using Lynx.Core.Services.Crypto.Interfaces;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.Crypto
 {
     public class TokenCryptoService<T> : ITokenCryptoService<T> where T : IToken
     {

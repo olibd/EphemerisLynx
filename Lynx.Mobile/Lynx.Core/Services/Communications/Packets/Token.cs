@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Lynx.Core.Services.Interfaces;
+using Lynx.Core.Services.Communications.Packets.Interfaces;
 using Newtonsoft.Json;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.Communications.Packets
 {
     public abstract class Token : IToken
     {

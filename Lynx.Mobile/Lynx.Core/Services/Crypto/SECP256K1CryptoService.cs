@@ -1,5 +1,5 @@
 using System;
-using Lynx.Core.Services.Interfaces;
+using Lynx.Core.Services.Crypto.Interfaces;
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Asn1.X9;
@@ -8,10 +8,10 @@ using Org.BouncyCastle.Crypto.Agreement;
 using Org.BouncyCastle.Crypto.Agreement.Kdf;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
+using Org.BouncyCastle.Security;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.Crypto
 {
     public class SECP256K1CryptoService : IECCCryptoService
     {

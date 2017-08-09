@@ -1,6 +1,6 @@
-﻿using Lynx.Core.Services.Interfaces;
+﻿using Lynx.Core.Services.Communications.Packets.Interfaces;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.Communications.Packets
 {
     public class Syn : HandshakeToken, ISyn
     {

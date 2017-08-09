@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Text;
-using Lynx.Core.Services.Interfaces;
+using Lynx.Core.Services.Communications.Packets;
+using Lynx.Core.Services.Communications.Packets.Interfaces;
+using Lynx.Core.Services.Crypto;
+using Lynx.Core.Services.Crypto.Interfaces;
+using Lynx.Core.Services.PeerVerification.Interfaces;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Services.PeerVerification
 {
     public class Verifier : IVerifier
     {
