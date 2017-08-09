@@ -1,12 +1,11 @@
 ﻿using System;
+using Lynx.Core;
+using Lynx.Core.Communications.Packets;
+using Lynx.Core.Communications.Packets.Interfaces;
+using Lynx.Core.Crypto;
+using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
-using Lynx.Core.Services;
-using Lynx.Core.Services.Communications.Packets;
-using Lynx.Core.Services.Communications.Packets.Interfaces;
-using Lynx.Core.Services.Crypto;
-using Lynx.Core.Services.Crypto.Interfaces;
-using Lynx.Core.Services.Interfaces;
-using Lynx.Core.Services.PeerVerification;
+using Lynx.Core.PeerVerification;
 using NUnit.Framework;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 

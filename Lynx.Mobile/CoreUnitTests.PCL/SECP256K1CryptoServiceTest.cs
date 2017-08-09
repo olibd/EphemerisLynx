@@ -1,6 +1,5 @@
 ﻿using System;
-using Lynx.Core.Services;
-using Lynx.Core.Services.Crypto;
+using Lynx.Core.Crypto;
 using NUnit.Framework;
 
 namespace CoreUnitTests.PCL

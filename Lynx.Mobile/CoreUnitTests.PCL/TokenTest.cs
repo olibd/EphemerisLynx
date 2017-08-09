@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Lynx.Core.Services;
-using Lynx.Core.Services.Communications.Packets;
+using Lynx.Core.Communications.Packets;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
