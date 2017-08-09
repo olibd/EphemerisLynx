@@ -1,5 +1,4 @@
-﻿using System;
-namespace Lynx.Core.Services.Interfaces
+﻿namespace Lynx.Core.Interfaces
 {
     public interface IAccountService
     {

@@ -1,11 +1,9 @@
 ﻿using System;
-using Lynx.Core.Services.Interfaces;
-using NBitcoin;
+using Lynx.Core.Interfaces;
 using NBitcoin.Crypto;
-using NBitcoin.DataEncoders;
 using Nethereum.Core.Signing.Crypto;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core
 {
     public class AccountService : IAccountService
     {

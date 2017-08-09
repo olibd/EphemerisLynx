@@ -1,7 +1,9 @@
 ﻿using System;
+using Lynx.Core.Communications;
+using Lynx.Core.Communications.Interfaces;
+using Lynx.Core.Communications.Packets;
+using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
-using Lynx.Core.Services;
-using Lynx.Core.Services.Interfaces;
 using NUnit.Framework;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 

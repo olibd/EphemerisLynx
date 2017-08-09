@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Lynx.Core.Services.Interfaces;
-using Lynx.Core.Services;
+using Lynx.Core.Communications;
+using Lynx.Core.Communications.Interfaces;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 

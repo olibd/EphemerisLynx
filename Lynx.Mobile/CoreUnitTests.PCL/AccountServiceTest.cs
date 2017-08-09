@@ -1,5 +1,5 @@
 ﻿using System;
-using Lynx.Core.Services;
+using Lynx.Core;
 using NUnit.Framework;
 
 namespace CoreUnitTests.PCL

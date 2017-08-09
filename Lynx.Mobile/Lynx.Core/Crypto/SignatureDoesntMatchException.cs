@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lynx.Core.Services
+namespace Lynx.Core.Crypto
 {
     internal class SignatureDoesntMatchException : Exception
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lynx.Core.Services.Interfaces
+namespace Lynx.Core.Communications.Interfaces
 {
     public interface ISession
     {

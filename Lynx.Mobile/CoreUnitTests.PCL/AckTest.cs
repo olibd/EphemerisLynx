@@ -1,6 +1,6 @@
 ﻿using System;
+using Lynx.Core.Communications.Packets;
 using Lynx.Core.Models.IDSubsystem;
-using Lynx.Core.Services;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

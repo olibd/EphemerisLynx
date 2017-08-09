@@ -1,5 +1,6 @@
-﻿using System;
-namespace Lynx.Core.Services.Interfaces
+﻿using Lynx.Core.Communications.Packets.Interfaces;
+
+namespace Lynx.Core.Crypto.Interfaces
 {
     public interface ITokenCryptoService<T> where T : IToken
     {

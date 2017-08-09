@@ -1,4 +1,4 @@
-﻿namespace Lynx.Core.Services.Interfaces
+﻿namespace Lynx.Core.Communications.Packets.Interfaces
 {
     public interface ISyn : IHandshakeToken
     {

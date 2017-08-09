@@ -1,6 +1,6 @@
 ﻿using System;
+using Lynx.Core;
 using Lynx.Core.Models.IDSubsystem;
-using Lynx.Core.Services;
 using NUnit.Framework;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
