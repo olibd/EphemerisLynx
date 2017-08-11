@@ -2,11 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#4C2DA5"
+    android:clipChildren="false"
+    android:clipToPadding="false">
     <ImageView
+        android:layout_gravity="center_horizontal"
         android:id="@+id/AddressQRCode"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"

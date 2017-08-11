@@ -162,6 +162,7 @@
     <Compile Include="Views\IDView.cs" />
     <Compile Include="ValueConverters\StringToBitmapQrCodeConverter.cs" />
     <Compile Include="Views\VerificationRequestView.cs" />
+    <Compile Include="Views\Callbacks\BottomSheetInvalidateParentCallback.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -191,7 +192,11 @@
     <AndroidResource Include="Resources\layout\ImageIDAddressView.xml" />
     <AndroidResource Include="Resources\layout\VerificationRequestView.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\drawable\" />
+    <Folder Include="ValueConverters\" />
+    <Folder Include="Views\Callbacks\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lynx.Core\Lynx.Core.csproj">
       <Project>{43906ED3-CA63-4825-A1FD-5ACAD813C269}</Project>

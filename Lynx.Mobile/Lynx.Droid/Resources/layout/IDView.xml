@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:local="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <include
-        layout="@layout/imageidaddressview" />
-    <TextView
-        android:id="@+id/IDaddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        local:MvxBind="Text ID.Address" />
-    <Mvx.MvxListView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        local:MvxBind="ItemsSource Attributes"
-        local:MvxItemTemplate="@layout/attributeview" />
-</LinearLayout>
+    android:id="@+id/IDViewLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E4DAFE">
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:elevation="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        local:behavior_peekHeight="120dp"
+        android:orientation="vertical"
+        local:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        android:background="#EF4571">
+        <include
+            layout="@layout/imageidaddressview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/include" />
+        <TextView
+            android:id="@+id/IDaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            local:MvxBind="Text ID.Address" />
+        <Mvx.MvxListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            local:MvxBind="ItemsSource Attributes"
+            local:MvxItemTemplate="@layout/attributeview" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
