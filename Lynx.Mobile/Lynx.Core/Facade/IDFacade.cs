@@ -63,7 +63,7 @@ namespace Lynx.Core.Facade
         }
 
         //This function will only be used to create the initial ID object on login
-        public async Task<ID> GetIDAsync(string address)
+        public async Task<ID> GetIDAsync(string address, string[] accessibleAttributes)
         {
             IDControllerService idcService = new IDControllerService(Web3, address);
 
@@ -73,13 +73,15 @@ namespace Lynx.Core.Facade
                 Address = await idcService.GetIDAsyncCall()
             };
 
-            //Get all attributes from the smart contract and add them to the ID object
+            //Get attributes from the smart contract and add them to the ID object
             Dictionary<string, Attribute> attributes = await GetAttributesAsync(newID);
             foreach (string key in attributes.Keys)
             {
-                newID.AddAttribute(key, attributes[key]);
+                if (accessibleAttributes.Contains(key)) 
+                    newID.AddAttribute(key, attributes[key]);
+                else
+                    newID.AddAttribute(key, null);
             }
-
             return newID;
         }
 
