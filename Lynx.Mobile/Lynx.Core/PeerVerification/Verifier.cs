@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Lynx.Core.Communications.Interfaces;
 using Lynx.Core.Communications.Packets;
@@ -9,6 +9,10 @@ using Lynx.Core.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.PeerVerification.Interfaces;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using Lynx.Core.Facade;
+using System.Threading.Tasks;
+using Lynx.Core.Models.IDSubsystem;
+
 
 namespace Lynx.Core.PeerVerification
 {
@@ -18,12 +22,14 @@ namespace Lynx.Core.PeerVerification
         private ID _id;
         private IAccountService _accountService;
         private ISession _session;
+        private IDFacade _iDFacade;
 
-        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id)
+        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IDFacade iDFacade)
         {
             _tokenCryptoService = tokenCryptoService;
             _id = id;
             _accountService = accountService;
+            _iDFacade = iDFacade;
         }
 
         public ISyn Syn { get; set; }
@@ -45,11 +51,12 @@ namespace Lynx.Core.PeerVerification
             _session.Send(encryptedToken);
         }
 
-        public ISyn ProcessSyn(string synString)
+        public async Task<ISyn> ProcessSyn(string synString)
         {
-            ISyn syn = new Syn(synString);
-            //TODO: handle encrypted token
-            if (_tokenCryptoService.Verify(syn, Encoding.UTF8.GetBytes(syn.PublicKey)))
+            TokenFactory<Syn> synFactory= new TokenFactory<Syn>(_iDFacade);
+            string[] accessibleAttributes = new string[]{""};//dummy temporary array
+            Syn syn = await synFactory.CreateToken(synString, accessibleAttributes);
+			if (_tokenCryptoService.Verify(syn, Encoding.UTF8.GetBytes(syn.PublicKey)))
                 return syn;
             else
                 throw new SignatureDoesntMatchException("The signature was not " +

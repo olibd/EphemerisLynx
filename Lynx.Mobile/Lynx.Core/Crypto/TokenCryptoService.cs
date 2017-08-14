@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Crypto.Interfaces;
+using Newtonsoft.Json;
 
 namespace Lynx.Core.Crypto
 {
@@ -13,9 +15,31 @@ namespace Lynx.Core.Crypto
             _ieccCryptoService = ieccCryptoService;
         }
 
-        public string EncryptAndSign(T token, byte[] privkey)
+        public string Encrypt(T token, byte[] pubkey, byte[] privkey)
         {
-            throw new NotImplementedException();
+            byte[] encryptedPayloadBytes = _ieccCryptoService.Encrypt(Encoding.UTF8.GetBytes(token.GetEncodedPayload()), pubkey, privkey);
+            string encryptedPayload = Encoding.UTF8.GetString(encryptedPayloadBytes, 0, encryptedPayloadBytes.Length);
+            return token.GetEncodedHeader() + "." + encryptedPayload;
+        }
+
+        public string Decrypt(string encryptedToken, byte[] privkey)
+        {
+            //dissamble the encrypted token to decrypt the payload
+            string[] splittedEncryptedToken = encryptedToken.Split('.');
+
+            //get the public key
+            //TODO: check pub key agaisnt ID
+            string jsonDecodedHeader = Base64Decode(splittedEncryptedToken[0]);
+            Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
+            byte[] pubkey = Encoding.UTF8.GetBytes(header["pubkey"]);
+
+            //decrypt the payload
+            byte[] encryptedPayloadBytes = Encoding.UTF8.GetBytes(splittedEncryptedToken[1]);
+            byte[] decryptedPayloadBytes = _ieccCryptoService.Decrypt(encryptedPayloadBytes, pubkey, privkey);
+            string decryptedPayload = Encoding.UTF8.GetString(decryptedPayloadBytes, 0, decryptedPayloadBytes.Length);
+
+            //reassemble the decrypted token
+            return splittedEncryptedToken[0] + "." + decryptedPayload;
         }
 
         public bool Verify(T token, byte[] pubkey)
@@ -27,12 +51,15 @@ namespace Lynx.Core.Crypto
 
         public void Sign(T token, byte[] privkey)
         {
-            //UTF8 because the token is mostly base64 concatenated with a 
-            //period so the range is ASCII which is a subset of utf-8 and 
-            //Encoding.ASCII is not a class within the namespace
             byte[] encodedToken = Encoding.UTF8.GetBytes(token.GetEncodedToken());
             byte[] signature = _ieccCryptoService.GetDataSignature(encodedToken, privkey);
             token.SignAndLock(Encoding.UTF8.GetString(signature, 0, signature.Length));
+        }
+
+        private string Base64Decode(string encodedText)
+        {
+            byte[] plainTextBytes = Convert.FromBase64String(encodedText);
+            return System.Text.Encoding.UTF8.GetString(plainTextBytes, 0, plainTextBytes.Length);
         }
     }
 }

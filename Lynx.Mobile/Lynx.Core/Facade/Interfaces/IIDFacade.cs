@@ -19,7 +19,7 @@ namespace Lynx.Core.Facade.Interfaces
         /// </summary>
         /// <param name="address">The address of the ID to be fetched</param>
         /// <returns>A new ID populated with data from the blockchain (and attached Attributes and Certificates)</returns>
-        Task<ID> GetIDAsync(string address);
+        Task<ID> GetIDAsync(string address, string[] accessibleAttributes);
 
         /// <summary>
         /// Fetches the dictionary of attributes attached to an ID

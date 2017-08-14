@@ -1,4 +1,5 @@
 ﻿using Lynx.Core.Communications.Packets.Interfaces;
+using System.Threading.Tasks;
 
 namespace Lynx.Core.PeerVerification.Interfaces
 {
@@ -19,7 +20,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// </summary>
         /// <param name="syn">The JSON-encoded SYN</param>
         /// <returns>The Syn object</returns>
-        ISyn ProcessSyn(string syn);
+        Task<ISyn> ProcessSyn(string syn);
 
         /// <summary>
         /// Creates and transmits an ACK in response to a previously processed SYN

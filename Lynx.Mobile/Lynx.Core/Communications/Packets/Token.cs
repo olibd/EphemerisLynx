@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Newtonsoft.Json;
+using Lynx.Core.Models.IDSubsystem;
 
 namespace Lynx.Core.Communications.Packets
 {
@@ -20,6 +21,7 @@ namespace Lynx.Core.Communications.Packets
         public bool Locked { get { return _signedAndlocked; } }
         private Dictionary<string, string> _header;
         private Dictionary<string, string> _payload;
+        private ID _id;  
 
         protected Token()
         {
@@ -38,10 +40,24 @@ namespace Lynx.Core.Communications.Packets
                 string sig = splittedEncodedToken[2];
                 _signature = sig;
             }
-
             _header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
             _payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
         }
+
+		protected Token(Dictionary<string, string> header, Dictionary<string, string> payload, ID id, string sig)
+		{
+            _header = header;
+            _payload = payload; 
+            _signature = sig;
+            _id = id;
+		}
+
+		protected Token(Dictionary<string, string> header, Dictionary<string, string> payload, ID id)
+		{
+			_header = header;
+			_payload = payload;
+			_id = id;
+		}
 
         public void SignAndLock(string signature)
         {
