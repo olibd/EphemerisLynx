@@ -75,7 +75,7 @@ namespace Lynx.Core.ViewModels
         {
             BuildID();
 
-           // await DeployToBlockchain();
+            await DeployToBlockchain();
             await SaveIDToDB();
         }
 
