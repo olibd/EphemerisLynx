@@ -6,19 +6,36 @@ namespace Lynx.Core.Communications.Packets
 {
     public class Ack : HandshakeToken, IAck
     {
-        private IContent _name;
-        public IContent Name
+        private Attribute[] _accessibleAttributes;
+        public Attribute[] AccessibleAttributes
         {
             get
             {
-                return _name;
+                return _accessibleAttributes;
             }
 
             set
             {
-                SetOnPayload("name", JsonConvert.SerializeObject(value));
-                _name = value;
+                string[] attrDescriptionArr = new string[value.Length];
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    attrDescriptionArr[i] = value[i].Description;
+                }
+
+                SetOnPayload("accAttr", JsonConvert.SerializeObject(attrDescriptionArr));
+                _accessibleAttributes = value;
             }
+        }
+
+        public Ack() : base()
+        {
+
+        }
+
+        public Ack(string token) : base(token)
+        {
+
         }
     }
 }

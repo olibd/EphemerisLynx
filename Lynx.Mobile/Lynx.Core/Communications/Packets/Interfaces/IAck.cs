@@ -7,6 +7,6 @@ namespace Lynx.Core.Communications.Packets.Interfaces
         /// <summary>
         /// The verifier's name (for identification purposes)
         /// </summary>
-        IContent Name { get; set; }
+        Attribute[] AccessibleAttributes { get; set; }
     }
 }

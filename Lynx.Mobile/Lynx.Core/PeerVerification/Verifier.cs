@@ -1,27 +1,48 @@
 ﻿using System;
 using System.Text;
+using Lynx.Core.Communications.Interfaces;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Crypto;
 using Lynx.Core.Crypto.Interfaces;
+using Lynx.Core.Interfaces;
+using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.PeerVerification.Interfaces;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.PeerVerification
 {
     public class Verifier : IVerifier
     {
         private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
+        private ID _id;
+        private IAccountService _accountService;
+        private ISession _session;
 
-        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService)
+        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id)
         {
             _tokenCryptoService = tokenCryptoService;
+            _id = id;
+            _accountService = accountService;
         }
 
         public ISyn Syn { get; set; }
 
-        public void Acknowledge(string privateKey, string publicKey)
+        public void Acknowledge()
         {
-            throw new NotImplementedException();
+            Attribute[] accessibleAttributes = { _id.Attributes["firstname"], _id.Attributes["lastname"] };
+
+            Ack ack = new Ack()
+            {
+                Id = _id,
+                PublicKey = _accountService.PublicKey,
+                Encrypted = true,
+                AccessibleAttributes = accessibleAttributes
+            };
+
+            byte[] requesterPubKey = Encoding.UTF8.GetBytes(Syn.PublicKey);
+            string encryptedToken = _tokenCryptoService.Encrypt(ack, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
+            _session.Send(encryptedToken);
         }
 
         public ISyn ProcessSyn(string synString)
