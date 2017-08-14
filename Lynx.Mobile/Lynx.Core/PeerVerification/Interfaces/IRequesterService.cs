@@ -29,7 +29,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// </summary>
         /// <param name="ack">The JSON-encoded ACK</param>
         /// <returns>The Ack object</returns>
-        IAck ProcessEncodedAck(string ack);
+        IAck ProcessEncryptedAck(string ack);
 
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the verifier for certification
