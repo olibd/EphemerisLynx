@@ -24,9 +24,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// <summary>
         /// Creates and transmits an ACK in response to a previously processed SYN
         /// </summary>
-        /// <param name="privateKey">The user's Ethereum private key</param>
-        /// <param name="publicKey">The user's Ethereum public key</param>
-        void Acknowledge(string privateKey, string publicKey);
+        void Acknowledge();
 
     }
 }
