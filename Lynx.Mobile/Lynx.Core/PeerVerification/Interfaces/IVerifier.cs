@@ -2,6 +2,11 @@
 
 namespace Lynx.Core.PeerVerification.Interfaces
 {
+    /// <summary>
+    /// IVerifiers is in charge of handlign the verification request coming from
+    /// other peers. It will process the Syn request and verify the data supplied
+    /// by the peer.
+    /// </summary>
     public interface IVerifier
     {
         /// <summary>

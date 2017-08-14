@@ -12,6 +12,9 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core
 {
+    /// <summary>
+    /// App. This class bootstraps the app at startup.
+    /// </summary>
     public class App : MvvmCross.Core.ViewModels.MvxApplication
     {
         public override void Initialize()

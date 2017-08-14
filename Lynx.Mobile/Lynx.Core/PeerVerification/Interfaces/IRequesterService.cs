@@ -4,6 +4,13 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.PeerVerification.Interfaces
 {
+    /// <summary>
+    /// IRequesterService is in charge of initiating the peer to peer verification
+    /// requests. It is a representation of the Requesting entity in a peer to
+    /// peer verification transaction. As such, the Requester will also be in
+    /// charge of sending the data to be verified the the other party, the 
+    /// Verifier.
+    /// </summary>
     public interface IRequesterService
     {
         /// <summary>
