@@ -4,7 +4,13 @@
     android:id="@+id/IDViewLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E4DAFE">
+    android:background="#FFFFFF">
+  <LinearLayout 
+    android:id="@+id/ZXingScannerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CCCCCC">
+  </LinearLayout>
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:elevation="8dp"

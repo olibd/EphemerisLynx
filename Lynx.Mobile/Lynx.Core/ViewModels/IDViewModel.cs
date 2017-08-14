@@ -17,6 +17,7 @@ namespace Lynx.Core.ViewModels
         private IMvxNavigationService _navigationService;
 
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
+        public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
 
         public IDViewModel(IMvxNavigationService navigationService)
         {
@@ -33,6 +34,11 @@ namespace Lynx.Core.ViewModels
         public override void Start()
         {
             //TODO: Add starting logic here
+        }
+
+        private async void QrCodeScan(string content)
+        {
+            throw new NotImplementedException();
         }
 
         private async void RequestVerification()

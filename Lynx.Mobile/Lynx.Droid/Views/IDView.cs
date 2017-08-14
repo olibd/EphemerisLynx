@@ -27,6 +27,9 @@ namespace Lynx.Droid.Views
         private CoordinatorLayout _IDViewLayout;
 
         private ZXingScannerFragment _scanner;
+        private IMvxCommand _qrCodeScanCommand;
+
+        public IMvxCommand QrCodeScanCommand { get; set; }
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -40,9 +43,10 @@ namespace Lynx.Droid.Views
             _scanner = new ZXingScannerFragment();
             _scanner.ScanningOptions = MobileBarcodeScanningOptions.Default;
             SupportFragmentManager.BeginTransaction()
-                .Add(Resource.Id.IDViewLayout, _scanner, "ZXINGSCANNER")
+                .Add(Resource.Id.ZXingScannerLayout, _scanner, "ZXINGSCANNER")
                 .Commit();
-            
+
+            BindCommand();
         }
 
         protected override void OnResume()
@@ -52,19 +56,24 @@ namespace Lynx.Droid.Views
             {
                 PermissionsHandler.RequestPermissionsAsync(this);
             }
-            Handler handler = new Handler(Looper.MainLooper);
 
             _scanner.StartScanning(result =>
             {
-                handler.Post(() =>
-                {
-                    Toast toast = new Toast(this);
-                    toast.Duration = ToastLength.Short;
-                    toast.SetText(result.Text);
-                    toast.Show();
-                });
-            }, MobileBarcodeScanningOptions.Default);
+                QrCodeScanCommand.Execute(result.Text);
+            }, 
+            MobileBarcodeScanningOptions.Default);
         }
+
+        private void BindCommand()
+        {
+            var set = this.CreateBindingSet<IDView, IDViewModel>();
+            set.Bind(this)
+                .For(view => view.QrCodeScanCommand)
+                .To(viewModel => viewModel.QrCodeScanCommand)
+                .OneWay()
+                .Apply();
+        }
+
     }
 }
 
