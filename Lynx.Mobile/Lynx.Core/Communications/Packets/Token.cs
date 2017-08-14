@@ -21,7 +21,14 @@ namespace Lynx.Core.Communications.Packets
         public bool Locked { get { return _signedAndlocked; } }
         private Dictionary<string, string> _header;
         private Dictionary<string, string> _payload;
-        private ID _id;  
+        private ID _id;
+		public ID ID
+		{
+			get
+			{
+				return _id;
+			}
+		}
 
         protected Token()
         {

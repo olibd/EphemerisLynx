@@ -88,6 +88,7 @@
     <Compile Include="Crypto\SignatureDoesntMatchException.cs" />
     <Compile Include="ViewModels\VerificationRequestViewModel.cs" />
     <Compile Include="Communications\Packets\TokenFactory.cs" />
+    <Compile Include="Crypto\AddressDoesntMatchException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
