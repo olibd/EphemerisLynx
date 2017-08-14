@@ -1,4 +1,4 @@
-﻿using Lynx.Core.Facade.Interfaces;
+﻿﻿using Lynx.Core.Facade.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,6 +51,7 @@ namespace Lynx.Core.Facade
 
             id.ControllerAddress = controllerAddress;
             id.Address = await idcService.GetIDAsyncCall();
+            id.Owner = await idcService.OwnerAsyncCall();
 
 
             //Add each attribute from the ID model to the ID smart contract
@@ -67,14 +68,15 @@ namespace Lynx.Core.Facade
         {
             IDControllerService idcService = new IDControllerService(Web3, address);
 
-            ID newID = new ID
-            {
-                ControllerAddress = address,
-                Address = await idcService.GetIDAsyncCall()
-            };
+			ID newID = new ID
+			{
+				ControllerAddress = address,
+                Address = await idcService.GetIDAsyncCall(),
+				Owner = await idcService.OwnerAsyncCall()
+			};
 
-            //Get attributes from the smart contract and add them to the ID object
-            Dictionary<string, Attribute> attributes = await GetAttributesAsync(newID);
+			//Get attributes from the smart contract and add them to the ID object
+			Dictionary<string, Attribute> attributes = await GetAttributesAsync(newID);
             foreach (string key in attributes.Keys)
             {
                 if (accessibleAttributes.Contains(key)) 

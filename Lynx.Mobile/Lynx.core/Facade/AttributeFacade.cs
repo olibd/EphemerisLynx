@@ -41,6 +41,7 @@ namespace Lynx.Core.Facade
 
             //Populating the attribute model with the new address
             attribute.Address = receipt.ContractAddress;
+            attribute.Owner = owner;
 
             //Iterating over certificates and deploying each one
             foreach (string key in attribute.Certificates.Keys)
@@ -62,7 +63,8 @@ namespace Lynx.Core.Facade
             {
                 Address = address,
                 Hash = await ethAttribute.HashAsyncCall(),
-                Location = await ethAttribute.LocationAsyncCall()
+                Location = await ethAttribute.LocationAsyncCall(),
+                Owner = await ethAttribute.OwnerAsyncCall()
             };
 
             //Fetch the content of the attribute
