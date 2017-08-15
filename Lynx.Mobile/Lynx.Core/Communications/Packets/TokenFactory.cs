@@ -12,10 +12,6 @@ namespace Lynx.Core.Communications.Packets
 
         public T CreateToken(string encodedToken)
         {
-            T t;
-            var settings = new JsonSerializerSettings();
-            settings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
-
             string[] splittedEncodedToken = encodedToken.Split('.');
             string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
             string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
@@ -26,8 +22,7 @@ namespace Lynx.Core.Communications.Packets
             Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
             Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
 
-
-            t = Activator.CreateInstance(typeof(T), new object[] { header, payload }) as T;
+            T t = Activator.CreateInstance(typeof(T), new object[] { header, payload }) as T;
 
             if (splittedEncodedToken.Length == 3)
             {
