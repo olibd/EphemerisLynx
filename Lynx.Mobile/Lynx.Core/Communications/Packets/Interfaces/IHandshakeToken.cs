@@ -18,5 +18,10 @@ namespace Lynx.Core.Communications.Packets.Interfaces
         /// The Ethereum public key of the user sending the handshake
         /// </summary>
         bool Encrypted { get; set; }
+
+        /// <summary>
+        /// The verifier's name (for identification purposes)
+        /// </summary>
+        Attribute[] AccessibleAttributes { get; set; }
     }
 }

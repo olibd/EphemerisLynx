@@ -53,10 +53,9 @@ namespace Lynx.Core.PeerVerification
 
         public async Task<ISyn> ProcessSyn(string synString)
         {
-            TokenFactory<Syn> synFactory= new TokenFactory<Syn>(_iDFacade);
-            string[] accessibleAttributes = new string[]{""};//dummy temporary array
-            Syn syn = await synFactory.CreateToken(synString, accessibleAttributes);
-			if (_tokenCryptoService.Verify(syn, Encoding.UTF8.GetBytes(syn.PublicKey)))
+            HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_iDFacade);
+            Syn syn = await synFactory.CreateHandshakeTokenAsync(synString);
+            if (_tokenCryptoService.Verify(syn, Encoding.UTF8.GetBytes(syn.PublicKey)))
                 return syn;
             else
                 throw new SignatureDoesntMatchException("The signature was not " +

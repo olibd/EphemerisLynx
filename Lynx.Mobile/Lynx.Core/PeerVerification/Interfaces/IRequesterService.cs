@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
@@ -29,7 +30,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// </summary>
         /// <param name="ack">The JSON-encoded ACK</param>
         /// <returns>The Ack object</returns>
-        IAck ProcessEncryptedAck(string ack);
+        Task ProcessEncryptedAckAsync(string ack);
 
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the verifier for certification

@@ -21,7 +21,6 @@ namespace Lynx.Core.Communications.Packets
         public bool Locked { get { return _signedAndlocked; } }
         private Dictionary<string, string> _header;
         private Dictionary<string, string> _payload;
-        private ID _id;  
 
         protected Token()
         {
@@ -29,35 +28,13 @@ namespace Lynx.Core.Communications.Packets
             _payload = new Dictionary<string, string>();
         }
 
-        protected Token(string encodedToken)
+        protected Token(Dictionary<string, string> header, Dictionary<string, string> payload)
         {
-            string[] splittedEncodedToken = encodedToken.Split('.');
-            string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
-            string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
-            //if the token is signed, restore the signature
-            if (splittedEncodedToken.Length == 3)
-            {
-                string sig = splittedEncodedToken[2];
-                _signature = sig;
-            }
-            _header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
-            _payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
-        }
-
-		protected Token(Dictionary<string, string> header, Dictionary<string, string> payload, ID id, string sig)
-		{
+            _header = new Dictionary<string, string>();
+            _payload = new Dictionary<string, string>();
             _header = header;
-            _payload = payload; 
-            _signature = sig;
-            _id = id;
-		}
-
-		protected Token(Dictionary<string, string> header, Dictionary<string, string> payload, ID id)
-		{
-			_header = header;
-			_payload = payload;
-			_id = id;
-		}
+            _payload = payload;
+        }
 
         public void SignAndLock(string signature)
         {
@@ -93,6 +70,18 @@ namespace Lynx.Core.Communications.Packets
         {
             Contract.Ensures(!_signedAndlocked);
             _payload.Add(key, val);
+        }
+
+        public void RemoveFromHeader(string key)
+        {
+            Contract.Ensures(!_signedAndlocked);
+            _header.Remove(key);
+        }
+
+        public void RemoveFromPayload(string key)
+        {
+            Contract.Ensures(!_signedAndlocked);
+            _payload.Remove(key);
         }
 
         public string GetFromHeader(string key)

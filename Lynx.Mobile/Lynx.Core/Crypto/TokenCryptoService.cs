@@ -28,7 +28,6 @@ namespace Lynx.Core.Crypto
             string[] splittedEncryptedToken = encryptedToken.Split('.');
 
             //get the public key
-            //TODO: check pub key agaisnt ID
             string jsonDecodedHeader = Base64Decode(splittedEncryptedToken[0]);
             Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
             byte[] pubkey = Encoding.UTF8.GetBytes(header["pubkey"]);
