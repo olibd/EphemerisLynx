@@ -51,7 +51,7 @@ namespace Lynx.Core.PeerVerification
             _session.Send(encryptedToken);
         }
 
-        public async Task<ISyn> ProcessSyn(string synString)
+        public async void ProcessSyn(string synString)
         {
             HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_iDFacade);
             Syn syn = await synFactory.CreateHandshakeTokenAsync(synString);

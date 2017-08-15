@@ -16,11 +16,15 @@ namespace Lynx.Core.Communications.Packets
             string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
             string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
 
+            //define basic sanitation settings
+            var settings = new JsonSerializerSettings();
+            settings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
+
             jsonDecodedHeader = Uri.EscapeDataString(jsonDecodedHeader);
             jsonDecodedPayload = Uri.EscapeDataString(jsonDecodedPayload);
 
-            Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
-            Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
+            Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader, settings);
+            Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload, settings);
 
             T t = Activator.CreateInstance(typeof(T), new object[] { header, payload }) as T;
 
