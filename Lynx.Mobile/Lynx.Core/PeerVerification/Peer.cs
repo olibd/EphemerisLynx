@@ -22,7 +22,8 @@ namespace Lynx.Core.PeerVerification
         }
 
         /// <summary>
-        /// Decrypt and parses a JSON-encoded HandshakeToken
+        /// Decrypt and parses a JSON-encoded HandshakeToken. Also verifies that the
+        /// token was encrypted by the ID that issued the token.
         /// </summary>
         /// <param name="encryptedHandshakeToken">The JSON-encoded SYNACK</param>
         /// <returns>The HandshakeToken object</returns>
