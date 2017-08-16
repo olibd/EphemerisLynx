@@ -10,10 +10,10 @@ namespace Lynx.Core.Communications.Packets
 {
     public class HandshakeTokenFactory<T> : TokenFactory<T> where T : HandshakeToken, new()
     {
-        private IIDFacade _iDFacade;
-        public HandshakeTokenFactory(IIDFacade iDFacade)
+        private IIDFacade _idFacade;
+        public HandshakeTokenFactory(IIDFacade idFacade)
         {
-            _iDFacade = iDFacade;
+            _idFacade = idFacade;
         }
 
         public async Task<T> CreateHandshakeTokenAsync(string encodedToken)
@@ -28,7 +28,7 @@ namespace Lynx.Core.Communications.Packets
 
             //get the accessible attributes
             string[] accessibleAttributes = JsonConvert.DeserializeObject<string[]>(header["accAttr"]);
-            ID id = await _iDFacade.GetIDAsync(header["idAddr"], accessibleAttributes);
+            ID id = await _idFacade.GetIDAsync(header["idAddr"], accessibleAttributes);
 
             t.Id = id;
             return t;
