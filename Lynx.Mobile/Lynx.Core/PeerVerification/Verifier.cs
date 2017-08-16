@@ -12,6 +12,7 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using Lynx.Core.Facade;
 using System.Threading.Tasks;
 using Lynx.Core.Communications;
+using Lynx.Core.Facade.Interfaces;
 
 namespace Lynx.Core.PeerVerification
 {
@@ -21,10 +22,10 @@ namespace Lynx.Core.PeerVerification
         private ID _id;
         private IAccountService _accountService;
         private ISession _session;
-        private IDFacade _idFacade;
-        public event EventHandler IdentityProfileReceived;
+        private IIDFacade _idFacade;
+        public event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
 
-        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IDFacade idFacade) : base(tokenCryptoService, accountService, idFacade)
+        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade) : base(tokenCryptoService, accountService, idFacade)
         {
             _tokenCryptoService = tokenCryptoService;
             _id = id;
@@ -69,7 +70,10 @@ namespace Lynx.Core.PeerVerification
         protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
             SynAck synAck = await base.ProcessEncryptedHandshakeToken<SynAck>(encryptedHandshakeToken);
-            IdentityProfileReceived.Invoke(this, new EventArgs());
+
+            IdentityProfileReceivedEvent e = new IdentityProfileReceivedEvent();
+            e.SynAck = synAck;
+            IdentityProfileReceived.Invoke(this, e);
             //We can return null because the caller of this method is an anonymous method in an EventHandler
             //and it won't use the returned data
             return null;
