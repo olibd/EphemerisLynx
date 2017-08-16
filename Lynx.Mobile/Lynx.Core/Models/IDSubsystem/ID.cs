@@ -20,9 +20,9 @@ namespace Lynx.Core.Models.IDSubsystem
             Attributes.Add(type, attr);
         }
 
-        public Attribute GetAttribute(string hash)
+        public Attribute GetAttribute(string key)
         {
-            return Attributes[hash];
+            return Attributes[key];
         }
     }
 }
