@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Lynx.Core.Communications;
 using Lynx.Core.Communications.Interfaces;
@@ -16,7 +17,7 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 namespace Lynx.Core.PeerVerification
 {
 
-    public class RequesterService : IRequesterService
+    public class RequesterService : Peer, IRequesterService
     {
         private ISession _session;
         private ID _id;
@@ -24,13 +25,12 @@ namespace Lynx.Core.PeerVerification
         private IAccountService _accountService;
         private IIDFacade _idFacade;
 
-        public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade)
+        public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade) : base(tokenCryptoService, accountService, idFacade)
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
-            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedAckAsync(e)));
+            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<Ack>(e)));
             _id = id;
-            _idFacade = idFacade;
         }
 
         public IAck Ack { get; set; }
@@ -50,29 +50,34 @@ namespace Lynx.Core.PeerVerification
             return syn.GetEncodedToken();
         }
 
-        public async Task ProcessEncryptedAckAsync(string ack)
+        /// <summary>
+        /// JSON-Encodes and sends attributes and attribute contents to the verifier for certification
+        /// </summary>
+        private void GenerateAndSendSynAck(Ack ack)
         {
-            string decryptedToken = _tokenCryptoService.Decrypt(ack, _accountService.GetPrivateKeyAsByteArray());
-            HandshakeTokenFactory<Ack> ackTokenFactory = new HandshakeTokenFactory<Ack>(_idFacade);
-            Ack ackObj = await ackTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
+            Attribute[] accessibleAttributes = { _id.Attributes["firstname"],
+                _id.Attributes["lastname"], _id.Attributes["cell"], _id.Attributes["address"]};
 
-            //Compare public address derived from the public key used to encrypt 
-            //the token with the public address used to control the ID specify
-            //in the token header. If they match then the person sending/encrypting
-            //the token is the same as the one controlling the ID specified in
-            //the header.
-            string tokenPublicAddress = AccountService.GeneratePublicAddressFromPublicKey(ackObj.PublicKey);
+            SynAck synAck = new SynAck()
+            {
+                Id = _id,
+                PublicKey = _accountService.PublicKey,
+                Encrypted = true,
+                AccessibleAttributes = accessibleAttributes
+            };
 
-            if (tokenPublicAddress != ackObj.Id.Owner)
-                throw new TokenSenderIsNotIDOwnerException();
-
-            //TODO: call display of the name
-            //TODO: send SYNACK
+            byte[] requesterPubKey = Encoding.UTF8.GetBytes(ack.PublicKey);
+            string encryptedToken = _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
+            _session.Send(encryptedToken);
         }
 
-        public void SendAttributes(List<Attribute> attributes)
+        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
-            throw new NotImplementedException();
+            Ack ack = await base.ProcessEncryptedHandshakeToken<Ack>(encryptedHandshakeToken);
+            GenerateAndSendSynAck(ack);
+            //We can return null because the caller of this method is an anonymous method in an EventHandler
+            //and it won't use the returned data
+            return null;
         }
     }
 }
