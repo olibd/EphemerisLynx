@@ -23,7 +23,6 @@ namespace Lynx.Core
         public void ConfigureEthNode(string userAddress, string userPassword, string factoryContract, string rpcEndpoint)
         {
             Web3 web3 = new Web3(rpcEndpoint);
-            string addressFrom = (web3.Eth.Accounts.SendRequestAsync().Result)[0];
             Mvx.RegisterSingleton<Web3>(() => web3);
             Mvx.RegisterSingleton<IAccountService>(() => new AccountService());
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());

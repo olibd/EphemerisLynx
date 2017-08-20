@@ -39,41 +39,33 @@ namespace Lynx.Core.Facade
 
         public async Task<ID> DeployAsync(ID id)
         {
-            try
+            FactoryService factory = new FactoryService(Web3, AccountService.PrivateKey, _factoryAddress);
+            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
+
+            //Use the provided Factory address to create an ID + IDController
+            Event idCreationEvent = factory.GetEventReturnIDController();
+            HexBigInteger filterAddressFrom =
+                await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
+            await factory.CreateIDAsync(new HexBigInteger(3905820));
+
+            List<EventLog<ReturnIDControllerEventDTO>> log =
+                await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
+
+            string controllerAddress = log[0].Event._controllerAddress;
+            IDControllerService idcService =
+                new IDControllerService(Web3, AccountService.PrivateKey, controllerAddress);
+
+            id.ControllerAddress = controllerAddress;
+            id.Address = await idcService.GetIDAsyncCall();
+
+
+            //Add each attribute from the ID model to the ID smart contract
+            foreach (string key in id.Attributes.Keys)
             {
-                FactoryService factory = new FactoryService(Web3, AccountService.PrivateKey, _factoryAddress);
-                Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-
-                //Use the provided Factory address to create an ID + IDController
-                Event idCreationEvent = factory.GetEventReturnIDController();
-                HexBigInteger filterAddressFrom =
-                    await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
-                await factory.CreateIDAsync(new HexBigInteger(3905820));
-
-                List<EventLog<ReturnIDControllerEventDTO>> log =
-                    await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
-
-                string controllerAddress = log[0].Event._controllerAddress;
-                IDControllerService idcService =
-                    new IDControllerService(Web3, AccountService.PrivateKey, controllerAddress);
-
-                id.ControllerAddress = controllerAddress;
-                id.Address = await idcService.GetIDAsyncCall();
-
-
-                //Add each attribute from the ID model to the ID smart contract
-                foreach (string key in id.Attributes.Keys)
-                {
-                    Attribute attribute = id.GetAttribute(key);
-                    await AddAttributeAsync(id, encoder.Encode(key), attribute);
-                }
-                return id;
+                Attribute attribute = id.GetAttribute(key);
+                await AddAttributeAsync(id, encoder.Encode(key), attribute);
             }
-            catch (Exception e)
-            {
-                var e2 = e;
-            }
-            return null;
+            return id;
         }
 
         //This function will only be used to create the initial ID object on login
