@@ -8,6 +8,8 @@ using eVi.abi.lib.pcl;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using System.Numerics;
+using Lynx.Core.Crypto.Interfaces;
+using Lynx.Core.Interfaces;
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 using Org.BouncyCastle.Crypto.Engines;
@@ -22,13 +24,13 @@ namespace Lynx.Core.Facade
 
         //TODO in the constructors: unlock account with the provided password
 
-        public AttributeFacade(string address, string password, ICertificateFacade certificateFacade, IContentService contentService) : base(address, password, new Web3())
+        public AttributeFacade(ICertificateFacade certificateFacade, IContentService contentService, IAccountService accountService) : base(new Web3(), accountService)
         {
             _certificateFacade = certificateFacade;
             _contentService = contentService;
         }
 
-        public AttributeFacade(string address, string password, Web3 web3, ICertificateFacade certificateFacade, IContentService contentService) : base(address, password, web3)
+        public AttributeFacade(Web3 web3, ICertificateFacade certificateFacade, IContentService contentService, IAccountService accountService) : base(web3, accountService)
         {
             _certificateFacade = certificateFacade;
             _contentService = contentService;
@@ -36,7 +38,7 @@ namespace Lynx.Core.Facade
 
         public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
         {
-            string transactionHash = await AttributeService.DeployContractAsync(Web3, Address, attribute.Location, attribute.Hash, owner, new HexBigInteger(800000));
+            string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, attribute.Hash, owner, new HexBigInteger(800000));
             TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
             //Populating the attribute model with the new address
@@ -55,7 +57,7 @@ namespace Lynx.Core.Facade
         public async Task<Attribute> GetAttributeAsync(string address)
         {
 
-            AttributeService ethAttribute = new AttributeService(Web3, address);
+            AttributeService ethAttribute = new AttributeService(Web3, AccountService.PrivateKey, address);
 
             //Populating attribute object with values from the smart contract
             Attribute attributeModel = new Attribute
@@ -83,7 +85,7 @@ namespace Lynx.Core.Facade
         public async Task<Dictionary<string, Certificate>> GetCertificatesAsync(Attribute attribute)
         {
             Dictionary<string, Certificate> certs = new Dictionary<string, Certificate>();
-            AttributeService ethAttribute = new AttributeService(Web3, attribute.Address);
+            AttributeService ethAttribute = new AttributeService(Web3, AccountService.PrivateKey, attribute.Address);
 
             //Getting the number of certificates in the attribute
             BigInteger certCount = await ethAttribute.CertificateCountAsyncCall();
@@ -109,8 +111,8 @@ namespace Lynx.Core.Facade
             }
 
             //Add the certificate to the attribute
-            AttributeService ethAttribute = new AttributeService(Web3, attribute.Address);
-            await ethAttribute.AddCertificateAsync(Address, cert.Address);
+            AttributeService ethAttribute = new AttributeService(Web3, AccountService.PrivateKey, attribute.Address);
+            await ethAttribute.AddCertificateAsync(cert.Address);
 
             return cert;
         }

@@ -4,20 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lynx.Core.Interfaces;
 
 namespace Lynx.Core.Facade
 {
     public class Facade
     {
         protected Web3 Web3 { get; }
-        protected string Address { get; }
-        protected string Password { get; }
+        protected IAccountService AccountService { get; }
 
-        public Facade(string address, string password, Web3 web3)
+        public Facade(Web3 web3, IAccountService accountService)
         {
             Web3 = web3;
-            Address = address;
-            Password = password;
+            AccountService = accountService;
         }
     }
 }
