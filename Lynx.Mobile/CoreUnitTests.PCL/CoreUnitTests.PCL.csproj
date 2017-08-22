@@ -48,7 +48,6 @@
     <Compile Include="RequesterServiceTest.cs" />
     <Compile Include="IDFacadeTest.cs" />
     <Compile Include="FacadeTest.cs" />
-    <Compile Include="TokenFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">

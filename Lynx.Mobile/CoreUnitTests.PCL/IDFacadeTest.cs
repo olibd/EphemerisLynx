@@ -79,130 +79,92 @@ namespace CoreUnitTests.PCL
 		{
 			ID id = new ID();
 			
-			//ID deployed = await _idFacade.DeployAsync(new ID());
 			Attribute attribute = new Attribute()
 			{
 				Location = "I am an atribute location",
 				Hash = "I am an attribute hash"
 			};
             id.AddAttribute("key1", attribute);
-			//Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-			//byte[] keyBytes = encoder.Encode("key1");
-			//Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, keyBytes, attribute);
+			
 			Attribute attribute2 = new Attribute()
 			{
 				Location = "I am the second atribute location",
 				Hash = "I am the second attribute hash"
 			};
             id.AddAttribute("key2", attribute2);
-            //byte[] keyBytes2 = encoder.Encode("key2");
-            //Attribute addedAttrib2 = await _idFacade.AddAttributeAsync(deployed, keyBytes2, attribute2);
-            id = await _idFacade.DeployAsync(id);
-			ID newId = await _idFacade.GetIDAsync(id.ControllerAddress);
-			Dictionary<string, Attribute> attributeDict = await _idFacade.GetAttributesAsync(newId);
-			Assert.AreEqual(2, attributeDict.Count());
-			//Assert.IsTrue(attributeDict.Keys.Contains(Encoding.UTF8.GetString(keyBytes, 0, keyBytes.Length)));
-
-			/**Attribute attribute2 = new Attribute()
-			{
-				Location = "I am the second attribute location",
-				Hash = "I am the second attribute hash"
-			};
-			byte[] keyBytes2 = encoder.Encode("test type2");
-			Attribute addedAttrib2 = await _idFacade.AddAttributeAsync(deployed, keyBytes2, attribute2);
+			
 			Attribute attribute3 = new Attribute()
 			{
-				Location = "I am the third attribute location",
+				Location = "I am the third atribute location",
 				Hash = "I am the third attribute hash"
 			};
-			byte[] keyBytes3 = encoder.Encode("test type3");
-			Attribute addedAttrib3 = await _idFacade.AddAttributeAsync(deployed, keyBytes3, attribute3);
+			id.AddAttribute("key3", attribute3);
 
-            ID newId = await _idFacade.GetIDAsync(deployed.ControllerAddress);
-			string[] accessibleAttributes = new string[] { "test type1", "test type2" };
-            Dictionary<string, Attribute> attributeDict = await _idFacade.GetAttributesAsync(newId);//, accessibleAttributes);
-            Assert.AreEqual(1, attributeDict.Count());**/
-			//Assert.AreEqual(accessibleAttributes, attributeDict.Keys.ToArray());
-			//Assert.AreEqual(attribute1, attributeDict["test type1"]);
-			//Assert.AreEqual(attribute2, attributeDict["test type2"]);
+            id = await _idFacade.DeployAsync(id);
+			ID newId = await _idFacade.GetIDAsync(id.ControllerAddress);
+            string[] accessibleAttributes = new string[] { "key1", "key3" };
+			Dictionary<string, Attribute> attributeDict = await _idFacade.GetAttributesAsync(newId, accessibleAttributes);
+			Assert.AreEqual(2, attributeDict.Count());
+            Assert.AreEqual(accessibleAttributes, attributeDict.Keys.ToArray());
 		}
 
 		[Test]
 		public async Task TestGetAttributesAsync()
 		{
-			ID deployed = await _idFacade.DeployAsync(new ID());
+			ID id = new ID();
+
 			Attribute attribute = new Attribute()
 			{
 				Location = "I am an atribute location",
 				Hash = "I am an attribute hash"
 			};
+			id.AddAttribute("key1", attribute);
 
-			Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-            byte[] keyBytes = encoder.Encode("key");
-			Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, keyBytes, attribute);
-
-			ID newId = await _idFacade.GetIDAsync(deployed.ControllerAddress);
-            Dictionary<string, Attribute> attributeDict = await _idFacade.GetAttributesAsync(newId);
-            Assert.AreEqual(1, attributeDict.Count());
-            Assert.IsTrue(attributeDict.Keys.Contains(Encoding.UTF8.GetString(keyBytes, 0, keyBytes.Length)));
-
-            /**
-			ID id = await _idFacade.DeployAsync(new ID());
-            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-			Attribute attribute1 = new Attribute()
-			{
-				Location = "I am the first attribute location",
-				Hash = "I am the first attribute hash"
-			};
-            await _idFacade.AddAttributeAsync(id, encoder.Encode("test type1"), attribute1);
-			//id.AddAttribute("test type1", attribute1);
 			Attribute attribute2 = new Attribute()
 			{
-				Location = "I am the second attribute location",
+				Location = "I am the second atribute location",
 				Hash = "I am the second attribute hash"
 			};
-			await _idFacade.AddAttributeAsync(id, encoder.Encode("test type2"), attribute2);
-			Attribute attribute3 = new Attribute()
-			{
-				Location = "I am the third attribute location",
-				Hash = "I am the third attribute hash"
-			};
-			await _idFacade.AddAttributeAsync(id, encoder.Encode("test type3"), attribute3);
-            ID newId = await _idFacade.GetIDAsync(id.ControllerAddress);
+			id.AddAttribute("key2", attribute2);
+
+			id = await _idFacade.DeployAsync(id);
+			ID newId = await _idFacade.GetIDAsync(id.ControllerAddress);
 			Dictionary<string, Attribute> attributeDict = await _idFacade.GetAttributesAsync(newId);
-			Assert.AreEqual(3, newId.Attributes.Count);
-			Assert.AreEqual(attribute1, attributeDict["test type1"]);
-			Assert.AreEqual(attribute2, attributeDict["test type2"]);
-            Assert.AreEqual(attribute3, attributeDict["test type3"]);**/
+			Assert.AreEqual(2, attributeDict.Count());
 		}
 
-		/**[Test]
-        public async Task TestGetIDAsync()
-        {
-			ID id = await _idFacade.DeployAsync(new ID());
-            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-			Attribute attribute1 = new Attribute()
+		[Test]
+		public async Task TestGetIDAsync()
+		{
+			ID id = new ID();
+
+			Attribute attribute = new Attribute()
 			{
-				Location = "I am the first attribute location",
-				Hash = "I am the first attribute hash"
+				Location = "I am an atribute location",
+				Hash = "I am an attribute hash"
 			};
-			id.AddAttribute("test type1", attribute1);
+			id.AddAttribute("key1", attribute);
+
 			Attribute attribute2 = new Attribute()
 			{
-				Location = "I am the second attribute location",
+				Location = "I am the second atribute location",
 				Hash = "I am the second attribute hash"
 			};
-			id.AddAttribute("test type2", attribute2);
+			id.AddAttribute("key2", attribute2);
+
 			Attribute attribute3 = new Attribute()
 			{
-				Location = "I am the third attribute location",
+				Location = "I am the third atribute location",
 				Hash = "I am the third attribute hash"
 			};
-			id.AddAttribute("test type3", attribute3);
+			id.AddAttribute("key3", attribute3);
+
 			id = await _idFacade.DeployAsync(id);
-            ID id2 = await _idFacade.GetIDAsync(id.Address);
-            Assert.AreEqual(id,id2);
-            Assert.AreEqual(id.Attributes,id2.Attributes);
-        }**/
+            string[] accessibleAttributes = new string[] { "key1", "key3" };
+			ID newId = await _idFacade.GetIDAsync(id.ControllerAddress, accessibleAttributes);
+			Assert.AreEqual(2, newId.Attributes.Count());
+			Assert.AreEqual(accessibleAttributes, newId.Attributes.Keys.ToArray());
+		}
+
 	}
 }

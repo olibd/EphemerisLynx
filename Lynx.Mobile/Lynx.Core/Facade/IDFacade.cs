@@ -130,6 +130,7 @@ namespace Lynx.Core.Facade
 				//Get all attribute keys and addresses for the ID
 				byte[] attributeKey = await idcService.GetAttributeKeyAsyncCall(i);
                 string keyStr = Encoding.UTF8.GetString(attributeKey, 0, attributeKey.Length);
+                keyStr = keyStr.TrimEnd('\0');//remove null characters at the end of string
                 if (accessibleAttributes.Contains(keyStr))
 				{
 					//Get the attribute and add it to the dict
@@ -137,7 +138,7 @@ namespace Lynx.Core.Facade
 					dict.Add(keyStr, newAttribute);
                 }
 			}
-			return dict;
+            return dict;
 		}
 
         private async Task<Attribute> GetAttributeByKey(IDControllerService idcService, byte[] attributeKey) 
