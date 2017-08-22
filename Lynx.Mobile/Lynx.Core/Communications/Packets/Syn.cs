@@ -10,11 +10,11 @@ namespace Lynx.Core.Communications.Packets
         {
         }
 
-        protected Syn(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload, id)
+        public Syn(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload, id)
         {
         }
 
-        protected Syn(Dictionary<string, string> header, Dictionary<string, string> payload) : base(header, payload)
+        public Syn(Dictionary<string, string> header, Dictionary<string, string> payload) : base(header, payload)
         {
         }
 
