@@ -22,13 +22,18 @@ namespace Lynx.Core.Communications.Packets
 
             //decode header to get the ID address and the accessible attribtue
             string[] splittedEncodedToken = encodedToken.Split('.');
-            string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
-            jsonDecodedHeader = Uri.EscapeDataString(jsonDecodedHeader);
-            Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
+            string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
+            Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
 
+            ID id;
             //get the accessible attributes
-            string[] accessibleAttributes = JsonConvert.DeserializeObject<string[]>(header["accAttr"]);
-            ID id = await _idFacade.GetIDAsync(header["idAddr"], accessibleAttributes);
+            if (payload.ContainsKey("accAttr"))
+            {
+                string[] accessibleAttributes = JsonConvert.DeserializeObject<string[]>(payload["accAttr"]);
+                id = await _idFacade.GetIDAsync(payload["idAddr"], accessibleAttributes);
+            }
+            else
+                id = await _idFacade.GetIDAsync(payload["idAddr"]);
 
             t.Id = id;
             return t;
