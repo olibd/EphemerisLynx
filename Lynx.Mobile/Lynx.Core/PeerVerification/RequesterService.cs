@@ -66,7 +66,7 @@ namespace Lynx.Core.PeerVerification
                 AccessibleAttributes = accessibleAttributes
             };
 
-            byte[] requesterPubKey = Encoding.UTF8.GetBytes(ack.PublicKey);
+            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(ack.PublicKey);
             string encryptedToken = _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
         }

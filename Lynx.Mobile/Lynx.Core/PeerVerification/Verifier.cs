@@ -49,7 +49,7 @@ namespace Lynx.Core.PeerVerification
                 AccessibleAttributes = accessibleAttributes
             };
 
-            byte[] requesterPubKey = Encoding.UTF8.GetBytes(syn.PublicKey);
+            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(syn.PublicKey);
             string encryptedToken = _tokenCryptoService.Encrypt(ack, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Open(syn.NetworkAddress);
             _session.Send(encryptedToken);
@@ -59,7 +59,9 @@ namespace Lynx.Core.PeerVerification
         {
             HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_idFacade);
             Syn syn = await synFactory.CreateHandshakeTokenAsync(synString);
-            if (_tokenCryptoService.Verify(syn, Encoding.UTF8.GetBytes(syn.PublicKey)))
+
+            byte[] pubK = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(syn.PublicKey);
+            if (_tokenCryptoService.Verify(syn, pubK))
                 Acknowledge(syn);
             else
                 throw new SignatureDoesntMatchException("The signature was not " +
