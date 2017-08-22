@@ -9,7 +9,7 @@ using Lynx.Core.Communications.Interfaces;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
-namespace CoreUnitTests
+namespace CoreUnitTests 
 {
     [TestFixture]
     public class SessionTest

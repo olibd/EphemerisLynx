@@ -6,6 +6,7 @@ using Lynx.Core.Crypto;
 using Lynx.Core.Models.IDSubsystem;
 using NUnit.Framework;
 
+
 namespace CoreUnitTests.PCL
 {
     [TestFixture()]
@@ -51,6 +52,18 @@ namespace CoreUnitTests.PCL
 
             //Verify: Negative Scenario
             Assert.IsFalse(_tCS.Verify(token, _account2.GetPublicKeyAsByteArray()));
+        }
+
+        [Test]
+        public void TestEncryptAndDecrypt()
+        {
+            string cipherData = _tCS.Encrypt(token, _account.GetPublicKeyAsByteArray(), _account.GetPrivateKeyAsByteArray());
+            Assert.AreNotEqual(null, cipherData);
+            string decryptedData = _tCS.Decrypt(cipherData, _account.GetPrivateKeyAsByteArray());
+            Assert.AreNotEqual(cipherData, decryptedData);
+            string[] splittedDecryptedData = decryptedData.Split('.');
+            Assert.AreEqual(token.GetEncodedHeader(), splittedDecryptedData[0]);
+            Assert.AreEqual(token.GetEncodedPayload(), splittedDecryptedData[1]);
         }
     }
 }

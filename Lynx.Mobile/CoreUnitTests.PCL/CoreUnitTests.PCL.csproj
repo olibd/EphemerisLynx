@@ -32,8 +32,6 @@
     <Compile Include="SessionTest.cs" />
     <None Include="AttributeFacadeTest.cs" />
     <None Include="CertificateFacadeTest.cs" />
-    <None Include="FacadeTest.cs" />
-    <None Include="IDFacadeTest.cs" />
     <Compile Include="Canary.cs" />
     <Compile Include="MapperTest.cs" />
     <Compile Include="IDMapperTest.cs" />
@@ -48,6 +46,9 @@
     <Compile Include="SynTest.cs" />
     <Compile Include="AckTest.cs" />
     <Compile Include="RequesterServiceTest.cs" />
+    <Compile Include="IDFacadeTest.cs" />
+    <Compile Include="FacadeTest.cs" />
+    <Compile Include="TokenFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">

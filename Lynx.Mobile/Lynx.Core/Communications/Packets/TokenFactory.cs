@@ -3,20 +3,21 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.Facade;
+using Lynx.Core.Facade.Interfaces;
 using System.Threading.Tasks;
 
 namespace Lynx.Core.Communications.Packets       
 {
     public class TokenFactory<T> where T : Token, new()
     {
-        private IDFacade _iDFacade;
+        private IIDFacade _iDFacade;
 
-        public TokenFactory(IDFacade iDFacade)
+        public TokenFactory(IIDFacade iDFacade)
         {
             _iDFacade = iDFacade; 
         }
 
-		public async Task<T> CreateToken(string encodedToken, string[] accessibleAttributes)
+		public async Task<T> CreateToken(string encodedToken, string[] accessibleAttributes = null)
         {
             T t;
 			var settings = new JsonSerializerSettings();
