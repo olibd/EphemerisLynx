@@ -13,11 +13,11 @@ namespace Lynx.Core.Communications.Packets
 
         }
 
-        protected Ack(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload, id)
+        public Ack(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload, id)
         {
         }
 
-        protected Ack(Dictionary<string, string> header, Dictionary<string, string> payload) : base(header, payload)
+        public Ack(Dictionary<string, string> header, Dictionary<string, string> payload) : base(header, payload)
         {
         }
     }
