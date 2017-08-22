@@ -30,8 +30,8 @@ namespace Lynx.Core.PeerVerification
         protected virtual async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken) where T : HandshakeToken, new()
         {
             string decryptedToken = _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
-            HandshakeTokenFactory<T> ackTokenFactory = new HandshakeTokenFactory<T>(_idFacade);
-            T handshakeToken = await ackTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
+            HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade);
+            T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
 
             //Compare public address derived from the public key used to encrypt 
             //the token with the public address used to control the ID specify
