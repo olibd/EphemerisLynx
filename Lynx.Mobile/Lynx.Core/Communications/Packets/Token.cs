@@ -63,12 +63,22 @@ namespace Lynx.Core.Communications.Packets
         public void SetOnHeader(string key, string val)
         {
             Contract.Ensures(!_signedAndlocked);
+
+            //Existing key value pairs are overwritten
+            if (_header.ContainsKey(key))
+                RemoveFromHeader(key);
+
             _header.Add(key, val);
         }
 
         public void SetOnPayload(string key, string val)
         {
             Contract.Ensures(!_signedAndlocked);
+
+            //Existing key value pairs are overwritten
+            if (_payload.ContainsKey(key))
+                RemoveFromPayload(key);
+
             _payload.Add(key, val);
         }
 
