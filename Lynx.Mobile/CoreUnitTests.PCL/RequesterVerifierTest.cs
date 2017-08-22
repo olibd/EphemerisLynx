@@ -37,6 +37,8 @@ namespace CoreUnitTests.PCL
         private SynAck _synAck;
         private readonly string[] _allAttributes = { "firstname", "lastname", "cell", "address", "extra" };
         private readonly string[] _accessibleAttributes = { "firstname", "lastname", "cell", "address" };
+        private readonly string idAddr1 = "0x1FD8397e8108ada12eC07976D92F773364ba46e7";
+        private readonly string idAddr2 = "0x00a329c0648769A73afAc7F9381E08FB43dBEA72";
 
         [SetUp]
         public void Setup()
@@ -57,8 +59,8 @@ namespace CoreUnitTests.PCL
 
         public async Task SetupIDsAsync()
         {
-            _id1 = await _idFacade1.GetIDAsync(_accountService1.GetAccountAddress(), new string[] { "firstname", "lastname", "cell", "address", "extra" });
-            _id2 = await _idFacade2.GetIDAsync(_accountService2.GetAccountAddress(), new string[] { "firstname", "lastname", "cell", "address", "extra2" });
+            _id1 = await _idFacade1.GetIDAsync(idAddr1, new string[] { "firstname", "lastname", "cell", "address", "extra" });
+            _id2 = await _idFacade2.GetIDAsync(idAddr2, new string[] { "firstname", "lastname", "cell", "address", "extra2" });
         }
 
         [Test]
@@ -72,7 +74,9 @@ namespace CoreUnitTests.PCL
                 waitHandle.Set();
             };
 
-            if (waitHandle.WaitOne(1000))
+            _verifier.ProcessSyn(encodedSyn).Wait();
+
+            if (waitHandle.WaitOne(100000))
             {
                 foreach (string attrKey in _accessibleAttributes)
                 {
@@ -131,6 +135,11 @@ namespace CoreUnitTests.PCL
                 id.Owner = _accountService.GetAccountAddress();
 
                 return id;
+            }
+
+            public Task<ID> GetIDAsync(string address)
+            {
+                return GetIDAsync(address, new string[] { "firstname", "lastname", "cell", "address", "extra" });
             }
         }
     }
