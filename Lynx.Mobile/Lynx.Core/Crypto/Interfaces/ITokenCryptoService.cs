@@ -1,4 +1,4 @@
-﻿using Lynx.Core.Communications.Packets.Interfaces;
+using Lynx.Core.Communications.Packets.Interfaces;
 
 namespace Lynx.Core.Crypto.Interfaces
 {

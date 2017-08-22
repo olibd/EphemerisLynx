@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -32,8 +32,6 @@
     <Compile Include="SessionTest.cs" />
     <None Include="AttributeFacadeTest.cs" />
     <None Include="CertificateFacadeTest.cs" />
-    <None Include="FacadeTest.cs" />
-    <None Include="IDFacadeTest.cs" />
     <Compile Include="Canary.cs" />
     <Compile Include="MapperTest.cs" />
     <Compile Include="IDMapperTest.cs" />
@@ -49,6 +47,8 @@
     <Compile Include="AckTest.cs" />
     <Compile Include="RequesterServiceTest.cs" />
     <Compile Include="RequesterVerifierTest.cs" />
+    <Compile Include="IDFacadeTest.cs" />
+    <Compile Include="FacadeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">

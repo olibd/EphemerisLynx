@@ -71,12 +71,12 @@ namespace Lynx.Core.Crypto
             byte[] derivedKey = DeriveSymmetricKeyFromSharedSecret(sharedSecret);
 
             KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DES", derivedKey);
-            IBufferedCipher cipher = CipherUtilities.GetCipher("DES/ECB/ISO7816_4PADDING");
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7PADDING");
             cipher.Init(true, keyparam);
 
             try
             {
-                output = cipher.DoFinal(data);
+                output = cipher.DoFinal(data,0,data.Length);
                 return output;
             }
             catch (InvalidCipherTextException ex)
@@ -98,12 +98,12 @@ namespace Lynx.Core.Crypto
             byte[] derivedKey = DeriveSymmetricKeyFromSharedSecret(sharedSecret);
 
             KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DES", derivedKey);
-            IBufferedCipher cipher = CipherUtilities.GetCipher("DES/ECB/ISO7816_4PADDING");
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7PADDING");
             cipher.Init(false, keyparam);
 
             try
             {
-                output = cipher.DoFinal(cipherData);
+                output = cipher.DoFinal(cipherData, 0, cipherData.Length);
                 return output;
             }
             catch (InvalidCipherTextException ex)
