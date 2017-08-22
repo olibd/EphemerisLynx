@@ -46,7 +46,7 @@ namespace Lynx.Core.Facade
         public async Task<Certificate> DeployAsync(Certificate cert)
         {
             //Standard Ethereum contract deploy and get address
-            string transactionHash = await CertificateService.DeployContractAsync(Web3, AccountService.PrivateKey, cert.Location, cert.Hash, cert.OwningAttribute.Address, new HexBigInteger(600000));
+            string transactionHash = await CertificateService.DeployContractAsync(Web3, AccountService.PrivateKey, cert.Location, cert.Hash, cert.OwningAttribute.Address);
             TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
             cert.Address = receipt.ContractAddress;
             return cert;

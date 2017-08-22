@@ -38,7 +38,7 @@ namespace Lynx.Core.Facade
 
         public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
         {
-            string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, attribute.Hash, owner, new HexBigInteger(800000));
+            string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, attribute.Hash, owner);
             TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
             //Populating the attribute model with the new address

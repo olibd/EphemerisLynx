@@ -46,7 +46,7 @@ namespace Lynx.Core.Facade
             Event idCreationEvent = factory.GetEventReturnIDController();
             HexBigInteger filterAddressFrom =
                 await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
-            await factory.CreateIDAsync(new HexBigInteger(3905820));
+            await factory.CreateIDAsync();
 
             List<EventLog<ReturnIDControllerEventDTO>> log =
                 await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
@@ -98,7 +98,7 @@ namespace Lynx.Core.Facade
                 attribute = await _attributeFacade.DeployAsync(attribute, id.Address);
 
 
-            await idcService.AddAttributeAsync(key, attribute.Address, new HexBigInteger(3905820));
+            await idcService.AddAttributeAsync(key, attribute.Address);
 
             return attribute;
         }
