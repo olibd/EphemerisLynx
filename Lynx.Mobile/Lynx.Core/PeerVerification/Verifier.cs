@@ -15,12 +15,12 @@ namespace Lynx.Core.PeerVerification
     public class Verifier : IVerifier
     {
         private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
-        private IDFacade _iDFacade;
+        private IDFacade _idFacade;
 
-        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IDFacade iDFacade)
+        public Verifier(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IDFacade idFacade)
         {
             _tokenCryptoService = tokenCryptoService;
-            _iDFacade = iDFacade;
+            _idFacade = idFacade;
         }
 
         public ISyn Syn { get; set; }
@@ -32,7 +32,7 @@ namespace Lynx.Core.PeerVerification
 
         public async void ProcessSyn(string synString)
         {
-            TokenFactory<Syn> synFactory= new TokenFactory<Syn>(_iDFacade);
+            TokenFactory<Syn> synFactory= new TokenFactory<Syn>(_idFacade);
             string[] accessibleAttributes = new string[]{""};//dummy temporary array 
             Syn syn = await synFactory.CreateToken(synString, accessibleAttributes);
 			string pubAddress = AccountService.GeneratePublicAddressFromPublicKey(syn.PublicKey);
