@@ -22,7 +22,6 @@ namespace Lynx.Core.Facade
         private ICertificateFacade _certificateFacade;
         private IContentService _contentService;
 
-        //TODO in the constructors: unlock account with the provided password
 
         public AttributeFacade(ICertificateFacade certificateFacade, IContentService contentService, IAccountService accountService) : base(new Web3(), accountService)
         {
@@ -112,7 +111,7 @@ namespace Lynx.Core.Facade
 
             //Add the certificate to the attribute
             AttributeService ethAttribute = new AttributeService(Web3, AccountService.PrivateKey, attribute.Address);
-            await ethAttribute.AddCertificateAsync(cert.Address);
+            await ethAttribute.AddCertificateAsync(cert.Address, new HexBigInteger(800000));
 
             return cert;
         }
