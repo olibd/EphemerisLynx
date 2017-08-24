@@ -16,7 +16,8 @@ namespace Lynx.Core.Crypto
 		}
 		public string Encrypt(T token, byte[] pubkey, byte[] privkey)
 		{
-			byte[] encryptedPayloadBytes = _ieccCryptoService.Encrypt(Encoding.UTF8.GetBytes(token.GetEncodedPayload()), pubkey, privkey);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(token.GetEncodedPayload());
+			byte[] encryptedPayloadBytes = _ieccCryptoService.Encrypt(payloadBytes, pubkey, privkey);
 			string encryptedPayload = Convert.ToBase64String(encryptedPayloadBytes);
 			return token.GetEncodedHeader() + "." + encryptedPayload;
 		}

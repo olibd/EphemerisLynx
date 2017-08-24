@@ -34,7 +34,7 @@ namespace CoreUnitTests.PCL
             {
                 Encrypted = false,
                 PublicKey = _account.PublicKey,
-                NetworkAddress = "123",
+                NetworkAddress = "a8aa460b582f9dd543835d2388dd7b0b15fa0ddfbc5d386cf187df6720e3d95656789abcd56789abcd56789abcd",
                 Id = id
             };
         }
@@ -57,6 +57,8 @@ namespace CoreUnitTests.PCL
         [Test]
         public void TestEncryptAndDecrypt()
         {
+			Assert.Null(token.Signature);
+			_tCS.Sign(token, _account.GetPrivateKeyAsByteArray());
             string cipherData = _tCS.Encrypt(token, _account.GetPublicKeyAsByteArray(), _account.GetPrivateKeyAsByteArray());
             Assert.AreNotEqual(null, cipherData);
             string decryptedData = _tCS.Decrypt(cipherData, _account.GetPrivateKeyAsByteArray());
