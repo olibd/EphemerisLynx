@@ -46,8 +46,8 @@
     <Compile Include="SynTest.cs" />
     <Compile Include="AckTest.cs" />
     <Compile Include="RequesterServiceTest.cs" />
-    <Compile Include="IDFacadeTest.cs" />
-    <Compile Include="FacadeTest.cs" />
+    <None Include="IDFacadeTest.cs" />
+    <None Include="FacadeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">

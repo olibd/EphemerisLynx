@@ -18,7 +18,6 @@ namespace Lynx.Core.Crypto
         private string _curveName = "secp256k1";
         private X9ECParameters _ecP;
         private ECDomainParameters _ecSpec;
-        private ISigner _signer = SignerUtilities.GetSigner("SHA-256withECDSA");
 
         public SECP256K1CryptoService()
         {
@@ -28,34 +27,26 @@ namespace Lynx.Core.Crypto
 
         public ECPublicKeyParameters GeneratePublicKey(byte[] pubkey)
         {
-            FpCurve c = (FpCurve)_ecP.Curve;
             ECPoint point = _ecSpec.Curve.DecodePoint(pubkey);
             ECPublicKeyParameters publicKey = new ECPublicKeyParameters("ECDH", point, _ecSpec);
-            return publicKey;
+			return publicKey;
         }
 
         public ECPrivateKeyParameters GeneratePrivateKey(byte[] privkey)
         {
-            ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("ECDH", new BigInteger(privkey), _ecSpec);
+            string privKeyString = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHex(privkey);
+            ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("ECDH", new BigInteger(privKeyString, 16), _ecSpec);
             return privateKey;
         }
 
         public byte[] GetSharedSecretValue(ECPublicKeyParameters publicKey, ECPrivateKeyParameters privateKey)
         {
-            ECDHCBasicAgreement eLacAgreement = new ECDHCBasicAgreement();
+			ECDHCBasicAgreement eLacAgreement = new ECDHCBasicAgreement();
             eLacAgreement.Init(privateKey);
-            BigInteger d = privateKey.D;
-            ECPoint q = publicKey.Q;
-            //publicKey.Q.multiply(privateKey.D).normalize();
-            BigInteger eLA = eLacAgreement.CalculateAgreement(publicKey);
-            return eLA.ToByteArray();
-            /**
-			IBasicAgreement aKeyAgree = AgreementUtilities.GetBasicAgreement("ECDH");
-			aKeyAgree.Init(privateKey);
-			BigInteger sharedSecret = aKeyAgree.CalculateAgreement(publicKey);
-			byte[] sharedSecretBytes = sharedSecret.ToByteArray();
-            return sharedSecretBytes; **/
-        }
+			BigInteger eLA = eLacAgreement.CalculateAgreement(publicKey);
+            byte[] eLABytes = eLA.ToByteArray(); 
+            return eLABytes;
+		}
 
         /// <summary>
         /// Derives the symmetric key from the shared secret.
