@@ -10,11 +10,11 @@ namespace Lynx.Core.Communications.Packets
 {
     public class TokenFactory<T> where T : Token, new()
     {
-        private IIDFacade _iDFacade;
+        private IIDFacade _idFacade;
 
-        public TokenFactory(IIDFacade iDFacade)
+        public TokenFactory(IIDFacade idFacade)
         {
-            _iDFacade = iDFacade; 
+            _idFacade = idFacade; 
         }
 
 		public async Task<T> CreateToken(string encodedToken, string[] accessibleAttributes = null)
@@ -30,7 +30,7 @@ namespace Lynx.Core.Communications.Packets
 			Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader, settings);
 			Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload, settings);
 
-            ID id = await _iDFacade.GetIDAsync(header["idAddr"], accessibleAttributes);
+            ID id = await _idFacade.GetIDAsync(header["idAddr"], accessibleAttributes);
 
 			if (splittedEncodedToken.Length == 3)
 			{

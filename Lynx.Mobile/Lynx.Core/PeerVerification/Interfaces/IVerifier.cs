@@ -14,7 +14,6 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// Parses a JSON-encoded SYN and verifies its integrity.
         /// </summary>
         /// <param name="syn">The JSON-encoded SYN</param>
-        /// <returns>The Syn object</returns>
         void ProcessSyn(string syn);
 
         /// <summary>
