@@ -27,16 +27,20 @@ namespace CoreUnitTests.PCL
             Task<string> deployFactory = DeployFactory();
             deployFactory.Wait();
 
-            _certFacade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
-            _attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade, new DummyContentService());
-            _idFacade = new IDFacade(_addressFrom, "", deployFactory.Result, _web3, _attributeFacade);
+            _certFacade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
+            _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
+            _idFacade = new IDFacade(deployFactory.Result, _web3, _attributeFacade, _accountService);
         }
 
         private async Task<string> DeployFactory()
         {
+            // Until the Nethereum NullReferenceException issue is figured out, we're going to be using a known address for the factory
+            /*
             string transactionHash = await FactoryService.DeployContractAsync(_web3, _addressFrom, new HexBigInteger(3905820));
             TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
             return receipt.ContractAddress;
+            */
+            return "0x6d10E8ca4d6EC1De78D11D12fCAF89256f6FD13E";
         }
 
         [Test]
