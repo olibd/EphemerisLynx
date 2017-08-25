@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Lynx.Core.Communications.Interfaces;
 using Nethereum.ABI.Util;
@@ -21,13 +22,16 @@ namespace Lynx.Core.Communications
                 SubscribeKey = "sub-c-6d071204-6b3a-11e7-b6db-02ee2ddab7fe"
             };
 
+            //filter out your own messages
+            pubNubConfig.FilterExpression = "uuid != '" + pubNubConfig.Uuid + "'";
+
             _pubNub = new Pubnub(pubNubConfig);
             AddMessageReceptionHandler(messageEventHandler);
         }
 
         public void AddMessageReceptionHandler(EventHandler<string> handler)
         {
-            _pubNub.AddListener(new PubNubCallback(handler));
+            _pubNub.AddListener(new PubNubCallback(handler, _pubNub.PNConfig));
         }
 
         public void Close()
@@ -67,8 +71,13 @@ namespace Lynx.Core.Communications
 
         public void Send(string message)
         {
+            //Add your identifier to the message
+            Dictionary<string, object> meta = new Dictionary<string, object>();
+            meta.Add("uuid", _pubNub.PNConfig.Uuid);
+
             _pubNub.Publish()
                 .Channel(_channel)
+                .Meta(meta)
                 .Message(message)
                 .ShouldStore(false)
                 .UsePOST(true)

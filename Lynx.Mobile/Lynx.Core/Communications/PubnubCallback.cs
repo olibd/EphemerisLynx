@@ -5,11 +5,14 @@ namespace Lynx.Core.Communications
 {
     class PubNubCallback : SubscribeCallback
     {
+        PNConfiguration _config;
+
         private event EventHandler<string> MessageReceived;
 
-        public PubNubCallback(EventHandler<string> eventHandler)
+        public PubNubCallback(EventHandler<string> eventHandler, PNConfiguration config)
         {
             MessageReceived += eventHandler;
+            _config = config;
         }
 
         public override void Status(Pubnub pubnub, PNStatus status)
@@ -20,7 +23,6 @@ namespace Lynx.Core.Communications
         {
             if (message.Message != null && MessageReceived.GetInvocationList().Length != 0)
             {
-                //TODO: Check sender to ignore own messages
                 MessageReceived(this, message.Message.ToString());
             }
         }
