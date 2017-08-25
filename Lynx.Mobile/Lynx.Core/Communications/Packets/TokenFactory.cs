@@ -20,9 +20,6 @@ namespace Lynx.Core.Communications.Packets
             var settings = new JsonSerializerSettings();
             settings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
 
-            jsonDecodedHeader = Uri.EscapeDataString(jsonDecodedHeader);
-            jsonDecodedPayload = Uri.EscapeDataString(jsonDecodedPayload);
-
             Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader, settings);
             Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload, settings);
 
