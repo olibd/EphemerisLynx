@@ -89,7 +89,7 @@ namespace CoreUnitTests.PCL
 
             string[] splittedEncodedToken = encodedToken.Split('.');
 
-            Assert.AreEqual(3, splittedEncodedToken);
+            Assert.AreEqual(3, splittedEncodedToken.Length);
 
             string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
             string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
