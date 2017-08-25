@@ -44,7 +44,7 @@ namespace CoreUnitTests
             Task.Delay(2000).Wait();
 
             _session1.Send(message);
-            resetEvent.WaitOne(10000);
+            resetEvent.WaitOne(50000);
 
             Assert.AreEqual(message, messageReceived);
         }
