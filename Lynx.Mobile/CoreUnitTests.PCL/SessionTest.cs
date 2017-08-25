@@ -9,7 +9,7 @@ using Lynx.Core.Communications.Interfaces;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
-namespace CoreUnitTests 
+namespace CoreUnitTests
 {
     [TestFixture]
     public class SessionTest
@@ -37,14 +37,14 @@ namespace CoreUnitTests
                     messageReceived = eventArgs;
                 }
             );
-            ;
+
             string sessionKey = _session1.Open();
             _session2.Open(sessionKey);
 
             Task.Delay(2000).Wait();
 
             _session1.Send(message);
-            resetEvent.WaitOne(5000);
+            resetEvent.WaitOne(10000);
 
             Assert.AreEqual(message, messageReceived);
         }
