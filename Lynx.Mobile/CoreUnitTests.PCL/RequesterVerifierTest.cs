@@ -53,8 +53,10 @@ namespace CoreUnitTests.PCL
 
             SetupIDsAsync().Wait();
 
-            _requester = new RequesterService(_tkCrypto, _accountService1, _id1, _idFacade1);
-            _verifier = new Verifier(_tkCrypto, _accountService2, _id2, _idFacade2);
+            //Uses ID facade 2 because it wants to be able to load ID 2
+            _requester = new RequesterService(_tkCrypto, _accountService1, _id1, _idFacade2);
+            //Uses ID facade 1 because it wants to be able to load ID 1
+            _verifier = new Verifier(_tkCrypto, _accountService2, _id2, _idFacade1);
         }
 
         public async Task SetupIDsAsync()
