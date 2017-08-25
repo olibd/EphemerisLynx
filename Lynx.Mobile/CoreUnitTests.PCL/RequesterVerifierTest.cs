@@ -63,7 +63,6 @@ namespace CoreUnitTests.PCL
             _id2 = await _idFacade2.GetIDAsync(idAddr2, new string[] { "firstname", "lastname", "cell", "address", "extra2" });
         }
 
-        [Test]
         public void VerificationRequestHandshakeTest()
         {
             string encodedSyn = _requester.CreateEncodedSyn();
@@ -119,6 +118,10 @@ namespace CoreUnitTests.PCL
             public async Task<ID> GetIDAsync(string address, string[] accessibleAttributes)
             {
                 ID id = new ID();
+
+                if (accessibleAttributes == null)
+                    accessibleAttributes = new string[] { "firstname", "lastname", "cell", "address", "extra" };
+
                 foreach (string key in accessibleAttributes)
                 {
                     Attribute attr = new Attribute()
@@ -137,9 +140,9 @@ namespace CoreUnitTests.PCL
                 return id;
             }
 
-            public Task<ID> GetIDAsync(string address)
+            public Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
             {
-                return GetIDAsync(address, new string[] { "firstname", "lastname", "cell", "address", "extra" });
+                throw new NotImplementedException();
             }
         }
     }
