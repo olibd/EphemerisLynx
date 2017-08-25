@@ -15,11 +15,9 @@ namespace CoreUnitTests.PCL
             base.Setup();
             IContent name = new StringContent("Olivier");
             _payload.Add("name", JsonConvert.SerializeObject(name));
-            _token = new Ack()
+            _token = new Ack(_header, _payload)
             {
                 //TODO: add accessible attributes property
-                Encrypted = Boolean.Parse(_header["encrypted"]),
-                PublicKey = _header["pubkey"],
                 Id = _id
             };
         }
