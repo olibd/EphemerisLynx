@@ -65,6 +65,7 @@ namespace CoreUnitTests.PCL
             _id2 = await _idFacade2.GetIDAsync(idAddr2, new string[] { "firstname", "lastname", "cell", "address", "extra2" });
         }
 
+        [Test]
         public void VerificationRequestHandshakeTest()
         {
             string encodedSyn = _requester.CreateEncodedSyn();
