@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Newtonsoft.Json;
 using Lynx.Core.Models.IDSubsystem;
+using static System.Diagnostics.Contracts.Contract;
 
 namespace Lynx.Core.Communications.Packets
 {
@@ -30,15 +31,13 @@ namespace Lynx.Core.Communications.Packets
 
         protected Token(Dictionary<string, string> header, Dictionary<string, string> payload)
         {
-            _header = new Dictionary<string, string>();
-            _payload = new Dictionary<string, string>();
             _header = header;
             _payload = payload;
         }
 
         public void SignAndLock(string signature)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
             _signedAndlocked = true;
             _signature = signature;
         }
@@ -62,7 +61,7 @@ namespace Lynx.Core.Communications.Packets
 
         public void SetOnHeader(string key, string val)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
 
             //Existing key value pairs are overwritten
             if (_header.ContainsKey(key))
@@ -73,7 +72,7 @@ namespace Lynx.Core.Communications.Packets
 
         public void SetOnPayload(string key, string val)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
 
             //Existing key value pairs are overwritten
             if (_payload.ContainsKey(key))
@@ -84,13 +83,13 @@ namespace Lynx.Core.Communications.Packets
 
         public void RemoveFromHeader(string key)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
             _header.Remove(key);
         }
 
         public void RemoveFromPayload(string key)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
             _payload.Remove(key);
         }
 
@@ -119,6 +118,12 @@ namespace Lynx.Core.Communications.Packets
         public string GetUnsignedEncodedToken()
         {
             return GetEncodedHeader() + "." + GetEncodedPayload();
+        }
+
+        private void EnsureTokenIsNotSignedAndLocked()
+        {
+            if (_signedAndlocked)
+                throw new TokenIsSignedAndLockedException();
         }
     }
 }
