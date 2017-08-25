@@ -84,7 +84,19 @@ namespace CoreUnitTests.PCL
                     Assert.IsNotNull(_synAck.Id.GetAttribute(attrKey));
                 }
 
-                Assert.IsNull(_synAck.Id.GetAttribute(_allAttributes[4]));
+                //Check if the extra attribute is present. It should not be
+                //because it is not part of the accessible attributes arrray
+
+                bool failed = false;
+                try
+                {
+                    _synAck.Id.GetAttribute(_allAttributes[4]);
+                }
+                catch (Exception e)
+                {
+                    failed = true;
+                }
+                Assert.True(failed);
             }
             else
                 Assert.Fail();
