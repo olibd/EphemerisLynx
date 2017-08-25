@@ -1,4 +1,4 @@
-﻿using Lynx.Core.Communications.Packets.Interfaces;
+using Lynx.Core.Communications.Packets.Interfaces;
 using System.Threading.Tasks;
 using System;
 
@@ -17,7 +17,6 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// Parses a JSON-encoded SYN and verifies its integrity.
         /// </summary>
         /// <param name="syn">The JSON-encoded SYN</param>
-        /// <returns>The Syn object</returns>
         Task ProcessSyn(string syn);
     }
 }
