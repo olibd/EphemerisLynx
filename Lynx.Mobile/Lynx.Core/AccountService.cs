@@ -57,7 +57,7 @@ namespace Lynx.Core
 
         public static string GeneratePublicAddressFromPublicKey(string pubK)
         {
-            ECKey eckey = new ECKey(Encoding.UTF8.GetBytes(pubK), false);
+            ECKey eckey = new ECKey(Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(pubK), false);
             string publicAddress = EthECKey.GetPublicAddress(eckey);
             return publicAddress;
         }
