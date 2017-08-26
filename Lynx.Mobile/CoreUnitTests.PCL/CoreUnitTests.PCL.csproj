@@ -49,6 +49,8 @@
     <Compile Include="RequesterVerifierTest.cs" />
     <Compile Include="IDFacadeTest.cs" />
     <Compile Include="FacadeTest.cs" />
+    <Compile Include="HandshakeTokenFactoryTest.cs" />
+    <Compile Include="TokenFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
