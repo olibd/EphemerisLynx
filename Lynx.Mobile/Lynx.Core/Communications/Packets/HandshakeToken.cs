@@ -32,26 +32,6 @@ namespace Lynx.Core.Communications.Packets
             }
         }
 
-        public string PublicKey
-        {
-            get
-            {
-                return GetFromHeader("pubkey");
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    SetOnHeader("pubkey", value);
-                }
-                else
-                {
-                    RemoveFromPayload("idAddr");
-                }
-            }
-        }
-
         public bool Encrypted
         {
             get

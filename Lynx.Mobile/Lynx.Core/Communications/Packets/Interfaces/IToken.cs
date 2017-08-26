@@ -10,6 +10,10 @@
         string GetEncodedPayload();
         string GetUnsignedEncodedToken();
         string GetEncodedToken();
+        /// <summary>
+        /// The public key of the user sending the handshake
+        /// </summary>
+        string PublicKey { get; set; }
         string Signature { get; }
         void SignAndLock(string signature);
         bool Locked { get; }

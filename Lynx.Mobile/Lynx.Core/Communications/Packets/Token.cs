@@ -35,6 +35,26 @@ namespace Lynx.Core.Communications.Packets
             _payload = payload;
         }
 
+        public string PublicKey
+        {
+            get
+            {
+                return GetFromHeader("pubkey");
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    SetOnHeader("pubkey", value);
+                }
+                else
+                {
+                    RemoveFromPayload("idAddr");
+                }
+            }
+        }
+
         public void SignAndLock(string signature)
         {
             EnsureTokenIsNotSignedAndLocked();
