@@ -21,6 +21,19 @@ namespace Lynx.Core.PeerVerification
             _idFacade = idFacade;
         }
 
+        protected void VerifyHandshakeTokenIDOwnership<T>(T handshakeToken) where T : HandshakeToken, new()
+        {
+            //Compare public address derived from the public key used to encrypt 
+            //the token with the public address used to control the ID specify
+            //in the token header. If they match then the person sending/encrypting
+            //the token is the same as the one controlling the ID specified in
+            //the header.
+            string tokenPublicAddress = AccountService.GeneratePublicAddressFromPublicKey(handshakeToken.PublicKey);
+
+            if (tokenPublicAddress != handshakeToken.Id.Owner)
+                throw new TokenSenderIsNotIDOwnerException();
+        }
+
         /// <summary>
         /// Decrypt and parses a JSON-encoded HandshakeToken. Also verifies that the
         /// token was encrypted by the ID that issued the token.
@@ -32,16 +45,6 @@ namespace Lynx.Core.PeerVerification
             string decryptedToken = _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
             HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade);
             T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
-
-            //Compare public address derived from the public key used to encrypt 
-            //the token with the public address used to control the ID specify
-            //in the token header. If they match then the person sending/encrypting
-            //the token is the same as the one controlling the ID specified in
-            //the header.
-            string tokenPublicAddress = AccountService.GeneratePublicAddressFromPublicKey(handshakeToken.PublicKey);
-
-            if (tokenPublicAddress != handshakeToken.Id.Owner)
-                throw new TokenSenderIsNotIDOwnerException();
 
             return handshakeToken;
         }

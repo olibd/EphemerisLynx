@@ -61,7 +61,10 @@ namespace Lynx.Core.PeerVerification
             Syn syn = await synFactory.CreateHandshakeTokenAsync(synString);
 
             byte[] pubK = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(syn.PublicKey);
-            if (_tokenCryptoService.Verify(syn, pubK))
+
+            VerifyHandshakeTokenIDOwnership(syn);
+
+            if (_tokenCryptoService.VerifySignature(syn))
                 Acknowledge(syn);
             else
                 throw new SignatureDoesntMatchException("The signature was not " +
