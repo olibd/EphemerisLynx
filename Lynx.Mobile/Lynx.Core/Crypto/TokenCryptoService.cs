@@ -35,8 +35,9 @@ namespace Lynx.Core.Crypto
             //reassemble the decrypted token
             return splittedEncryptedToken[0] + "." + decryptedPayload;
         }
-        public bool Verify(T token, byte[] pubkey)
+        public bool VerifySignature(T token)
         {
+            byte[] pubkey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(token.PublicKey);
             PubKey pubk = new PubKey(pubkey);
             return pubk.VerifyMessage(token.GetUnsignedEncodedToken(), token.Signature);
         }

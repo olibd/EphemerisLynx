@@ -6,7 +6,7 @@ namespace Lynx.Core.Crypto.Interfaces
     {
         void Sign(T token, byte[] privkey);
         string Encrypt(T token, byte[] pubkey, byte[] privkey);
-        bool Verify(T token, byte[] pubkey);
+        bool VerifySignature(T token);
         string Decrypt(string encryptedToken, byte[] privkey);
     }
 }
