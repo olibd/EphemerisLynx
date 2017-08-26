@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Reflection;
 using Lynx.Core;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Crypto;
 using Lynx.Core.Models.IDSubsystem;
+using NUnit.Compatibility;
 using NUnit.Framework;
 
 
@@ -42,23 +44,38 @@ namespace CoreUnitTests.PCL
         [Test]
         public void SignVerifyTest()
         {
+            /////////////////////////////
+            //Verify: Positive Scenario//
+            /////////////////////////////
+
             //Sign
             Assert.Null(token.Signature);
             _tCS.Sign(token, _account.GetPrivateKeyAsByteArray());
             Assert.NotNull(token.Signature);
 
-            //Verify: Positive Scenario
-            Assert.IsTrue(_tCS.Verify(token, _account.GetPublicKeyAsByteArray()));
+            //Verify
+            Assert.IsTrue(_tCS.VerifySignature(token));
 
-            //Verify: Negative Scenario
-            Assert.IsFalse(_tCS.Verify(token, _account2.GetPublicKeyAsByteArray()));
+            /////////////////////////////
+            //Verify: Negative Scenario//
+            /////////////////////////////
+
+            //Force unlock the token
+
+            typeof(Token).GetTypeInfo().GetDeclaredField("_signedAndlocked").SetValue(token, false);
+
+            //modify the pubkey
+            token.PublicKey = _account2.PublicKey;
+
+            //check signature
+            Assert.IsFalse(_tCS.VerifySignature(token));
         }
 
         [Test]
         public void TestEncryptAndDecrypt()
         {
-			Assert.Null(token.Signature);
-			_tCS.Sign(token, _account.GetPrivateKeyAsByteArray());
+            Assert.Null(token.Signature);
+            _tCS.Sign(token, _account.GetPrivateKeyAsByteArray());
             string cipherData = _tCS.Encrypt(token, _account.GetPublicKeyAsByteArray(), _account.GetPrivateKeyAsByteArray());
             Assert.AreNotEqual(null, cipherData);
             string decryptedData = _tCS.Decrypt(cipherData, _account.GetPrivateKeyAsByteArray());
