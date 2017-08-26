@@ -106,7 +106,7 @@ namespace CoreUnitTests.PCL
         /// <summary>
         /// Dummy IDFacade that return a fully formed dummy ID
         /// </summary>
-        private class DummyIDFacade : IIDFacade
+        public class DummyIDFacade : IIDFacade
         {
             private IAccountService _accountService;
 
