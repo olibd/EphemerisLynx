@@ -9,6 +9,9 @@ using Lynx.Core.Models.IDSubsystem;
 using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using Lynx.Core.PeerVerification.Interfaces;
+using Lynx.Core.PeerVerification;
+using Lynx.Core.Interfaces;
 
 namespace Lynx.Core
 {
@@ -37,6 +40,9 @@ namespace Lynx.Core
             //Register the dummy ContentService as a singleton, temp solution
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
             RegisterAppStart<ViewModels.MainViewModel>();
+
+            Mvx.RegisterType<IRequester>(() => new Requester(Mvx.Resolve<ITokenCryptoService<IHandshakeToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>()));
+            Mvx.RegisterType<IVerifier>(() => new Verifier(Mvx.Resolve<ITokenCryptoService<IHandshakeToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>()));
         }
     }
 }
