@@ -18,7 +18,7 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 namespace CoreUnitTests.PCL
 {
     [TestFixture()]
-    public class RequesterServiceTest
+    public class RequesterTest
     {
         private Requester _requester;
         private ID _id;
