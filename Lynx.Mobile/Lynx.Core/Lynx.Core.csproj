@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -68,11 +68,11 @@
     <Compile Include="ValueConverters\ContentToStringConverter.cs" />
     <Compile Include="Communications\Packets\Interfaces\IAck.cs" />
     <Compile Include="Communications\Packets\Interfaces\IHandshakeToken.cs" />
-    <Compile Include="PeerVerification\Interfaces\IRequesterService.cs" />
+    <Compile Include="PeerVerification\Interfaces\IRequester.cs" />
     <Compile Include="Communications\Interfaces\ISession.cs" />
     <Compile Include="Communications\Packets\Interfaces\ISyn.cs" />
     <Compile Include="PeerVerification\Interfaces\IVerifier.cs" />
-    <Compile Include="PeerVerification\RequesterService.cs" />
+    <Compile Include="PeerVerification\Requester.cs" />
     <Compile Include="Interfaces\IAccountService.cs" />
     <Compile Include="AccountService.cs" />
     <Compile Include="Communications\Packets\Syn.cs" />

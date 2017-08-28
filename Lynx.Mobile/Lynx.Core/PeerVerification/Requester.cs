@@ -17,14 +17,14 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 namespace Lynx.Core.PeerVerification
 {
 
-    public class RequesterService : Peer, IRequesterService
+    public class Requester : Peer, IRequester
     {
         private ISession _session;
         private ID _id;
         private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
         private IAccountService _accountService;
 
-        public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade) : base(tokenCryptoService, accountService, idFacade)
+        public Requester(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade) : base(tokenCryptoService, accountService, idFacade)
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;

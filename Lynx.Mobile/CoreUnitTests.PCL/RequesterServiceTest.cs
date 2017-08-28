@@ -20,7 +20,7 @@ namespace CoreUnitTests.PCL
     [TestFixture()]
     public class RequesterServiceTest
     {
-        private RequesterService _requesterService;
+        private Requester _requester;
         private ID _id;
         private AccountService _accountService;
         private string _privateKey;
@@ -80,13 +80,13 @@ namespace CoreUnitTests.PCL
             _privateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
             _accountService = new AccountService(_privateKey);
             _tokenCryptoService = new TokenCryptoService<IHandshakeToken>(new SECP256K1CryptoService());
-            _requesterService = new RequesterService(_tokenCryptoService, _accountService, _id, _idFacade);
+            _requester = new Requester(_tokenCryptoService, _accountService, _id, _idFacade);
         }
 
         [Test]
         public void CreateEncodedSynTest()
         {
-            string encodedToken = _requesterService.CreateEncodedSyn();
+            string encodedToken = _requester.CreateEncodedSyn();
 
             string[] splittedEncodedToken = encodedToken.Split('.');
 

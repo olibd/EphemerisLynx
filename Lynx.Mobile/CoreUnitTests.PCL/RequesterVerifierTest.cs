@@ -30,7 +30,7 @@ namespace CoreUnitTests.PCL
         private IAccountService _accountService2;
         private IIDFacade _idFacade1;
         private IIDFacade _idFacade2;
-        private RequesterService _requester;
+        private Requester _requester;
         private Verifier _verifier;
         private ID _id1;
         private ID _id2;
@@ -56,7 +56,7 @@ namespace CoreUnitTests.PCL
             SetupIDsAsync().Wait();
 
             //Uses ID facade 2 because it wants to be able to load ID 2
-            _requester = new RequesterService(_tkCrypto, _accountService1, _id1, _idFacade2);
+            _requester = new Requester(_tkCrypto, _accountService1, _id1, _idFacade2);
             //Uses ID facade 1 because it wants to be able to load ID 1
             _verifier = new Verifier(_tkCrypto, _accountService2, _id2, _idFacade1);
         }
