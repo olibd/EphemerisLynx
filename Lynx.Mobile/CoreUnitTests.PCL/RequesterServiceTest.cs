@@ -64,6 +64,7 @@ namespace CoreUnitTests.PCL
             _id.AddAttribute("Firstname", firstname);
             _id.AddAttribute("Lastname", lastname);
             _id.AddAttribute("Age", age);
+            _id.Address = "0x1234567";
 
             ////////////////////////
             //Create the ID Facade//
@@ -98,6 +99,22 @@ namespace CoreUnitTests.PCL
             {
                 Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
                 Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
+
+                Assert.True(header.ContainsKey("encrypted"));
+                Assert.AreEqual("False", header["encrypted"]);
+
+                Assert.True(payload.ContainsKey("idAddr"));
+                Assert.AreEqual("0x1234567", payload["idAddr"]);
+
+                Assert.True(header.ContainsKey("pubkey"));
+                Assert.AreEqual(_accountService.PublicKey, header["pubkey"]);
+
+                //Testing only the presence of the key and not
+                //the value because the value is generated on
+                //the fly
+                Assert.True(payload.ContainsKey("netAddr"));
+
+
             }
             catch (Exception e)
             {
