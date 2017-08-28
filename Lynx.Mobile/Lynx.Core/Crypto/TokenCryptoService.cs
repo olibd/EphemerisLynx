@@ -25,15 +25,18 @@ namespace Lynx.Core.Crypto
 		{
 			//dissamble the encrypted token to decrypt the payload
 			string[] splittedEncryptedToken = encryptedToken.Split('.');
+
 			//get the public key
 			string jsonDecodedHeader = Base64Decode(splittedEncryptedToken[0]);
 			Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
 			byte[] pubkey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(header["pubkey"]);
-			//decrypt the payload
+			
+            //decrypt the payload
 			byte[] encryptedPayloadBytes = Convert.FromBase64String(splittedEncryptedToken[1]);
 			byte[] decryptedPayloadBytes = _ieccCryptoService.Decrypt(encryptedPayloadBytes, pubkey, privkey);
 			string decryptedPayload = Encoding.UTF8.GetString(decryptedPayloadBytes, 0, decryptedPayloadBytes.Length);
-			//reassemble the decrypted token
+			
+            //reassemble the decrypted token
 			return splittedEncryptedToken[0] + "." + decryptedPayload;
 		}
 		public bool Verify(T token, byte[] pubkey)

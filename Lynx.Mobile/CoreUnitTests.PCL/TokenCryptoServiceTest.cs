@@ -59,7 +59,7 @@ namespace CoreUnitTests.PCL
         {
 			Assert.Null(token.Signature);
 			_tCS.Sign(token, _account.GetPrivateKeyAsByteArray());
-            string cipherData = _tCS.Encrypt(token, _account.GetPublicKeyAsByteArray(), _account.GetPrivateKeyAsByteArray());
+            string cipherData = _tCS.Encrypt(token, _account.GetPublicKeyAsByteArray(), _account2.GetPrivateKeyAsByteArray());
             Assert.AreNotEqual(null, cipherData);
             string decryptedData = _tCS.Decrypt(cipherData, _account.GetPrivateKeyAsByteArray());
             Assert.AreNotEqual(cipherData, decryptedData);
