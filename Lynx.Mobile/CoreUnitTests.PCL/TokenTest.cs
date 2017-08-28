@@ -48,7 +48,7 @@ namespace CoreUnitTests.PCL
 
             string[] splittedEncodedToken = encodedToken.Split('.');
 
-            if (splittedEncodedToken.Length == 3)
+            if (splittedEncodedToken.Length != 2)
             {
                 Assert.Fail();
             }
