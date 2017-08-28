@@ -82,20 +82,19 @@
     <Compile Include="Crypto\Interfaces\ITokenCryptoService.cs" />
     <Compile Include="Communications\Packets\Token.cs" />
     <Compile Include="Crypto\TokenCryptoService.cs" />
-    <Compile Include="Crypto\Interfaces\ICryptoService.cs" />
+    <Compile Include="Crypto\Interfaces\IECCCryptoService.cs" />
     <Compile Include="Crypto\SECP256K1CryptoService.cs" />
     <Compile Include="PeerVerification\Verifier.cs" />
-    <Compile Include="Crypto\SignatureDoesntMatchException.cs" />
     <Compile Include="ViewModels\VerificationRequestViewModel.cs" />
     <Compile Include="Communications\Packets\TokenFactory.cs" />
     <Compile Include="Communications\Packets\HandshakeTokenFactory.cs" />
     <Compile Include="PeerVerification\TokenSenderIsNotIDOwnerException.cs" />
-    <Compile Include="Crypto\AddressDoesntMatchException.cs" />
     <Compile Include="Communications\Packets\Interfaces\ISynAck.cs" />
     <Compile Include="Communications\Packets\SynAck.cs" />
     <Compile Include="PeerVerification\Peer.cs" />
     <Compile Include="PeerVerification\IdentityProfileReceivedEvent.cs" />
     <Compile Include="Communications\Packets\TokenIsSignedAndLockedException.cs" />
+    <Compile Include="PeerVerification\SignatureDoesntMatchException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
