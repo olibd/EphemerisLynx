@@ -31,7 +31,7 @@ namespace Lynx.Core.Communications
 
         public void AddMessageReceptionHandler(EventHandler<string> handler)
         {
-            _pubNub.AddListener(new PubNubCallback(handler, _pubNub.PNConfig));
+            _pubNub.AddListener(new PubNubCallback(handler));
         }
 
         public void Close()

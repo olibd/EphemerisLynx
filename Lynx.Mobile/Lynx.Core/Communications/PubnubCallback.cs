@@ -5,14 +5,11 @@ namespace Lynx.Core.Communications
 {
     class PubNubCallback : SubscribeCallback
     {
-        PNConfiguration _config;
-
         private event EventHandler<string> MessageReceived;
 
-        public PubNubCallback(EventHandler<string> eventHandler, PNConfiguration config)
+        public PubNubCallback(EventHandler<string> eventHandler)
         {
             MessageReceived += eventHandler;
-            _config = config;
         }
 
         public override void Status(Pubnub pubnub, PNStatus status)
