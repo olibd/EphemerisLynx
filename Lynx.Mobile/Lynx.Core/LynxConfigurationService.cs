@@ -11,7 +11,7 @@ namespace Lynx.Core
     /// <summary>
     /// Lynx configuration service. This class is in charge of configuring
     /// the Lynx service when the app is first ran. It will, for instance,
-    /// generate Register the singletons with the IoC container.
+    /// Generate and register the singletons with the IoC container.
     /// </summary>
     class LynxConfigurationService : ILynxConfigurationService
     {
