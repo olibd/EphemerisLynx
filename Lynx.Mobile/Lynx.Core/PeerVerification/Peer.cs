@@ -21,13 +21,17 @@ namespace Lynx.Core.PeerVerification
             _idFacade = idFacade;
         }
 
+        /// <summary>
+        /// Compare public address derived from the public key used to encrypt 
+        /// the token with the public address used to control the ID specify
+        /// in the token header. If they match then the person sending/encrypting
+        /// the token is the same as the one controlling the ID specified in
+        /// the header.
+        /// </summary>
+        /// <param name="handshakeToken">Handshake token.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
         protected void VerifyHandshakeTokenIDOwnership<T>(T handshakeToken) where T : HandshakeToken, new()
         {
-            //Compare public address derived from the public key used to encrypt 
-            //the token with the public address used to control the ID specify
-            //in the token header. If they match then the person sending/encrypting
-            //the token is the same as the one controlling the ID specified in
-            //the header.
             string tokenPublicAddress = AccountService.GeneratePublicAddressFromPublicKey(handshakeToken.PublicKey);
 
             if (tokenPublicAddress != handshakeToken.Id.Owner)

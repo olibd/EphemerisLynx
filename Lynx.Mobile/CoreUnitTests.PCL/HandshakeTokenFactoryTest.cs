@@ -48,8 +48,13 @@ namespace CoreUnitTests.PCL
         [Test]
         public void CreateHandshakeTokenAsyncTest()
         {
+            //Create an ecoded version of the token
             string encodedToken = _token.GetEncodedToken();
+
+            //instantiate a new instance of the same token using the facotry and the encoded token
             RestoreSynAsync(encodedToken).Wait();
+
+            //Compare the new token to the old token
             Assert.AreEqual(encodedToken, _restoredSyn.GetEncodedToken());
             Assert.NotNull(_restoredSyn.Id);
             Assert.AreEqual(_token.Encrypted, _restoredSyn.Encrypted);

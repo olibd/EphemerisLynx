@@ -44,6 +44,8 @@ namespace CoreUnitTests.PCL
         public void Setup()
         {
             _tkCrypto = new TokenCryptoService<IHandshakeToken>(new SECP256K1CryptoService());
+
+            //Setup 2 accounts because we want to simulate the exchange between 2 actors
             _accountService1 = new AccountService(_privateKey1);
             _accountService2 = new AccountService(_privateKey2);
 
@@ -69,7 +71,11 @@ namespace CoreUnitTests.PCL
         public void VerificationRequestHandshakeTest()
         {
             string encodedSyn = _requester.CreateEncodedSyn();
+
+            //Wait handle will wait the test until the handshake is comple
             ManualResetEvent waitHandle = new ManualResetEvent(false);
+
+            //Setup callback for when the handshake is complete
             _verifier.IdentityProfileReceived += (sender, e) =>
             {
                 _synAck = e.SynAck;
@@ -80,6 +86,7 @@ namespace CoreUnitTests.PCL
 
             if (waitHandle.WaitOne(100000))
             {
+                //Check that all accessible attribute are present in the SynAck
                 foreach (string attrKey in _accessibleAttributes)
                 {
                     Assert.IsNotNull(_synAck.Id.GetAttribute(attrKey));
