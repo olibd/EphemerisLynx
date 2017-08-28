@@ -23,7 +23,6 @@ namespace Lynx.Core.PeerVerification
         private ID _id;
         private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
         private IAccountService _accountService;
-        private IIDFacade _idFacade;
 
         public RequesterService(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade) : base(tokenCryptoService, accountService, idFacade)
         {
