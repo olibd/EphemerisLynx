@@ -18,7 +18,7 @@ namespace Lynx.Core.Facade.Interfaces
 		/// Fetches an ID from the blockchain
 		/// </summary>
 		/// <param name="address">The address of the ID to be fetched</param>
-		/// <param name="accessibleAttributes">The array of keys of accessible attribute to be fetched</param>
+		/// <param name="accessibleAttributes">The array of keys of accessible attributes to be fetched</param>
 		/// <returns>A new ID populated with data from the blockchain (and attached Attributes and Certificates)</returns>
 		Task<ID> GetIDAsync(string address, string[] accessibleAttributes=null);
 
@@ -33,7 +33,7 @@ namespace Lynx.Core.Facade.Interfaces
 		/// Fetches the dictionary of accessible attributes attached to an ID
 		/// </summary>
 		/// <param name="ID">The ID to be queried</param>
-		/// <param name="ID">The array of keys of accessible attributes to be queried</param>
+		/// <param name="accessibleAttributes">The array of keys of accessible attributes to be queried</param>
 		/// <returns>A dictionary representing the attribute mapping in the smart contract</returns>
 		Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes);
 
