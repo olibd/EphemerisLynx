@@ -41,9 +41,9 @@ namespace Lynx.Core.Crypto
 
         public byte[] GetSharedSecretValue(ECPublicKeyParameters publicKey, ECPrivateKeyParameters privateKey)
         {
-			ECDHCBasicAgreement eLacAgreement = new ECDHCBasicAgreement();
+            ECDHCBasicAgreement eLacAgreement = new ECDHCBasicAgreement();
             eLacAgreement.Init(privateKey);
-			BigInteger eLA = eLacAgreement.CalculateAgreement(publicKey);
+            BigInteger eLA = eLacAgreement.CalculateAgreement(publicKey);
             byte[] eLABytes = eLA.ToByteArray(); 
             return eLABytes;
 		}
