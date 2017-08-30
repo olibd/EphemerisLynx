@@ -13,7 +13,7 @@ namespace CoreUnitTests.PCL
 
         protected async Task SetupAsync()
         {
-            _web3 = new Web3("http://10.0.1.11:8082");
+            _web3 = new Web3("http://4e663978.ngrok.io");
 
             _addressFrom = (await _web3.Eth.Accounts.SendRequestAsync())[0];
         }

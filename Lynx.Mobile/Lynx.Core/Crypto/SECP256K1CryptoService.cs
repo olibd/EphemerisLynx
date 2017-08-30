@@ -18,7 +18,6 @@ namespace Lynx.Core.Crypto
         private string _curveName = "secp256k1";
         private X9ECParameters _ecP;
         private ECDomainParameters _ecSpec;
-        private ISigner _signer = SignerUtilities.GetSigner("SHA-256withECDSA");
 
         public SECP256K1CryptoService()
         {
@@ -26,27 +25,28 @@ namespace Lynx.Core.Crypto
             _ecSpec = new ECDomainParameters(_ecP.Curve, _ecP.G, _ecP.N, _ecP.H, _ecP.GetSeed());
         }
 
-        private ECPublicKeyParameters GeneratePublicKey(byte[] pubkey)
+        public ECPublicKeyParameters GeneratePublicKey(byte[] pubkey)
         {
-            FpCurve c = (FpCurve)_ecP.Curve;
             ECPoint point = _ecSpec.Curve.DecodePoint(pubkey);
             ECPublicKeyParameters publicKey = new ECPublicKeyParameters("ECDH", point, _ecSpec);
-            return publicKey;
+			return publicKey;
         }
 
-        private ECPrivateKeyParameters GeneratePrivateKey(byte[] privkey)
+        public ECPrivateKeyParameters GeneratePrivateKey(byte[] privkey)
         {
-            ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("ECDH", new BigInteger(privkey), _ecSpec);
+            string privKeyString = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHex(privkey);
+            ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("ECDH", new BigInteger(privKeyString, 16), _ecSpec);
             return privateKey;
         }
 
-        private byte[] GetSharedSecretValue(ECPublicKeyParameters publicKey, ECPrivateKeyParameters privateKey)
+        public byte[] GetSharedSecretValue(ECPublicKeyParameters publicKey, ECPrivateKeyParameters privateKey)
         {
             ECDHCBasicAgreement eLacAgreement = new ECDHCBasicAgreement();
             eLacAgreement.Init(privateKey);
             BigInteger eLA = eLacAgreement.CalculateAgreement(publicKey);
-            return eLA.ToByteArray();
-        }
+            byte[] eLABytes = eLA.ToByteArray(); 
+            return eLABytes;
+		}
 
         /// <summary>
         /// Derives the symmetric key from the shared secret.
@@ -70,13 +70,13 @@ namespace Lynx.Core.Crypto
             byte[] sharedSecret = GetSharedSecretValue(publicKey, privateKey);
             byte[] derivedKey = DeriveSymmetricKeyFromSharedSecret(sharedSecret);
 
-            KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DES", derivedKey);
-            IBufferedCipher cipher = CipherUtilities.GetCipher("DES/ECB/ISO7816_4PADDING");
+            KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("AES", derivedKey);
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7PADDING");
             cipher.Init(true, keyparam);
 
             try
             {
-                output = cipher.DoFinal(data);
+                output = cipher.DoFinal(data,0,data.Length);
                 return output;
             }
             catch (InvalidCipherTextException ex)
@@ -97,13 +97,13 @@ namespace Lynx.Core.Crypto
             byte[] sharedSecret = GetSharedSecretValue(publicKey, privateKey);
             byte[] derivedKey = DeriveSymmetricKeyFromSharedSecret(sharedSecret);
 
-            KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DES", derivedKey);
-            IBufferedCipher cipher = CipherUtilities.GetCipher("DES/ECB/ISO7816_4PADDING");
+            KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("AES", derivedKey);
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7PADDING");
             cipher.Init(false, keyparam);
 
             try
             {
-                output = cipher.DoFinal(cipherData);
+                output = cipher.DoFinal(cipherData, 0, cipherData.Length);
                 return output;
             }
             catch (InvalidCipherTextException ex)

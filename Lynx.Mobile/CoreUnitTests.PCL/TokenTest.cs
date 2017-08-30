@@ -48,7 +48,7 @@ namespace CoreUnitTests.PCL
 
             string[] splittedEncodedToken = encodedToken.Split('.');
 
-            if (splittedEncodedToken.Length == 3)
+            if (splittedEncodedToken.Length != 2)
             {
                 Assert.Fail();
             }
@@ -117,7 +117,7 @@ namespace CoreUnitTests.PCL
             {
                 GetSetOnHeaderTest();
             }
-            catch (Exception e)
+            catch (TokenIsSignedAndLockedException e)
             {
                 setOnHeaderException = true;
             }
@@ -128,7 +128,7 @@ namespace CoreUnitTests.PCL
             {
                 GetSetOnPayloadTest();
             }
-            catch (Exception e)
+            catch (TokenIsSignedAndLockedException e)
             {
                 setOnPayloadException = true;
             }

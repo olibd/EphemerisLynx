@@ -10,13 +10,13 @@ namespace Lynx.Core.Communications.Packets.Interfaces
         ID Id { get; set; }
 
         /// <summary>
-        /// The Ethereum public key of the user sending the handshake
-        /// </summary>
-        string PublicKey { get; set; }
-
-        /// <summary>
-        /// The Ethereum public key of the user sending the handshake
+        /// Specifies if the Token was/will be encrypted or not
         /// </summary>
         bool Encrypted { get; set; }
+
+        /// <summary>
+        /// The Accessible ID attributes that the peer can read
+        /// </summary>
+        Attribute[] AccessibleAttributes { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace Lynx.Core.ViewModels
 {
     public class VerificationRequestViewModel : MvxViewModel
     {
-        private IRequesterService _requester;
+        private IRequester _requester;
         public string Syn
         {
             get
@@ -15,7 +15,7 @@ namespace Lynx.Core.ViewModels
                 return _requester.CreateEncodedSyn();
             }
         }
-        public VerificationRequestViewModel(IRequesterService requester)
+        public VerificationRequestViewModel(IRequester requester)
         {
             _requester = requester;
         }

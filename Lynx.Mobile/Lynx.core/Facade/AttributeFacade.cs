@@ -36,11 +36,12 @@ namespace Lynx.Core.Facade
 
         public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
         {
-            string transactionHash = await AttributeService.DeployContractAsync(Web3, Address, attribute.Location, attribute.Hash, owner, new HexBigInteger(800000));
+            string transactionHash = await AttributeService.DeployContractAsync(Web3, Address, attribute.Location, attribute.Hash, owner, new HexBigInteger(3000000));
             TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
             //Populating the attribute model with the new address
             attribute.Address = receipt.ContractAddress;
+            attribute.Owner = owner;
 
             //Iterating over certificates and deploying each one
             foreach (string key in attribute.Certificates.Keys)
@@ -62,7 +63,8 @@ namespace Lynx.Core.Facade
             {
                 Address = address,
                 Hash = await ethAttribute.HashAsyncCall(),
-                Location = await ethAttribute.LocationAsyncCall()
+                Location = await ethAttribute.LocationAsyncCall(),
+                Owner = await ethAttribute.OwnerAsyncCall()
             };
 
             //Fetch the content of the attribute

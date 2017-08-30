@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Newtonsoft.Json;
+using Lynx.Core.Models.IDSubsystem;
+using static System.Diagnostics.Contracts.Contract;
 
 namespace Lynx.Core.Communications.Packets
 {
@@ -27,25 +29,35 @@ namespace Lynx.Core.Communications.Packets
             _payload = new Dictionary<string, string>();
         }
 
-        protected Token(string encodedToken)
+        protected Token(Dictionary<string, string> header, Dictionary<string, string> payload)
         {
-            string[] splittedEncodedToken = encodedToken.Split('.');
-            string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
-            string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
-            //if the token is signed, restore the signature
-            if (splittedEncodedToken.Length == 3)
+            _header = header;
+            _payload = payload;
+        }
+
+        public string PublicKey
+        {
+            get
             {
-                string sig = splittedEncodedToken[2];
-                _signature = sig;
+                return GetFromHeader("pubkey");
             }
 
-            _header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
-            _payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
+            set
+            {
+                if (value != null)
+                {
+                    SetOnHeader("pubkey", value);
+                }
+                else
+                {
+                    RemoveFromPayload("idAddr");
+                }
+            }
         }
 
         public void SignAndLock(string signature)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
             _signedAndlocked = true;
             _signature = signature;
         }
@@ -69,14 +81,36 @@ namespace Lynx.Core.Communications.Packets
 
         public void SetOnHeader(string key, string val)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
+
+            //Existing key value pairs are overwritten
+            if (_header.ContainsKey(key))
+                RemoveFromHeader(key);
+
             _header.Add(key, val);
         }
 
         public void SetOnPayload(string key, string val)
         {
-            Contract.Ensures(!_signedAndlocked);
+            EnsureTokenIsNotSignedAndLocked();
+
+            //Existing key value pairs are overwritten
+            if (_payload.ContainsKey(key))
+                RemoveFromPayload(key);
+
             _payload.Add(key, val);
+        }
+
+        public void RemoveFromHeader(string key)
+        {
+            EnsureTokenIsNotSignedAndLocked();
+            _header.Remove(key);
+        }
+
+        public void RemoveFromPayload(string key)
+        {
+            EnsureTokenIsNotSignedAndLocked();
+            _payload.Remove(key);
         }
 
         public string GetFromHeader(string key)
@@ -104,6 +138,12 @@ namespace Lynx.Core.Communications.Packets
         public string GetUnsignedEncodedToken()
         {
             return GetEncodedHeader() + "." + GetEncodedPayload();
+        }
+
+        private void EnsureTokenIsNotSignedAndLocked()
+        {
+            if (_signedAndlocked)
+                throw new TokenIsSignedAndLockedException();
         }
     }
 }
