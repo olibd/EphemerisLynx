@@ -8,6 +8,7 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using MvvmCross.Core.Navigation;
 using System.Threading.Tasks;
 using Lynx.Core.PeerVerification;
+using Lynx.Core.Communications.Packets;
 
 namespace Lynx.Core.ViewModels
 {
@@ -43,6 +44,10 @@ namespace Lynx.Core.ViewModels
         {
             //TODO: Setup the verifier callback
             await _verifier.ProcessSyn(content);
+            _verifier.IdentityProfileReceived += async (sender, e) =>
+            {
+                await _navigationService.Navigate<CertifyViewModel, SynAck>(e.SynAck);
+            };
         }
 
         private async void RequestVerification()
