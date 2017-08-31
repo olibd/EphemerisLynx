@@ -74,6 +74,8 @@ namespace Lynx.Core.Facade
             Dictionary<string, Certificate> certificates = await GetCertificatesAsync(attributeModel);
             foreach (Certificate cert in certificates.Values)
             {
+                //replace the OwningAttribute placeholder with a complete instance
+                cert.OwningAttribute = attributeModel;
                 attributeModel.AddCertificate(cert);
             }
 
