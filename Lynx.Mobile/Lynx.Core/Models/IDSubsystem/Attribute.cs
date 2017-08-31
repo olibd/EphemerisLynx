@@ -18,7 +18,7 @@ namespace Lynx.Core.Models.IDSubsystem
 
         public void AddCertificate(Certificate cert)
         {
-            Certificates.Add(cert.Hash, cert);
+            Certificates.Add(cert.Owner, cert);
         }
     }
 }
