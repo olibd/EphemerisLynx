@@ -111,7 +111,7 @@ namespace Lynx.Core.Facade
 
             //Add the certificate to the attribute
             AttributeService ethAttribute = new AttributeService(Web3, AccountService.PrivateKey, attribute.Address);
-            await ethAttribute.AddCertificateAsync(cert.Address, new HexBigInteger(800000));
+            await ethAttribute.AddCertificateAsync(cert.Address);
 
             return cert;
         }

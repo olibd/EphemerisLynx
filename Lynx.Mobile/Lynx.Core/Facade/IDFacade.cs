@@ -46,7 +46,11 @@ namespace Lynx.Core.Facade
             Event idCreationEvent = factory.GetEventReturnIDController();
             HexBigInteger filterAddressFrom =
                 await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
-            await factory.CreateIDAsync();
+
+            string txHash = await factory.CreateIDAsync();
+            while (Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(txHash) == null)
+                await Task.Delay(1000);
+                
 
             List<EventLog<ReturnIDControllerEventDTO>> log =
                 await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
