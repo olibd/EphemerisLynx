@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using eVi.abi.lib.pcl;
 using Lynx.Core;
 using Lynx.Core.Facade;
 using Nethereum.Web3;
@@ -11,11 +12,13 @@ namespace CoreUnitTests.PCL
     {
         protected Web3 _web3;
         protected AccountService _accountService;
+        protected FactoryService _factoryService;
 
         protected async Task SetupAsync()
         {
-            _web3 = new Web3("http://31c67be3.ngrok.io/");
+            _web3 = new Web3("http://jmon.tech:8545");
             _accountService = new AccountService();
+            _factoryService = new FactoryService(_web3, _accountService.PrivateKey, "0x731a10897d267e19b34503ad902d0a29173ba4b1");
         }
 
     }
