@@ -21,15 +21,30 @@ namespace Lynx.Core.PeerVerification
     {
         private ISession _session;
         private ID _id;
-        private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
+        private ITokenCryptoService<IToken> _tokenCryptoService;
         private IAccountService _accountService;
+        private ICertificateFacade _certificateFacade;
+        private Attribute[] _accessibleAttributes;
+        private IAttributeFacade _attributeFacade;
+        //prevents the early calling of the ProcessCertificationConfirmationToken event handler
+        private bool _synAckSent = false;
+        public event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
 
-        public Requester(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade) : base(tokenCryptoService, accountService, idFacade)
+        public Requester(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
             _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<Ack>(e)));
+            _session.AddMessageReceptionHandler(new EventHandler<string>(async (sender, e) => await ProcessCertificationConfirmationToken(e)));
             _id = id;
+            _attributeFacade = attributeFacade;
+            _certificateFacade = certificateFacade;
+            _accessibleAttributes = new Attribute[]{
+                _id.Attributes["firstname"],
+                _id.Attributes["lastname"],
+                _id.Attributes["cell"],
+                _id.Attributes["address"]
+            };
         }
 
         public IAck Ack { get; set; }
@@ -54,29 +69,69 @@ namespace Lynx.Core.PeerVerification
         /// </summary>
         private void GenerateAndSendSynAck(Ack ack)
         {
-            Attribute[] accessibleAttributes = { _id.Attributes["firstname"],
-                _id.Attributes["lastname"], _id.Attributes["cell"], _id.Attributes["address"]};
-
             SynAck synAck = new SynAck()
             {
                 Id = _id,
                 PublicKey = _accountService.PublicKey,
                 Encrypted = true,
-                AccessibleAttributes = accessibleAttributes
+                AccessibleAttributes = _accessibleAttributes
             };
 
             byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(ack.PublicKey);
             string encryptedToken = _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
+            _synAckSent = true;
         }
 
         protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
+            if (encryptedHandshakeToken.Contains("cert"))
+                return null;
+
             Ack ack = await base.ProcessEncryptedHandshakeToken<Ack>(encryptedHandshakeToken);
+            //_session.ClearMessageReceptionHandlers();
+
             GenerateAndSendSynAck(ack);
             //We can return null because the caller of this method is an anonymous method in an EventHandler
             //and it won't use the returned data
             return null;
+        }
+
+        private async Task ProcessCertificationConfirmationToken(string encryptedToken)
+        {
+            if (!encryptedToken.Contains("cert"))
+                return;
+            encryptedToken = (encryptedToken.Split(':'))[1];
+            string decryptedToken = _tokenCryptoService.Decrypt(encryptedToken, _accountService.GetPrivateKeyAsByteArray());
+            CertificationConfirmationTokenFactory tokenFactory = new CertificationConfirmationTokenFactory(_certificateFacade);
+            CertificationConfirmationToken token = await tokenFactory.CreateTokenAsync(decryptedToken);
+            await AddCertificatesToTheAccessibleAttributes(token.IssuedCertificates);
+        }
+
+        private async Task AddCertificatesToTheAccessibleAttributes(Certificate[] certificates)
+        {
+            List<Certificate> addedCertificate = new List<Certificate>();
+            foreach (Attribute attr in _accessibleAttributes)
+            {
+                foreach (Certificate cert in certificates)
+                {
+                    if (attr.Address != cert.OwningAttribute.Address)
+                        continue;
+
+                    cert.OwningAttribute = attr;
+                    attr.AddCertificate(cert);
+
+                    await _attributeFacade.AddCertificateAsync(attr, cert);
+                    addedCertificate.Add(cert);
+                }
+            }
+
+            IssuedCertificatesAddedToIDEvent e = new IssuedCertificatesAddedToIDEvent()
+            {
+                CertificatesAdded = addedCertificate,
+            };
+
+            IssuedCertificatesAddedToID.Invoke(this, e);
         }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Newtonsoft.Json;
-using Lynx.Core.Models.IDSubsystem;
-using static System.Diagnostics.Contracts.Contract;
 
 namespace Lynx.Core.Communications.Packets
 {
@@ -52,6 +49,19 @@ namespace Lynx.Core.Communications.Packets
                 {
                     RemoveFromPayload("idAddr");
                 }
+            }
+        }
+
+        public bool Encrypted
+        {
+            get
+            {
+                return Boolean.Parse(GetFromHeader("encrypted"));
+            }
+
+            set
+            {
+                SetOnHeader("encrypted", value.ToString());
             }
         }
 
@@ -121,6 +131,16 @@ namespace Lynx.Core.Communications.Packets
         public string GetFromPayload(string key)
         {
             return _payload[key];
+        }
+
+        public bool HeaderContains(string key)
+        {
+            return _header.ContainsKey(key);
+        }
+
+        public bool PayloadContains(string key)
+        {
+            return _payload.ContainsKey(key);
         }
 
         public string GetEncodedHeader()

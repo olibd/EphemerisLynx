@@ -10,11 +10,11 @@ namespace Lynx.Core.PeerVerification
 {
     public abstract class Peer
     {
-        private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
+        private ITokenCryptoService<IToken> _tokenCryptoService;
         private IAccountService _accountService;
         private IIDFacade _idFacade;
 
-        public Peer(ITokenCryptoService<IHandshakeToken> tokenCryptoService, IAccountService accountService, IIDFacade idFacade)
+        public Peer(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, IIDFacade idFacade)
         {
             _accountService = accountService;
             _tokenCryptoService = tokenCryptoService;

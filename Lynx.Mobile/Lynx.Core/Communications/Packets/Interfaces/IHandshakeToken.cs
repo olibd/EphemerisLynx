@@ -10,11 +10,6 @@ namespace Lynx.Core.Communications.Packets.Interfaces
         ID Id { get; set; }
 
         /// <summary>
-        /// Specifies if the Token was/will be encrypted or not
-        /// </summary>
-        bool Encrypted { get; set; }
-
-        /// <summary>
         /// The Accessible ID attributes that the peer can read
         /// </summary>
         Attribute[] AccessibleAttributes { get; set; }
