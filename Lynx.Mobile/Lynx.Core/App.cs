@@ -20,6 +20,12 @@ namespace Lynx.Core
     /// </summary>
     public class App : MvvmCross.Core.ViewModels.MvxApplication
     {
+        private IPlatformSpecificDataService _dataService;
+        public App(IPlatformSpecificDataService dataService)
+        {
+            _dataService = dataService;
+        }
+
         public override void Initialize()
         {
             //Register dependencies
@@ -30,12 +36,16 @@ namespace Lynx.Core
             Mvx.RegisterSingleton<ID>(() => new ID());
             Mvx.RegisterSingleton<ITokenCryptoService<IHandshakeToken>>(() => new TokenCryptoService<IHandshakeToken>(Mvx.Resolve<IECCCryptoService>()));
 
-            Mvx.RegisterType<IMapper<Certificate>>(() => new ExternalElementMapper<Certificate>(":memory:"));
-            Mvx.RegisterType<IMapper<Attribute>>(() => new AttributeMapper(":memory:", Mvx.Resolve<IMapper<Certificate>>()));
-            Mvx.RegisterType<IMapper<ID>>(() => new IDMapper(":memory:", Mvx.Resolve<IMapper<Attribute>>()));
+            Mvx.RegisterSingleton(() => _dataService);
+
+            string dbfile = _dataService.GetDatabaseFile();
+
+            Mvx.RegisterType<IMapper<Certificate>>(() => new ExternalElementMapper<Certificate>(dbfile));
+            Mvx.RegisterType<IMapper<Attribute>>(() => new AttributeMapper(dbfile, Mvx.Resolve<IMapper<Certificate>>()));
+            Mvx.RegisterType<IMapper<ID>>(() => new IDMapper(dbfile, Mvx.Resolve<IMapper<Attribute>>()));
 
             //Configure the the eth node
-            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode(null, null, "0x1FD8397e8108ada12eC07976D92F773364ba46e7", "http://2b9cebd0.ngrok.io");
+            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode(null, null, "0x6d10E8ca4d6EC1De78D11D12fCAF89256f6FD13E", "http://cd9e5e83.ngrok.io");
 
             //Register the dummy ContentService as a singleton, temp solution
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());

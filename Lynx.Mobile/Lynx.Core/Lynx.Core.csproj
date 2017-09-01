@@ -42,7 +42,9 @@
     <Compile Include="Communications\ConnectOperationImpossibleException.cs" />
     <Compile Include="Communications\PubnubCallback.cs" />
     <Compile Include="Communications\PubnubSession.cs" />
+    <Compile Include="Interfaces\IPlatformSpecificDataService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\RegistrationViewModel.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Models\IDSubsystem\Watchdog.cs" />
     <Compile Include="Models\IDSubsystem\ID.cs" />
