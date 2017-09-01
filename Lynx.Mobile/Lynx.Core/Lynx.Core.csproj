@@ -100,7 +100,7 @@
     <Compile Include="Communications\Packets\CertificationConfirmationToken.cs" />
     <Compile Include="Communications\Packets\CertificationConfirmationTokenFactory.cs" />
     <Compile Include="PeerVerification\IssuedCertificatesAddedToIDEvent.cs" />
-    <Compile Include="PeerVerification\InvalidTokenType.cs" />
+    <Compile Include="PeerVerification\InvalidTokenTypeException.cs" />
     <Compile Include="ViewModels\CertifyViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

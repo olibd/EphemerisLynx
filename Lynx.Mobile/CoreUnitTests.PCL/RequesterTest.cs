@@ -102,10 +102,13 @@ namespace CoreUnitTests.PCL
         [Test]
         public void CreateEncodedSynTest()
         {
+            //check the type
+            string encodedSyn = _requester.CreateEncodedSyn();
+            Assert.True(encodedSyn.Contains(":"));
             //remove the type
-            string encodedToken = _requester.CreateEncodedSyn().Split(':')[1];
+            string untypedEncodedToken = _requester.CreateEncodedSyn().Split(':')[1];
 
-            string[] splittedEncodedToken = encodedToken.Split('.');
+            string[] splittedEncodedToken = untypedEncodedToken.Split('.');
 
             Assert.AreEqual(3, splittedEncodedToken.Length);
 
