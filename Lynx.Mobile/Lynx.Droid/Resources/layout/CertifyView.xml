@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/CertifyViewLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+    <LinearLayout
+        android:elevation="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        local:behavior_peekHeight="120dp"
+        android:orientation="vertical"
+        android:background="#EF4571">
+        <TextView
+            android:id="@+id/IDaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            local:MvxBind="Text ID.Address" />
+        <Mvx.MvxListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            local:MvxBind="ItemsSource Attributes"
+            local:MvxItemTemplate="@layout/certifyattributeview" />
+        <Button
+            android:id="@+id/certifyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="certify"
+            android:textSize="20dp"
+            android:background="#ff37e7ec"
+            local:MvxBind="Click CertifyIDCommand"
+            android:layout_marginRight="10dp"
+            android:textAllCaps="false"
+            android:textColor="#ffffffff"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
