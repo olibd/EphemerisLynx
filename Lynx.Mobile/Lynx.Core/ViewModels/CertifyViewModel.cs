@@ -15,6 +15,7 @@ namespace Lynx.Core.ViewModels
 		public ID ID { get; set; }
 		public List<Attribute> Attributes { get; set; }
         public SynAck _synAck;
+        public List<string> certifiedAttributes;
 		private IMvxNavigationService _navigationService;
 
 		public CertifyViewModel(IMvxNavigationService navigationService)
@@ -35,6 +36,25 @@ namespace Lynx.Core.ViewModels
 		{
 			//TODO: Add starting logic here
 		}
+
+        public void UpdateCertifiedAttributes()
+        {
+            
+        }
+
+		public IMvxCommand UpdateCertifiedAttributesCommand => new MvxCommand<string>(UpdateCertifiedAttributes);
+
+        public void UpdateCertifiedAttributes(string attributeDescription)
+        {
+			if (certifiedAttributes.Contains(attributeDescription))
+			{
+				certifiedAttributes.Remove(attributeDescription);
+			}
+			else
+			{
+				certifiedAttributes.Add(attributeDescription);
+			}
+        }
 
         public IMvxCommand CertifyIDCommand => new MvxCommand(CertifyID);
 

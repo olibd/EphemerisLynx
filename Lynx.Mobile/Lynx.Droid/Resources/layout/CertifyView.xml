@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             local:MvxBind="ItemsSource Attributes"
-            local:MvxItemTemplate="@layout/attributeview" />
+            local:MvxItemTemplate="@layout/certifyattributeview" />
         <Button
             android:id="@+id/certifyButton"
             android:layout_width="match_parent"
