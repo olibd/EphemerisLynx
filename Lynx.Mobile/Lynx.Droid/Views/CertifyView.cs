@@ -12,8 +12,6 @@ namespace Lynx.Droid.Views
     [Activity(Label = "View for CertifyViewModel")]
     public class CertifyView : MvxFragmentActivity
     {
-        private CoordinatorLayout _CertifyViewLayout;
-
         public CertifyView()
         {
         }
@@ -22,8 +20,6 @@ namespace Lynx.Droid.Views
 		{
 			base.OnCreate(bundle);
 			SetContentView(Resource.Layout.CertifyView);
-			_CertifyViewLayout = FindViewById<CoordinatorLayout>(Resource.Id.CertifyViewLayout);
-
 			BindCommand();
 		}
 

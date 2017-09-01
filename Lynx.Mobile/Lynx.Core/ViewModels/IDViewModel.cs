@@ -46,7 +46,7 @@ namespace Lynx.Core.ViewModels
             await _verifier.ProcessSyn(content);
             _verifier.IdentityProfileReceived += async (sender, e) =>
             {
-                await _navigationService.Navigate<CertifyViewModel, SynAck>(e.SynAck);
+                await _navigationService.Navigate<CertifyViewModel, ID>(e.SynAck.Id);
             };
         }
 

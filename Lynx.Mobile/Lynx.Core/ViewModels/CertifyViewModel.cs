@@ -10,7 +10,7 @@ using Lynx.Core.Communications.Packets;
 
 namespace Lynx.Core.ViewModels
 {
-    public class CertifyViewModel : MvxViewModel<SynAck>
+    public class CertifyViewModel : MvxViewModel<ID>
     {
 		public ID ID { get; set; }
 		public List<Attribute> Attributes { get; set; }
@@ -23,12 +23,10 @@ namespace Lynx.Core.ViewModels
             _navigationService = navigationService;
         }
 
-		public override Task Initialize(SynAck synAck)
+		public override Task Initialize(ID Id)
 		{
-            _synAck = synAck;
-            ID = synAck.Id;
+            ID = Id;
             Attributes = ID.Attributes.Values.ToList();
-		
             return base.Initialize();
 		}
 
