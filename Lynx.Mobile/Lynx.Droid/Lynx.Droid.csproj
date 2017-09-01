@@ -165,6 +165,7 @@
     <Compile Include="ValueConverters\StringToBitmapQrCodeConverter.cs" />
     <Compile Include="Views\VerificationRequestView.cs" />
     <Compile Include="Views\Callbacks\BottomSheetInvalidateParentCallback.cs" />
+    <Compile Include="Views\CertifyView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -176,6 +177,8 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <None Include="ToDo-MvvmCross\_ Droid UI.txt" />
+    <AndroidResource Include="Resources\layout\CertifyAttributeView.xml" />
+    <AndroidResource Include="Resources\layout\CertifyView.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
