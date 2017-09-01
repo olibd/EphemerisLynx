@@ -9,6 +9,7 @@ namespace Lynx.Core.Communications.Packets
     {
         private bool _signedAndlocked;
         private string _signature;
+        protected virtual string Type { get; }
         public string Signature
         {
             get
@@ -149,6 +150,11 @@ namespace Lynx.Core.Communications.Packets
             return Base64Encode(header);
         }
 
+        public string GetTypedEncodedHeader()
+        {
+            return Type + ":" + GetEncodedHeader();
+        }
+
         public string GetEncodedPayload()
         {
             string payload = JsonConvert.SerializeObject(_payload);
@@ -157,7 +163,7 @@ namespace Lynx.Core.Communications.Packets
 
         public string GetUnsignedEncodedToken()
         {
-            return GetEncodedHeader() + "." + GetEncodedPayload();
+            return GetTypedEncodedHeader() + "." + GetEncodedPayload();
         }
 
         private void EnsureTokenIsNotSignedAndLocked()

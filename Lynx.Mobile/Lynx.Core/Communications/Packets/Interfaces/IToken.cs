@@ -11,6 +11,7 @@
         void RemoveFromHeader(string key);
         void RemoveFromPayload(string key);
         string GetEncodedHeader();
+        string GetTypedEncodedHeader();
         string GetEncodedPayload();
         string GetUnsignedEncodedToken();
         string GetEncodedToken();

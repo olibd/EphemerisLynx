@@ -7,6 +7,14 @@ namespace Lynx.Core.Communications.Packets
 {
     public class CertificationConfirmationToken : Token
     {
+        protected override string Type
+        {
+            get
+            {
+                return "cert";
+            }
+        }
+
         private Certificate[] _issuedCertificates;
         public Certificate[] IssuedCertificates
         {

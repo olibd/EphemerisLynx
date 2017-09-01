@@ -98,6 +98,7 @@
     <Compile Include="Communications\Packets\CertificationConfirmationToken.cs" />
     <Compile Include="Communications\Packets\CertificationConfirmationTokenFactory.cs" />
     <Compile Include="PeerVerification\IssuedCertificatesAddedToIDEvent.cs" />
+    <Compile Include="PeerVerification\InvalidTokenType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EdjCase.JsonRpc.Client, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">

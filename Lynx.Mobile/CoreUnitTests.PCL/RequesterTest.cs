@@ -102,7 +102,8 @@ namespace CoreUnitTests.PCL
         [Test]
         public void CreateEncodedSynTest()
         {
-            string encodedToken = _requester.CreateEncodedSyn();
+            //remove the type
+            string encodedToken = _requester.CreateEncodedSyn().Split(':')[1];
 
             string[] splittedEncodedToken = encodedToken.Split('.');
 
