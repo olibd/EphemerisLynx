@@ -32,6 +32,19 @@ namespace Lynx.Core.Communications.Packets
             }
         }
 
+        public bool Encrypted
+        {
+            get
+            {
+                return Boolean.Parse(GetFromHeader("encrypted"));
+            }
+
+            set
+            {
+                SetOnHeader("encrypted", value.ToString());
+            }
+        }
+
         private Attribute[] _accessibleAttributes;
         public Attribute[] AccessibleAttributes
         {

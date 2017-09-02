@@ -12,10 +12,7 @@ namespace Lynx.Core.Communications.Packets
 
         public T CreateToken(string encodedToken)
         {
-            //removed the type from the header if it is there
-            string untypedEncodedToken = encodedToken.Split(':')[1];
-            //split the token in its 3 parts
-            string[] splittedEncodedToken = untypedEncodedToken.Split('.');
+            string[] splittedEncodedToken = encodedToken.Split('.');
             string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
             string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
 
