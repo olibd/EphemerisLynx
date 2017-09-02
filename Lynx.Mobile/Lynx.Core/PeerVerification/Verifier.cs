@@ -121,12 +121,12 @@ namespace Lynx.Core.PeerVerification
             return _tokenCryptoService.Encrypt(certConfToken, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
         }
 
-        private async Task<Certificate[]> IssueCertificates(string[] keysOfAttributesToCertifify)
+        private async Task<Certificate[]> IssueCertificates(string[] attributeKeys)
         {
-            Certificate[] certificates = new Certificate[keysOfAttributesToCertifify.Length];
+            Certificate[] certificates = new Certificate[attributeKeys.Length];
 
             int i = 0;
-            foreach (string key in keysOfAttributesToCertifify)
+            foreach (string key in attributeKeys)
             {
                 Attribute attr = SynAck.Id.Attributes[key];
                 Certificate cert = new Certificate()
