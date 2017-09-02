@@ -2,17 +2,17 @@
 
 namespace Lynx.Core.PeerVerification
 {
-    internal class InvalidTokenType : Exception
+    internal class InvalidTokenTypeException : Exception
     {
-        public InvalidTokenType()
+        public InvalidTokenTypeException()
         {
         }
 
-        public InvalidTokenType(string message) : base(message)
+        public InvalidTokenTypeException(string message) : base(message)
         {
         }
 
-        public InvalidTokenType(string message, Exception innerException) : base(message, innerException)
+        public InvalidTokenTypeException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

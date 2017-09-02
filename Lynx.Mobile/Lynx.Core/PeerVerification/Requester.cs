@@ -99,7 +99,7 @@ namespace Lynx.Core.PeerVerification
                     break;
 
                 default:
-                    throw new InvalidTokenType("The Token type received is invalid");
+                    throw new InvalidTokenTypeException("The Token type received is invalid");
             }
 
             //We can return null because the caller of this method is an anonymous method in an EventHandler
