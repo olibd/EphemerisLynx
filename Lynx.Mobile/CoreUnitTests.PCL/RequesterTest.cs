@@ -24,7 +24,7 @@ namespace CoreUnitTests.PCL
         private ID _id;
         private AccountService _accountService;
         private string _privateKey;
-        private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
+        private ITokenCryptoService<IToken> _tokenCryptoService;
         private IIDFacade _idFacade;
         private ICertificateFacade _certFacade;
         private IAttributeFacade _attributeFacade;
@@ -60,10 +60,26 @@ namespace CoreUnitTests.PCL
                 Content = new IntContent(24)
             };
 
+            Attribute cell = new Attribute()
+            {
+                Location = "4",
+                Hash = "4",
+                Content = new StringContent("555-555-5555")
+            };
+
+            Attribute address = new Attribute()
+            {
+                Location = "5",
+                Hash = "5",
+                Content = new StringContent("1 infinite loop, cupertino")
+            };
+
             _id = new ID();
-            _id.AddAttribute("Firstname", firstname);
-            _id.AddAttribute("Lastname", lastname);
-            _id.AddAttribute("Age", age);
+            _id.AddAttribute("firstname", firstname);
+            _id.AddAttribute("lastname", lastname);
+            _id.AddAttribute("age", age);
+            _id.AddAttribute("cell", cell);
+            _id.AddAttribute("address", address);
             _id.Address = "0x1234567";
 
             ////////////////////////
@@ -79,16 +95,20 @@ namespace CoreUnitTests.PCL
             /////////////////////////
             _privateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
             _accountService = new AccountService(_privateKey);
-            _tokenCryptoService = new TokenCryptoService<IHandshakeToken>(new SECP256K1CryptoService());
-            _requester = new Requester(_tokenCryptoService, _accountService, _id, _idFacade);
+            _tokenCryptoService = new TokenCryptoService<IToken>(new SECP256K1CryptoService());
+            _requester = new Requester(_tokenCryptoService, _accountService, _id, _idFacade, _attributeFacade, _certFacade);
         }
 
         [Test]
         public void CreateEncodedSynTest()
         {
-            string encodedToken = _requester.CreateEncodedSyn();
+            //check the type
+            string encodedSyn = _requester.CreateEncodedSyn();
+            Assert.True(encodedSyn.Contains(":"));
+            //remove the type
+            string untypedEncodedToken = _requester.CreateEncodedSyn().Split(':')[1];
 
-            string[] splittedEncodedToken = encodedToken.Split('.');
+            string[] splittedEncodedToken = untypedEncodedToken.Split('.');
 
             Assert.AreEqual(3, splittedEncodedToken.Length);
 

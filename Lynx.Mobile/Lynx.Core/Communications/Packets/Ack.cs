@@ -7,6 +7,13 @@ namespace Lynx.Core.Communications.Packets
 {
     public class Ack : HandshakeToken, IAck
     {
+        protected override string Type
+        {
+            get
+            {
+                return "ack";
+            }
+        }
 
         public Ack() : base()
         {

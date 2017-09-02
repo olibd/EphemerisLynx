@@ -11,11 +11,13 @@ namespace Lynx.Core.Communications
     public class PubNubSession : ISession
     {
         private readonly Pubnub _pubNub;
-
+        private Stack<PubNubCallback> _messageReceptionHandlerStack;
         private string _channel;
 
         public PubNubSession(EventHandler<string> messageEventHandler)
         {
+            _messageReceptionHandlerStack = new Stack<PubNubCallback>();
+
             PNConfiguration pubNubConfig = new PNConfiguration()
             {
                 PublishKey = "pub-c-361ee194-a500-4a92-bc1f-54b0ece5ee3d",
@@ -31,7 +33,19 @@ namespace Lynx.Core.Communications
 
         public void AddMessageReceptionHandler(EventHandler<string> handler)
         {
+            PubNubCallback callback = new PubNubCallback(handler);
+            _messageReceptionHandlerStack.Push(callback);
             _pubNub.AddListener(new PubNubCallback(handler));
+        }
+
+        public void ClearMessageReceptionHandlers()
+        {
+            foreach (PubNubCallback e in _messageReceptionHandlerStack)
+            {
+                _pubNub.RemoveListener(e);
+            }
+
+            _messageReceptionHandlerStack.Clear();
         }
 
         public void Close()

@@ -6,6 +6,14 @@ namespace Lynx.Core.Communications.Packets
 {
     public class Syn : HandshakeToken, ISyn
     {
+        protected override string Type
+        {
+            get
+            {
+                return "syn";
+            }
+        }
+
         public Syn() : base()
         {
         }
