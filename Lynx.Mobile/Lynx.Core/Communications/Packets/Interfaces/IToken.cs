@@ -6,12 +6,7 @@
         void SetOnPayload(string key, string val);
         string GetFromHeader(string key);
         string GetFromPayload(string key);
-        bool HeaderContains(string key);
-        bool PayloadContains(string key);
-        void RemoveFromHeader(string key);
-        void RemoveFromPayload(string key);
         string GetEncodedHeader();
-        string GetTypedEncodedHeader();
         string GetEncodedPayload();
         string GetUnsignedEncodedToken();
         string GetEncodedToken();
@@ -22,9 +17,5 @@
         string Signature { get; }
         void SignAndLock(string signature);
         bool Locked { get; }
-        /// <summary>
-        /// Specifies if the Token was/will be encrypted or not
-        /// </summary>
-        bool Encrypted { get; set; }
     }
 }

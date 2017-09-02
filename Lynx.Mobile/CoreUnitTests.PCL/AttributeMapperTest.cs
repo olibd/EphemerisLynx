@@ -22,7 +22,6 @@ namespace CoreUnitTests.PCL
             };
             Certificate nameCert = new Certificate()
             {
-                Owner = "0x00a329c0648769A73afAc7F9381E08FB43dBEA72",
                 Revoked = false,
                 Location = "certLocation",
                 Hash = "certHash",
@@ -31,7 +30,6 @@ namespace CoreUnitTests.PCL
 
             Certificate nameCert2 = new Certificate()
             {
-                Owner = "0x1FD8397e8108ada12eC07976D92F773364ba46e7",
                 Revoked = false,
                 Location = "certLocation2",
                 Hash = "certHash2",

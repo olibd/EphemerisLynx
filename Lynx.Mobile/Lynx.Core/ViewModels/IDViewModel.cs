@@ -9,7 +9,6 @@ using MvvmCross.Core.Navigation;
 using System.Threading.Tasks;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.Communications.Packets;
-using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
 {
@@ -47,7 +46,7 @@ namespace Lynx.Core.ViewModels
             await _verifier.ProcessSyn(content);
             _verifier.IdentityProfileReceived += async (sender, e) =>
             {
-                await _navigationService.Navigate<CertifyViewModel, IVerifier>((IVerifier)sender);
+                await _navigationService.Navigate<CertifyViewModel, ID>(e.SynAck.Id);
             };
         }
 

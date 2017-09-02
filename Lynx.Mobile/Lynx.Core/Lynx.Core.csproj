@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -97,10 +97,6 @@
     <Compile Include="PeerVerification\IdentityProfileReceivedEvent.cs" />
     <Compile Include="Communications\Packets\TokenIsSignedAndLockedException.cs" />
     <Compile Include="PeerVerification\SignatureDoesntMatchException.cs" />
-    <Compile Include="Communications\Packets\CertificationConfirmationToken.cs" />
-    <Compile Include="Communications\Packets\CertificationConfirmationTokenFactory.cs" />
-    <Compile Include="PeerVerification\IssuedCertificatesAddedToIDEvent.cs" />
-    <Compile Include="PeerVerification\InvalidTokenTypeException.cs" />
     <Compile Include="ViewModels\CertifyViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

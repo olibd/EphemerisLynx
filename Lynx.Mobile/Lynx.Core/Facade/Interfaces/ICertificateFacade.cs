@@ -7,10 +7,7 @@ namespace Lynx.Core.Facade.Interfaces
     public interface ICertificateFacade
     {
         /// <summary>
-        /// Fetches a certificate from the blockchain. The OwningAttribute
-        /// property will contain a placeholder Attribute containing only
-        /// the attribute's address. It is the responsability of the
-        /// caller to replace it with a complete instance.
+        /// Fetches a certificate from the blockchain
         /// </summary>
         /// <param name="address">The address of the certificate to be fetched</param>
         /// <returns>A new certificate populated with data from the blockchain</returns>
