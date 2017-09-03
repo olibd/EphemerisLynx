@@ -15,12 +15,9 @@ namespace Lynx.Core
         /// Registers the Facades as singletons, creating them using the specified parameters.
         /// This should be called once the app is logged in and ready to talk to Ethereum.
         /// </summary>
-        /// <param name="userAddress">The user's address (used to perform all transactions)</param>
-        /// <param name="userPassword">The user's password (TODO, should used to unlock the account)</param>
-        /// 
         /// <param name="factoryContract">The IDFactory smart contract address, used when deploying a new ID</param>
         /// <param name="rpcEndpoint">The URL for the Ethereum node's RPC endpoint</param>
-        public void ConfigureEthNode(string userAddress, string userPassword, string factoryContract, string rpcEndpoint)
+        public void ConfigureEthNode(string factoryContract, string rpcEndpoint)
         {
             Web3 web3 = new Web3(rpcEndpoint);
             Mvx.RegisterSingleton<Web3>(() => web3);

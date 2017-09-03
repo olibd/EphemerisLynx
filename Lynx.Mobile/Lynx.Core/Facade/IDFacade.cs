@@ -45,12 +45,8 @@ namespace Lynx.Core.Facade
             //Use the provided Factory address to create an ID + IDController
             Event idCreationEvent = factory.GetEventReturnIDController();
             HexBigInteger filterAddressFrom =
-                await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
-
-            string txHash = await factory.CreateIDAsync();
-            while (Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(txHash) == null)
-                await Task.Delay(1000);
-                
+                await idCreationEvent.CreateFilterAsync();
+            await factory.CreateIDAsync();
 
             List<EventLog<ReturnIDControllerEventDTO>> log =
                 await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
