@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Reflection;
 using Lynx.Core;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Crypto;
 using Lynx.Core.Models.IDSubsystem;
+using NUnit.Compatibility;
 using NUnit.Framework;
+
 
 namespace CoreUnitTests.PCL
 {
@@ -33,7 +36,7 @@ namespace CoreUnitTests.PCL
             {
                 Encrypted = false,
                 PublicKey = _account.PublicKey,
-                NetworkAddress = "123",
+                NetworkAddress = "a8aa460b582f9dd543835d2388dd7b0b15fa0ddfbc5d386cf187df6720e3d95656789abcd56789abcd56789abcd",
                 Id = id
             };
         }
@@ -41,16 +44,45 @@ namespace CoreUnitTests.PCL
         [Test]
         public void SignVerifyTest()
         {
+            /////////////////////////////
+            //Verify: Positive Scenario//
+            /////////////////////////////
+
             //Sign
             Assert.Null(token.Signature);
             _tCS.Sign(token, _account.GetPrivateKeyAsByteArray());
             Assert.NotNull(token.Signature);
 
-            //Verify: Positive Scenario
-            Assert.IsTrue(_tCS.Verify(token, _account.GetPublicKeyAsByteArray()));
+            //Verify
+            Assert.IsTrue(_tCS.VerifySignature(token));
 
-            //Verify: Negative Scenario
-            Assert.IsFalse(_tCS.Verify(token, _account2.GetPublicKeyAsByteArray()));
+            /////////////////////////////
+            //Verify: Negative Scenario//
+            /////////////////////////////
+
+            //Force unlock the token
+
+            typeof(Token).GetTypeInfo().GetDeclaredField("_signedAndlocked").SetValue(token, false);
+
+            //modify the pubkey
+            token.PublicKey = _account2.PublicKey;
+
+            //check signature
+            Assert.IsFalse(_tCS.VerifySignature(token));
+        }
+
+        [Test]
+        public void TestEncryptAndDecrypt()
+        {
+            Assert.Null(token.Signature);
+            _tCS.Sign(token, _account.GetPrivateKeyAsByteArray());
+            string cipherData = _tCS.Encrypt(token, _account2.GetPublicKeyAsByteArray(), _account.GetPrivateKeyAsByteArray());
+            Assert.AreNotEqual(null, cipherData);
+            string decryptedData = _tCS.Decrypt(cipherData, _account2.GetPrivateKeyAsByteArray());
+            Assert.AreNotEqual(cipherData, decryptedData);
+            string[] splittedDecryptedData = decryptedData.Split('.');
+            Assert.AreEqual(token.GetEncodedHeader(), splittedDecryptedData[0]);
+            Assert.AreEqual(token.GetEncodedPayload(), splittedDecryptedData[1]);
         }
     }
 }

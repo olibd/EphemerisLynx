@@ -7,13 +7,17 @@ namespace Lynx.Droid
 {
     public class Setup : MvxAndroidSetup
     {
+        private AndroidSpecificDataService _dataService;
+
         public Setup(Context applicationContext) : base(applicationContext)
         {
+            _dataService = new AndroidSpecificDataService(applicationContext);
+
         }
 
         protected override IMvxApplication CreateApp()
         {
-            return new Core.App();
+            return new Core.App(_dataService);
         }
 
         protected override IMvxTrace CreateDebugTrace()

@@ -20,7 +20,6 @@ namespace Lynx.Core.Communications
         {
             if (message.Message != null && MessageReceived.GetInvocationList().Length != 0)
             {
-                //TODO: Check sender to ignore own messages
                 MessageReceived(this, message.Message.ToString());
             }
         }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:id="@+id/firstname_layout"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:hint="@string/firstname"
+            android:layout_height="wrap_content"
+            android:id="@+id/firstname_edittext"
+            local:MvxBind="Text Firstname" />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:id="@+id/lastname_layout"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:hint="@string/lastname"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastname_edittext"
+            local:MvxBind="Text Lastname" />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:id="@+id/cell_layout"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:hint="@string/cell"
+            android:layout_height="wrap_content"
+            android:id="@+id/cell_edittext"
+            local:MvxBind="Text Cell" />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:id="@+id/address_layout"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:hint="@string/address"
+            android:layout_height="wrap_content"
+            android:id="@+id/address_edittext"
+            local:MvxBind="Text Address" />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create my Lynx"
+        android:textSize="20dp"
+        android:background="#ff37e7ec"
+        local:MvxBind="Click DeployIDCommand"
+        android:layout_marginRight="10dp"
+        android:textAllCaps="false"
+        android:textColor="#ffffffff"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="#ff32bec2"
+        local:MvxBind="Text SerializedID" />
+</LinearLayout>

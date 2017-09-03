@@ -2,6 +2,7 @@
 using Lynx.Core.Interfaces;
 using NBitcoin.Crypto;
 using Nethereum.Core.Signing.Crypto;
+using System.Text;
 
 namespace Lynx.Core
 {
@@ -52,6 +53,13 @@ namespace Lynx.Core
             byte[] noPrefixPubKey = EthECKey.GetPubKeyNoPrefix(eckey);
             byte[] tag1 = new byte[1] { 4 };
             return CombineByteArrays(new byte[1] { 4 }, noPrefixPubKey);
+        }
+
+        public static string GeneratePublicAddressFromPublicKey(string pubK)
+        {
+            ECKey eckey = new ECKey(Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(pubK), false);
+            string publicAddress = EthECKey.GetPublicAddress(eckey);
+            return publicAddress;
         }
 
         private byte[] CombineByteArrays(byte[] first, byte[] second)

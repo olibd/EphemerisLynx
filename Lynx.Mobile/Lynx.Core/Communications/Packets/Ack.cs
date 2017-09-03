@@ -1,4 +1,5 @@
-﻿using Lynx.Core.Communications.Packets.Interfaces;
+﻿using System.Collections.Generic;
+using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using Newtonsoft.Json;
 
@@ -6,19 +7,18 @@ namespace Lynx.Core.Communications.Packets
 {
     public class Ack : HandshakeToken, IAck
     {
-        private IContent _name;
-        public IContent Name
-        {
-            get
-            {
-                return _name;
-            }
 
-            set
-            {
-                SetOnPayload("name", JsonConvert.SerializeObject(value));
-                _name = value;
-            }
+        public Ack() : base()
+        {
+
+        }
+
+        public Ack(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload, id)
+        {
+        }
+
+        public Ack(Dictionary<string, string> header, Dictionary<string, string> payload) : base(header, payload)
+        {
         }
     }
 }

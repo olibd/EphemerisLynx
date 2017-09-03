@@ -36,6 +36,7 @@ namespace Lynx.Core.Facade
                 Hash = await ethCertificate.HashAsyncCall(),
                 Location = await ethCertificate.LocationAsyncCall(),
                 Revoked = await ethCertificate.RevokedAsyncCall(),
+                Owner = await ethCertificate.OwnerAsyncCall()
             };
 
             certificateModel.Content = _contentService.GetContent(certificateModel.Location, certificateModel.Hash);
@@ -49,6 +50,7 @@ namespace Lynx.Core.Facade
             string transactionHash = await CertificateService.DeployContractAsync(Web3, AccountService.PrivateKey, cert.Location, cert.Hash, cert.OwningAttribute.Address);
             TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
             cert.Address = receipt.ContractAddress;
+            cert.Owner = AccountService.GetAccountAddress();
             return cert;
         }
     }

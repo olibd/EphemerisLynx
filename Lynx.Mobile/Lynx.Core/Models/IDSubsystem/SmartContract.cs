@@ -7,5 +7,7 @@ namespace Lynx.Core.Models.IDSubsystem
     {
         [Indexed]
         public string Address { get; set; }
+
+        public string Owner { get; set; }
     }
 }
