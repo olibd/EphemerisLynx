@@ -27,8 +27,6 @@ namespace Lynx.Core.PeerVerification
         private ICertificateFacade _certificateFacade;
         private Attribute[] _accessibleAttributes;
         private IAttributeFacade _attributeFacade;
-        //prevents the early calling of the ProcessCertificationConfirmationToken event handler
-        private bool _synAckSent = false;
         public event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
 
         public Requester(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
@@ -36,7 +34,6 @@ namespace Lynx.Core.PeerVerification
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
             _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<Ack>(e)));
-            _session.AddMessageReceptionHandler(new EventHandler<string>(async (sender, e) => await ProcessCertificationConfirmationToken(e)));
             _id = id;
             _attributeFacade = attributeFacade;
             _certificateFacade = certificateFacade;
@@ -82,7 +79,6 @@ namespace Lynx.Core.PeerVerification
             _tokenCryptoService.Sign(synAck, _accountService.GetPrivateKeyAsByteArray());
             string encryptedToken = _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
-            _synAckSent = true;
         }
 
         protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
