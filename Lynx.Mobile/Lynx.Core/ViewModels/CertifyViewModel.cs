@@ -15,14 +15,14 @@ namespace Lynx.Core.ViewModels
     {
         public ID ID { get; set; }
         public List<Attribute> Attributes { get; set; }
-        public SynAck _synAck;
-        public List<string> attributesToCertify;
+        private List<string> _attributesToCertify;
         private IMvxNavigationService _navigationService;
         private IVerifier _verifier;
 
         public CertifyViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
+            _attributesToCertify = new List<string>();
         }
 
         public override Task Initialize(IVerifier verifier)
@@ -30,30 +30,19 @@ namespace Lynx.Core.ViewModels
             _verifier = verifier;
             ID = _verifier.SynAck.Id;
             Attributes = ID.Attributes.Values.ToList();
-            return base.Initialize();
+            return Task.FromResult(true);
         }
-
-        public override void Start()
-        {
-            //TODO: Add starting logic here
-        }
-
-        public void UpdateCertifiedAttributes()
-        {
-
-        }
-
         public IMvxCommand UpdateCertifiedAttributesCommand => new MvxCommand<string>(UpdateCertifiedAttributes);
 
         public void UpdateCertifiedAttributes(string attributeDescription)
         {
-            if (attributesToCertify.Contains(attributeDescription))
+            if (_attributesToCertify.Contains(attributeDescription))
             {
-                attributesToCertify.Remove(attributeDescription);
+                _attributesToCertify.Remove(attributeDescription);
             }
             else
             {
-                attributesToCertify.Add(attributeDescription);
+                _attributesToCertify.Add(attributeDescription);
             }
         }
 
