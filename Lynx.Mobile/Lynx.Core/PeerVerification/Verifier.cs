@@ -16,7 +16,7 @@ using Lynx.Core.Facade.Interfaces;
 
 namespace Lynx.Core.PeerVerification
 {
-    public class Verifier : Peer, IVerifier
+    public class Verifier : Peer, IVerifier, IScanningPeer
     {
         private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
         private ID _id;
