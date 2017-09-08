@@ -141,6 +141,8 @@ namespace Lynx.Core.PeerVerification
                 {
                     OwningAttribute = attr,
                     Revoked = false,
+                    Location = "CertFor" + attr.Description,
+                    Hash = "HashFor" + attr.Description
                 };
 
                 await _certificateFacade.DeployAsync(cert);
