@@ -19,6 +19,21 @@ namespace Lynx.Core.Communications.Packets
             //decode header to get the ID address and the accessible attribtue
             string[] splittedEncodedToken = encodedToken.Split('.');
 
+            ///////////////////////////////////////////////////////////////////
+            //If the token has a signature, then the base will return a locked
+            //token, we need to extract the signature from the encoded token
+            //supplied to the base. And we'll add the signature in this method
+            //instead
+            ///////////////////////////////////////////////////////////////////
+            string signature = null;
+            if (splittedEncodedToken.Length == 3)
+            {
+                //save a copy of the signature
+                signature = splittedEncodedToken[2];
+                //remove the signature from the encodedToken
+                encodedToken = splittedEncodedToken[0] + "." + splittedEncodedToken[1];
+            }
+
             CertificationConfirmationToken t = base.CreateToken(encodedToken);
 
             /////////////////////////////////////////////////////////////////////////////
@@ -38,6 +53,10 @@ namespace Lynx.Core.Communications.Packets
             }
 
             t.IssuedCertificates = issuedCerts;
+
+            //If there was a signature in the encoded token, we sign it
+            if (signature != null)
+                t.SignAndLock(signature);
 
             return t;
         }
