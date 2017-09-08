@@ -20,6 +20,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// </summary>
         /// <returns>A JSON string representing the SYN payload</returns>
         string CreateEncodedSyn();
+        IAck Ack { get; set; }
         event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
     }
 }
