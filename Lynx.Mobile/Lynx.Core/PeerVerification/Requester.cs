@@ -149,6 +149,11 @@ namespace Lynx.Core.PeerVerification
                         continue;
 
                     cert.OwningAttribute = attr;
+
+                    //overwrite the old certificate
+                    if (attr.Certificates.ContainsKey(cert.Owner))
+                        attr.Certificates.Remove(cert.Owner);
+
                     attr.AddCertificate(cert);
 
                     await _attributeFacade.AddCertificateAsync(attr, cert);
