@@ -126,6 +126,7 @@ namespace Lynx.Core.PeerVerification
             };
 
             byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(SynAck.PublicKey);
+            _tokenCryptoService.Sign(certConfToken, _accountService.GetPrivateKeyAsByteArray());
             return _tokenCryptoService.Encrypt(certConfToken, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
         }
 
