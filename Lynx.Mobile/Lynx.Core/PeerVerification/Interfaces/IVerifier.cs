@@ -12,6 +12,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
     public interface IVerifier
     {
         event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
+        event EventHandler<CertificatesSent> CertificatesSent;
         ISynAck SynAck { get; }
         /// <summary>
         /// Parses a JSON-encoded SYN and verifies its integrity.

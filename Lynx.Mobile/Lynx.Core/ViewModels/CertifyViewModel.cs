@@ -51,6 +51,7 @@ namespace Lynx.Core.ViewModels
         private void CertifyID()
         {
             _verifier.Certify(attributesToCertify.ToArray());
+            _verifier.CertificatesSent += (sender, e) => { Close((this)); };
         }
     }
 }

@@ -28,6 +28,7 @@ namespace Lynx.Core.PeerVerification
         public ISynAck SynAck { get { return _synAck; } }
 
         public event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
+        public event EventHandler<CertificatesSent> CertificatesSent;
 
         public Verifier(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
         {
