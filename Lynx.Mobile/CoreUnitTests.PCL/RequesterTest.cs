@@ -105,8 +105,9 @@ namespace CoreUnitTests.PCL
             //check the type
             string encodedSyn = _requester.CreateEncodedSyn();
             Assert.True(encodedSyn.Contains(":"));
+
             //remove the type
-            string untypedEncodedToken = _requester.CreateEncodedSyn().Split(':')[1];
+            string untypedEncodedToken = encodedSyn.Split(':')[1];
 
             string[] splittedEncodedToken = untypedEncodedToken.Split('.');
 

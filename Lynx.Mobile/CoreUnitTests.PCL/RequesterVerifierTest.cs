@@ -124,6 +124,14 @@ namespace CoreUnitTests.PCL
             ManualResetEvent waitHandle = new ManualResetEvent(false);
 
             List<Certificate> issuedCertificate = null;
+
+            Boolean certsSent = false;
+
+            _verifier.CertificatesSent += (sender, e) =>
+            {
+                certsSent = true;
+            };
+
             _requester.IssuedCertificatesAddedToID += (sender, e) =>
             {
                 issuedCertificate = e.CertificatesAdded;
@@ -134,6 +142,10 @@ namespace CoreUnitTests.PCL
 
             if (waitHandle.WaitOne(100000))
             {
+                //make sure that from the point of view of the verifier, the
+                //certificates were sent
+                Assert.True(certsSent);
+
                 //assume we issued a certificate for each accessible attributes
                 Assert.AreEqual(_accessibleAttributes.Length, issuedCertificate.Count);
 
@@ -212,7 +224,7 @@ namespace CoreUnitTests.PCL
                     id.AddAttribute(attr.Description, attr);
                 }
                 id.Address = address;
-                id.Owner = _accountService.GetAccountAddress();
+                id.Owner = "0x" + _accountService.GetAccountAddress();
 
                 return id;
             }
