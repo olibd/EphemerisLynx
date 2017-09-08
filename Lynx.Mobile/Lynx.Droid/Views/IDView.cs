@@ -56,11 +56,25 @@ namespace Lynx.Droid.Views
             {
                 PermissionsHandler.RequestPermissionsAsync(this);
             }
-
             _scanner.StartScanning(result =>
             {
+                if (!result.Text.Contains(":"))
+                    return;
+
+                RunOnUiThread(() =>
+                {
+                    try
+                    {
+                        Toast.MakeText(this, "Request Scanned. Please wait.", ToastLength.Long).Show();
+                    }
+                    catch (Exception e)
+                    {
+                        var f = e;
+                    }
+                });
+
                 QrCodeScanCommand.Execute(result.Text);
-            }, 
+            },
             MobileBarcodeScanningOptions.Default);
         }
 
