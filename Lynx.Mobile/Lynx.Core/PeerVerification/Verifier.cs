@@ -111,7 +111,7 @@ namespace Lynx.Core.PeerVerification
         {
             Certificate[] certificates = await IssueCertificates(keysOfAttributesToCertifify);
 
-            string encryptedToken = "cert:" + CreateEncryptedCertificationConfirmationToken(certificates);
+            string encryptedToken = CreateEncryptedCertificationConfirmationToken(certificates);
 
             _session.Send(encryptedToken);
         }
