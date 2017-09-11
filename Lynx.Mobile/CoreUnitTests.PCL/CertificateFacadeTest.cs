@@ -37,8 +37,8 @@ namespace CoreUnitTests.PCL
             string address = (await DeployCertificateAsync()).Address;
             Certificate cert = await _facade.GetCertificateAsync(address);
 
-            Assert.AreEqual(cert.Hash, "I am a hash");
-            Assert.AreEqual(cert.Location, "I am a location");
+            Assert.AreEqual("I am a hash", cert.Hash);
+            Assert.AreEqual("I am a location", cert.Location);
             Assert.False(cert.Revoked);
         }
 

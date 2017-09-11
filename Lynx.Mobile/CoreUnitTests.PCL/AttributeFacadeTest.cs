@@ -68,7 +68,7 @@ namespace CoreUnitTests.PCL
             Certificate newCert = await _attributeFacade.AddCertificateAsync(attr, cert);
 
             Dictionary<string, Certificate> certs = await _attributeFacade.GetCertificatesAsync(attr);
-            Assert.AreEqual(certs.Count, 1);
+            Assert.AreEqual(1, certs.Count);
             Assert.AreEqual(newCert.Address, certs.ToArray()[0].Value.Address);
             Assert.AreEqual(newCert.Location, certs.ToArray()[0].Value.Location);
 
