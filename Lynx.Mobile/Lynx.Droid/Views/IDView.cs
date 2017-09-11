@@ -40,8 +40,10 @@ namespace Lynx.Droid.Views
             _IDViewLayout = FindViewById<CoordinatorLayout>(Resource.Id.IDViewLayout);
             _bottomSheetBehavior.SetBottomSheetCallback(new BottomSheetInvalidateParentCallback());
 
-            _scanner = new ZXingScannerFragment();
-            _scanner.ScanningOptions = MobileBarcodeScanningOptions.Default;
+            _scanner = new ZXingScannerFragment
+            {
+                ScanningOptions = MobileBarcodeScanningOptions.Default
+            };
             SupportFragmentManager.BeginTransaction()
                 .Add(Resource.Id.ZXingScannerLayout, _scanner, "ZXINGSCANNER")
                 .Commit();

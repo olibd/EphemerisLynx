@@ -14,6 +14,23 @@ namespace Lynx.Droid
             this.applicationContext = applicationContext;
         }
 
+        public string IDAddress
+        {
+            get
+            {
+                ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(applicationContext);
+                return prefs.GetString("IDAddress", "0x0");
+
+            }
+            set
+            {
+                ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(applicationContext);
+                prefs.Edit()
+                    .PutString("IDAddress", value)
+                    .Apply();
+            }
+        }
+
         public int IDUID
         {
             get
