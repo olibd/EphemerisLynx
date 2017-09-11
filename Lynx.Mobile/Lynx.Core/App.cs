@@ -45,7 +45,7 @@ namespace Lynx.Core
             Mvx.RegisterType<IMapper<ID>>(() => new IDMapper(dbfile, Mvx.Resolve<IMapper<Attribute>>()));
 
             //Configure the the eth node
-            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode(null, null, "0x6d10E8ca4d6EC1De78D11D12fCAF89256f6FD13E", "http://cd9e5e83.ngrok.io");
+            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode("0x7c276dcaab99bd16163c1bcce671cad6a1ec0945", "http://jmon.tech:8545");
 
             //Register the dummy ContentService as a singleton, temp solution
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());

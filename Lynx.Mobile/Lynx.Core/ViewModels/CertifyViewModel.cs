@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using Lynx.Core.Models.IDSubsystem;
@@ -50,7 +50,7 @@ namespace Lynx.Core.ViewModels
 
         private void CertifyID()
         {
-            _verifier.Certify(attributesToCertify.ToArray());
+            _verifier.Certify(_attributesToCertify.ToArray());
             _verifier.CertificatesSent += (sender, e) => { Close((this)); };
         }
     }

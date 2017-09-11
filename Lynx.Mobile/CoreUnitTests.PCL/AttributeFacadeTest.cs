@@ -20,8 +20,8 @@ namespace CoreUnitTests.PCL
         public void Setup()
         {
             SetupAsync().Wait();
-            _certFacade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
-            _attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade, new DummyContentService());
+            _certFacade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
+            _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace CoreUnitTests.PCL
                 Location = "I am an attribute location",
             };
 
-            Attribute deployed = await _attributeFacade.DeployAsync(attr, _addressFrom);
+            Attribute deployed = await _attributeFacade.DeployAsync(attr, _accountService.GetAccountAddress());
             return deployed;
         }
 

@@ -8,6 +8,7 @@ using Lynx.Core.Crypto;
 using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Facade;
 using Lynx.Core.Facade.Interfaces;
+using Lynx.Core.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.PeerVerification;
 using Nethereum.Web3;
@@ -82,19 +83,20 @@ namespace CoreUnitTests.PCL
             _id.AddAttribute("address", address);
             _id.Address = "0x1234567";
 
-            ////////////////////////
-            //Create the ID Facade//
-            ////////////////////////
-            initWeb3().Wait();
-            _certFacade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
-            _attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade, new DummyContentService());
-            _idFacade = new IDFacade(_addressFrom, "", "0x0", _web3, _attributeFacade);
-
             /////////////////////////
             //Create an eth account//
             /////////////////////////
             _privateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
             _accountService = new AccountService(_privateKey);
+
+            ////////////////////////
+            //Create the ID Facade//
+            ////////////////////////
+            initWeb3().Wait();
+            _certFacade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
+            _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
+            _idFacade = new IDFacade("0x0", _web3, _attributeFacade, _accountService);
+
             _tokenCryptoService = new TokenCryptoService<IToken>(new SECP256K1CryptoService());
             _requester = new Requester(_tokenCryptoService, _accountService, _id, _idFacade, _attributeFacade, _certFacade);
         }
@@ -151,8 +153,8 @@ namespace CoreUnitTests.PCL
 
         private async Task initWeb3()
         {
-            _web3 = new Web3("http://10.0.1.11:8082");
-            _addressFrom = (await _web3.Eth.Accounts.SendRequestAsync())[0];
+            _web3 = new Web3("http://jmon.tech:8545");
+            _addressFrom = _accountService.GetAccountAddress();
         }
     }
 }

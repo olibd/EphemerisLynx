@@ -8,7 +8,9 @@ using Lynx.Core.Models.IDSubsystem;
 using eVi.abi.lib.pcl;
 using Nethereum.Hex.HexTypes;
 using System.Numerics;
+using Lynx.Core.Interfaces;
 using Nethereum.ABI.Encoders;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Facade
 {
@@ -17,37 +19,40 @@ namespace Lynx.Core.Facade
         private string _factoryAddress;
         private IAttributeFacade _attributeFacade;
 
-        public IDFacade(string address, string password, string factoryAddress, Web3 web3, IAttributeFacade attributeFacade) : base(address, password, web3)
+        public IDFacade(string factoryAddress, Web3 web3, IAttributeFacade attributeFacade, IAccountService accountService) : base(web3, accountService)
         {
             _factoryAddress = factoryAddress;
             _attributeFacade = attributeFacade;
         }
 
-        public IDFacade(string address, string password, string factoryAddress, IAttributeFacade attributeFacade) : base(address, password, new Web3())
+        public IDFacade(string factoryAddress, IAttributeFacade attributeFacade, IAccountService accountService) : base(new Web3(), accountService)
         {
             _factoryAddress = factoryAddress;
             _attributeFacade = attributeFacade;
         }
 
-        public IDFacade(string address, string password, IAttributeFacade attributeFacade) : base(address, password, new Web3())
+        public IDFacade(IAttributeFacade attributeFacade, IAccountService accountService) : base(new Web3(), accountService)
         {
             _attributeFacade = attributeFacade;
         }
 
         public async Task<ID> DeployAsync(ID id)
         {
-            FactoryService factory = new FactoryService(Web3, _factoryAddress);
+            FactoryService factory = new FactoryService(Web3, AccountService.PrivateKey, _factoryAddress);
             Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
 
             //Use the provided Factory address to create an ID + IDController
             Event idCreationEvent = factory.GetEventReturnIDController();
-            HexBigInteger filterAddressFrom = await idCreationEvent.CreateFilterAsync(Address);
-            await factory.CreateIDAsync(Address, new HexBigInteger(3905820));
+            HexBigInteger filterAddressFrom =
+                await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
+            await factory.CreateIDAsync();
 
-            List<EventLog<ReturnIDControllerEventDTO>> log = await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
+            List<EventLog<ReturnIDControllerEventDTO>> log =
+                await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
 
             string controllerAddress = log[0].Event._controllerAddress;
-            IDControllerService idcService = new IDControllerService(Web3, controllerAddress);
+            IDControllerService idcService =
+                new IDControllerService(Web3, AccountService.PrivateKey, controllerAddress);
 
             id.ControllerAddress = controllerAddress;
             id.Address = await idcService.GetIDAsyncCall();
@@ -66,9 +71,9 @@ namespace Lynx.Core.Facade
         //This function will only be used to create the initial ID object on login
         public async Task<ID> GetIDAsync(string address, string[] accessibleAttributes = null)
         {
-            IDService idService = new IDService(Web3, address);
+            IDService idService = new IDService(Web3, AccountService.PrivateKey, address);
             string idcAddress = await idService.OwnerAsyncCall();
-            IDControllerService idcService = new IDControllerService(Web3, idcAddress);
+            IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, idcAddress);
 
             ID newID = new ID
             {
@@ -92,20 +97,21 @@ namespace Lynx.Core.Facade
 
         public async Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute)
         {
-            IDControllerService idcService = new IDControllerService(Web3, id.ControllerAddress);
+            IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
 
             //If the attribute to be added is not yet deployed, deploy it
             if (attribute.Address == null)
                 attribute = await _attributeFacade.DeployAsync(attribute, id.Address);
 
-            await idcService.AddAttributeAsync(Address, key, attribute.Address, new HexBigInteger(3905820));
+
+            await idcService.AddAttributeAsync(key, attribute.Address);
 
             return attribute;
         }
 
         public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id)
         {
-            IDControllerService idcService = new IDControllerService(Web3, id.ControllerAddress);
+            IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
             Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
 
             BigInteger attributes = await idcService.AttributeCountAsyncCall();
@@ -122,10 +128,10 @@ namespace Lynx.Core.Facade
             return dict;
         }
 
-        public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
-        {
-            IDControllerService idcService = new IDControllerService(Web3, id.ControllerAddress);
-            Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
+		public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
+		{
+			IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
+			Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
 
             BigInteger attributes = await idcService.AttributeCountAsyncCall();
             for (BigInteger i = 0; i < attributes; i++)
