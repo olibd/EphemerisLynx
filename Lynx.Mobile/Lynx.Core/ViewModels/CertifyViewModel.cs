@@ -50,7 +50,7 @@ namespace Lynx.Core.ViewModels
 
         private void CertifyID()
         {
-            _verifier.Certify(attributesToCertify.ToArray());
+            _verifier.Certify(_attributesToCertify.ToArray());
         }
     }
 }

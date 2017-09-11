@@ -52,5 +52,20 @@ namespace Lynx.Core.PeerVerification
 
             return handshakeToken;
         }
+
+        /// <summary>
+        /// Decrypt and parses a JSON-encoded InfoRequest Token. Also verifies that the
+        /// token was encrypted by the ID that issued the token.
+        /// </summary>
+        /// <param name="encryptedInfoRequestToken">The JSON-encoded Info Request SYNACK</param>
+        /// <returns>The InfoRequestToken object</returns>
+        protected virtual async Task<T> ProcessEncryptedInfoRequestToken<T>(string encryptedInfoRequestToken) where T : InfoRequestSynAck, new()
+		{
+			string decryptedToken = _tokenCryptoService.Decrypt(encryptedInfoRequestToken, _accountService.GetPrivateKeyAsByteArray());
+			InfoRequestTokenFactory<T> handshakeTokenFactory = new InfoRequestTokenFactory<T>(_idFacade);
+			T handshakeToken = await handshakeTokenFactory.CreateInfoRequestTokenAsync(decryptedToken);
+
+			return handshakeToken;
+		}
     }
 }
