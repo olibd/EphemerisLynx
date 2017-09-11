@@ -21,7 +21,7 @@ namespace CoreUnitTests.PCL
         public void Setup()
         {
             SetupAsync().Wait();
-            _facade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
+            _facade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace CoreUnitTests.PCL
         {
             Attribute dummyAttribute = new Attribute()
             {
-                Address = _addressFrom
+                Address = _accountService.GetAccountAddress()
             };
 
             Certificate cert = new Certificate()

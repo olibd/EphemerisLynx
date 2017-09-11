@@ -2,6 +2,6 @@
 {
     interface ILynxConfigurationService
     {
-        void ConfigureEthNode(string userAddress, string userPassword, string factoryContractAddress, string rpcEndpointUrl);
+        void ConfigureEthNode(string factoryContractAddress, string rpcEndpointUrl);
     }
 }

@@ -26,20 +26,10 @@ namespace CoreUnitTests.PCL
 		{
 			SetupAsync().Wait();
 
-			Task<string> deployFactory = DeployFactory();
-			deployFactory.Wait();
-
-			_certFacade = new CertificateFacade(_addressFrom, "", _web3, new DummyContentService());
-			_attributeFacade = new AttributeFacade(_addressFrom, "", _web3, _certFacade, new DummyContentService());
-			_idFacade = new IDFacade(_addressFrom, "", deployFactory.Result, _web3, _attributeFacade);
-		}
-
-		private async Task<string> DeployFactory()
-		{
-			string transactionHash = await FactoryService.DeployContractAsync(_web3, _addressFrom, new HexBigInteger(3905820));
-			TransactionReceipt receipt = await _web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
-			return receipt.ContractAddress;
-		}
+            _certFacade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
+            _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
+            _idFacade = new IDFacade(_factoryService.GetAddress(), _web3, _attributeFacade, _accountService);
+        }
 
 		[Test]
 		public async Task TestDeploy()
