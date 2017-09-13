@@ -12,6 +12,20 @@ namespace Lynx.Droid.Views
     [Activity(Label = "View for RegistrationViewModel")]
     public class RegistrationView : MvxActivity
     {
+		protected override void OnCreate(Bundle bundle)
+		{
+			base.OnCreate(bundle);
+			SetContentView(Resource.Layout.RegistrationView);
+			BindCommand();
+		}
+
+		private void BindCommand()
+		{
+			var set = this.CreateBindingSet<RegistrationView, RegistrationViewModel>();
+			//set.Bind(this).For(view => view.UpdateCertifiedAttributesCommand).To(viewModel => viewModel.UpdateCertifiedAttributesCommand).OneWay();
+			set.Apply();
+		}
+        /**
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -52,6 +66,6 @@ namespace Lynx.Droid.Views
             var set = this.CreateBindingSet<RegistrationView, RegistrationViewModel>();
             set.Bind(this).For(view => view.Interaction).To(viewModel => viewModel.ConfirmationInteraction).OneWay();
             set.Apply();
-        }
+        }**/
     }
 }

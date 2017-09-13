@@ -27,6 +27,7 @@ namespace Lynx.Core.ViewModels
 		{
             ID = Id;
             Attributes = ID.Attributes.Values.ToList();
+            certifiedAttributes = new List<string>(); 
             return base.Initialize();
 		}
 
@@ -35,22 +36,17 @@ namespace Lynx.Core.ViewModels
 			//TODO: Add starting logic here
 		}
 
-        public void UpdateCertifiedAttributes()
-        {
-            
-        }
-
 		public IMvxCommand UpdateCertifiedAttributesCommand => new MvxCommand<string>(UpdateCertifiedAttributes);
 
-        public void UpdateCertifiedAttributes(string attributeDescription)
+        public void UpdateCertifiedAttributes(string Description)
         {
-			if (certifiedAttributes.Contains(attributeDescription))
+			if (certifiedAttributes.Contains(Description))
 			{
-				certifiedAttributes.Remove(attributeDescription);
+				certifiedAttributes.Remove(Description);
 			}
 			else
 			{
-				certifiedAttributes.Add(attributeDescription);
+				certifiedAttributes.Add(Description);
 			}
         }
 

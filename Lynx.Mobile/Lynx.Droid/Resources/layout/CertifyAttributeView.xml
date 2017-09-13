@@ -4,17 +4,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <CheckBox
-        android:id="@+id/checkbox_meat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        local:MvxBind="Click CommandParameter(UpdateCertifiedAttributesCommand, Description)" />
     <TextView
         android:id="@+id/AttrDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         local:MvxBind="Text Description" />
-    <include
-        layout="@layout/externalelement" />
+    <CheckBox
+        android:id="@+id/checkbox_meat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:focusable="false" />
 </LinearLayout>

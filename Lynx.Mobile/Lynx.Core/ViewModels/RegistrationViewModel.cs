@@ -10,6 +10,8 @@ using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Lynx.Core.ViewModels
 {
@@ -30,6 +32,9 @@ namespace Lynx.Core.ViewModels
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
         private readonly IMvxNavigationService _navigationService;
 
+		public List<Attribute> Attributes { get; set; }
+		public List<string> certifiedAttributes;
+
         public RegistrationViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
@@ -41,13 +46,44 @@ namespace Lynx.Core.ViewModels
             ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
 
             ID = Mvx.Resolve<ID>();
+            Attributes = new List<Attribute>();
+            certifiedAttributes = new List<string>();
+
+			Attribute firstname = new Attribute()
+			{
+				Description = "Firstname",
+				Content = new StringContent("fn"),
+				Hash = "hash" + "fn",
+				Location = "Location" + "fn",
+			};
+
+			Attribute lastname = new Attribute()
+			{
+				Description = "Lastname",
+				Hash = "hash" + "ln",
+				Location = "Location" + "ln",
+				Content = new StringContent("ln")
+			};
+
+			Attribute cell = new Attribute()
+			{
+				Description = "Cell",
+				Hash = "hash" + "cc",
+				Location = "Location" + "cc",
+				Content = new StringContent("cc")
+			};
+
+            Attributes.Add(firstname);
+            Attributes.Add(lastname);
+            Attributes.Add(cell);
+
         }
 
         public override void Start()
         {
             //TODO: Add starting logic here
         }
-
+        /**
         public IMvxCommand DeployIDCommand => new MvxCommand(DeployConfirm);
 
         /// <summary>
@@ -133,6 +169,30 @@ namespace Lynx.Core.ViewModels
             ID.AddAttribute(lastname.Description, lastname);
             ID.AddAttribute(cell.Description, cell);
             ID.AddAttribute(address.Description, address);
-        }
-    }
+        }**/
+
+        public IMvxCommand UpdateCertifiedAttributesCommand => new MvxCommand<Attribute>(UpdateCertifiedAttributes);
+
+        private void UpdateCertifiedAttributes(Attribute Attr)
+		{
+            string Description = Attr.Description;
+			if (certifiedAttributes.Contains(Description))
+			{
+				certifiedAttributes.Remove(Description);
+			}
+			else
+			{
+				certifiedAttributes.Add(Description);
+			}
+		}
+
+		public IMvxCommand CertifyIDCommand => new MvxCommand(CertifyID);
+
+		private void CertifyID()
+		{
+			throw new NotImplementedException();
+		}
+		
+	}
+
 }
