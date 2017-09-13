@@ -7,13 +7,12 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace CoreUnitTests.PCL
 {
-    [TestFixture()]
-    public class AckTest : HandshakeTokenTest
+    public class InfoRequestSynAckTest : HandshakeTokenTest
     {
-        [SetUp]
-        public override void Setup()
-        {
-            base.Setup();
+		[SetUp]
+		public override void Setup()
+		{
+			base.Setup();
 
 			//create some dummy attributes
 			Attribute firstname = new Attribute()
@@ -31,15 +30,18 @@ namespace CoreUnitTests.PCL
                 Description = "lastname",
 				Content = new StringContent("Brochu Dufour")
 			};
-            Attribute[] AccessibleAttr = new Attribute[]{firstname, lastname};
+			Attribute[] AccessibleAttr = new Attribute[] { firstname, lastname };
 
-            IContent name = new StringContent("Olivier");
-            _payload.Add("name", JsonConvert.SerializeObject(name));
-            _token = new Ack(_header, _payload)
-            {
-                Id = _id,
-                AccessibleAttributes = AccessibleAttr
-            };
-        }
+            string[] reqAttr = new string[]{ "firstname", "lastname" };
+
+			IContent name = new StringContent("Olivier");
+			_payload.Add("name", JsonConvert.SerializeObject(name));
+			_token = new InfoRequestSynAck(_header, _payload)
+			{
+				Id = _id,
+				AccessibleAttributes = AccessibleAttr,
+                RequestedAttributes = reqAttr
+			};
+		}
     }
 }

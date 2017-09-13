@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Lynx.Core.Communications.Packets
 {
-	public class InfoRequestSynAck : HandshakeToken
+    public class InfoRequestSynAck : SynAck
 	{
 		protected override string Type
 		{
