@@ -15,7 +15,7 @@ namespace Lynx.Core.ViewModels
 	{
 		public ID ID { get; set; }
 		public List<CheckedAttribute> Attributes { get; set; }
-		public List<string> _attributesToCertify;
+        private List<string> _attributesToCertify;
 		private IMvxNavigationService _navigationService;
 		private IVerifier _verifier;
 
@@ -83,6 +83,7 @@ namespace Lynx.Core.ViewModels
 		private void CertifyID()
 		{
 			_verifier.Certify(_attributesToCertify.ToArray());
+            _verifier.CertificatesSent += (sender, e) => { Close((this)); };
 		}
 	}
 }
