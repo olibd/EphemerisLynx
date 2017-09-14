@@ -14,6 +14,7 @@ using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 using Org.BouncyCastle.Crypto.Engines;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using Nethereum.ABI.Encoders;
 
 namespace Lynx.Core.Facade
 {
@@ -37,7 +38,9 @@ namespace Lynx.Core.Facade
 
         public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
         {
-            string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, attribute.Hash, owner);
+            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
+
+            string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, encoder.Encode(attribute.Description), attribute.Hash, owner);
             TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
             //Populating the attribute model with the new address

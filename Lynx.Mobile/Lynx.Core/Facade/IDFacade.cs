@@ -104,7 +104,7 @@ namespace Lynx.Core.Facade
                 attribute = await _attributeFacade.DeployAsync(attribute, id.Address);
 
 
-            await idcService.AddAttributeAsync(key, attribute.Address);
+            await idcService.AddAttributeAsync(attribute.Address);
 
             return attribute;
         }
@@ -128,10 +128,10 @@ namespace Lynx.Core.Facade
             return dict;
         }
 
-		public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
-		{
-			IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
-			Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
+        public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
+        {
+            IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
+            Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
 
             BigInteger attributes = await idcService.AttributeCountAsyncCall();
             for (BigInteger i = 0; i < attributes; i++)
