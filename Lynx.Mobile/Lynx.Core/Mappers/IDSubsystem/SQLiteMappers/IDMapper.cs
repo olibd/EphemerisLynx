@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
 using Lynx.Core.Models.IDSubsystem;
+using SQLite;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
@@ -43,6 +44,38 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         }
 
         /// <summary>
+        /// Get object T given the UID.
+        /// </summary>
+        /// <returns>The object T.</returns>
+        /// <param name="UID">UID.</param>
+        public override async Task<ID> GetAsync(int UID)
+        {
+            ID id = await base.GetAsync(UID);
+
+            //if we have a non-empty collection of certificates, then we return
+            //because it means that the Attribute was loaded from the identity
+            //map
+            if (id.Attributes.Count > 0)
+                return id;
+
+            return await Task.Run(async () =>
+            {
+                SQLiteConnection conn = new SQLiteConnection(_dbFilePath);
+                TableQuery<IDAttribute> query = conn
+                    .Table<IDAttribute>()
+                    .Where(mapping => mapping.IDUID == UID);
+
+                foreach (IDAttribute mapping in query)
+                {
+                    Attribute attr = await _attrMapper.GetAsync(mapping.AttrUID);
+                    id.AddAttribute(attr.Description, attr);
+                }
+
+                return id;
+            });
+        }
+
+        /// <summary>
         /// This private classes create a one to many relationship table in the 
         /// database when serializing an ID to the database. It will contain
         /// the UID of the attribute and of the ID. It does not support foreing
@@ -53,6 +86,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             private int _iDUID;
             private int _attrUID;
 
+            [Indexed]
             public int IDUID
             {
                 get { return _iDUID; }

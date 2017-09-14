@@ -8,7 +8,6 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 {
     public class Mapper<T> : IMapper<T> where T : IDBSerializable, new()
     {
-        private readonly string _dBFilePath;
         private SQLiteConnection _db;
         protected readonly string _dbFilePath;
         private readonly IIdentityMap<int, T> _idMap;
@@ -30,24 +29,22 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// <param name="UID">UID.</param>
         public virtual async Task<T> GetAsync(int UID)
         {
+            T obj;
+
+            if ((obj = _idMap.Find(UID)) != null)
+            {
+                return obj;
+            }
+
             await ConnectToTableAsync<T>();
 
             return await Task.Run(() =>
             {
-                T obj;
+                obj = _db.Get<T>(UID);
+                _idMap.Add(obj.UID, obj);
+                _db.Close();
+                return obj;
 
-                if ((obj = _idMap.Find(UID)) != null)
-                {
-                    _db.Close();
-                    return obj;
-                }
-                else
-                {
-                    obj = _db.Get<T>(UID);
-                    _idMap.Add(obj.UID, obj);
-                    _db.Close();
-                    return obj;
-                }
             });
         }
 
@@ -64,6 +61,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             {
                 int retUID = await SaveToDBAsync(obj);
                 _db.Close();
+                _idMap.Add(obj.UID, obj);
                 return retUID;
             });
         }

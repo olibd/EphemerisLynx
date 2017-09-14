@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SQLite;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Models.IDSubsystem
 {
