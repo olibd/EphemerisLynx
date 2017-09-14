@@ -20,6 +20,8 @@
         <Mvx.MvxListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:choiceMode="multipleChoice"
             local:MvxBind="ItemsSource Attributes"
             local:MvxItemTemplate="@layout/certifyattributeview" />
         <Button

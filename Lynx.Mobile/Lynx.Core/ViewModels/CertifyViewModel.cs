@@ -13,10 +13,34 @@ namespace Lynx.Core.ViewModels
     public class CertifyViewModel : MvxViewModel<ID>
     {
 		public ID ID { get; set; }
-		public List<Attribute> Attributes { get; set; }
+		public List<CheckedAttribute> Attributes { get; set; }
         public SynAck _synAck;
         public List<string> certifiedAttributes;
 		private IMvxNavigationService _navigationService;
+
+		public class CheckedAttribute
+		{
+			private CertifyViewModel _certifyViewModel;
+			public string Description { get; set; }
+			private bool _isChecked;
+
+			public bool IsChecked
+			{
+				get { return _isChecked; }
+				set
+				{
+					_isChecked = value;
+					_certifyViewModel.UpdateCertifiedAttributes(Description);
+				}
+			}
+
+			public CheckedAttribute(CertifyViewModel certifyViewModel, bool check, string attrDescription)
+			{
+				_certifyViewModel = certifyViewModel;
+				_isChecked = check;
+				Description = attrDescription;
+			}
+		}
 
 		public CertifyViewModel(IMvxNavigationService navigationService)
         {
@@ -26,7 +50,11 @@ namespace Lynx.Core.ViewModels
 		public override Task Initialize(ID Id)
 		{
             ID = Id;
-            Attributes = ID.Attributes.Values.ToList();
+            Attributes = new List<CheckedAttribute>();
+            foreach (Attribute attr in ID.Attributes.Values)
+            {
+                Attributes.Add(new CheckedAttribute(this, false, attr.Description));
+            }
             certifiedAttributes = new List<string>(); 
             return base.Initialize();
 		}
@@ -36,10 +64,8 @@ namespace Lynx.Core.ViewModels
 			//TODO: Add starting logic here
 		}
 
-		public IMvxCommand UpdateCertifiedAttributesCommand => new MvxCommand<string>(UpdateCertifiedAttributes);
-
-        public void UpdateCertifiedAttributes(string Description)
-        {
+		private void UpdateCertifiedAttributes(string Description)
+		{
 			if (certifiedAttributes.Contains(Description))
 			{
 				certifiedAttributes.Remove(Description);
@@ -48,7 +74,7 @@ namespace Lynx.Core.ViewModels
 			{
 				certifiedAttributes.Add(Description);
 			}
-        }
+		}
 
         public IMvxCommand CertifyIDCommand => new MvxCommand(CertifyID);
 

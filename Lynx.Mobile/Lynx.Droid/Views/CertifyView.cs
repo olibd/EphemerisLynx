@@ -26,6 +26,7 @@ namespace Lynx.Droid.Views
 		private void BindCommand()
 		{
 			var set = this.CreateBindingSet<CertifyView, CertifyViewModel>();
+            set.Apply();
 		}
     }
 }

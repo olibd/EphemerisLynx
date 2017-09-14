@@ -4,16 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/AttrDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        local:MvxBind="Text Description" />
     <CheckBox
         android:id="@+id/checkbox_meat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        local:MvxBind="Checked IsChecked; Text Description"
         android:focusable="false" />
 </LinearLayout>
