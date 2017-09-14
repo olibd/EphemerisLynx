@@ -129,10 +129,10 @@ namespace Lynx.Core.ViewModels
                 Content = new StringContent(Address)
             };
 
-            ID.AddAttribute(firstname.Description, firstname);
-            ID.AddAttribute(lastname.Description, lastname);
-            ID.AddAttribute(cell.Description, cell);
-            ID.AddAttribute(address.Description, address);
+            ID.AddAttribute(firstname);
+            ID.AddAttribute(lastname);
+            ID.AddAttribute(cell);
+            ID.AddAttribute(address);
         }
     }
 }

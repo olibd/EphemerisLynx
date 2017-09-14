@@ -188,7 +188,7 @@ namespace CoreUnitTests.PCL
                 _accountService = accountService;
             }
 
-            public Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute)
+            public Task<Attribute> AddAttributeAsync(ID id, Attribute attribute)
             {
                 throw new NotImplementedException();
             }
@@ -221,7 +221,7 @@ namespace CoreUnitTests.PCL
                         Content = new StringContent(key + " content")
                     };
 
-                    id.AddAttribute(attr.Description, attr);
+                    id.AddAttribute(attr);
                 }
                 id.Address = address;
                 id.Owner = "0x" + _accountService.GetAccountAddress();

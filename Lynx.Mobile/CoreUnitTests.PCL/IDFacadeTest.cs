@@ -37,10 +37,11 @@ namespace CoreUnitTests.PCL
             Attribute attribute = new Attribute()
             {
                 Location = "I am an atribute location",
-                Hash = "I am an attribute hash"
+                Hash = "I am an attribute hash",
+                Description = "test type"
             };
             ID id = new ID();
-            id.AddAttribute("test type", attribute);
+            id.AddAttribute(attribute);
             id = await _idFacade.DeployAsync(id);
             Assert.NotNull(id.Address);
             Assert.NotNull(attribute.Address);
@@ -53,11 +54,12 @@ namespace CoreUnitTests.PCL
             Attribute attribute = new Attribute()
             {
                 Location = "I am an atribute location",
-                Hash = "I am an attribute hash"
+                Hash = "I am an attribute hash",
+                Description = "key"
             };
 
             Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-            Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, encoder.Encode("key"), attribute);
+            Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, attribute);
 
             Assert.NotNull(addedAttrib.Address);
 
@@ -74,23 +76,26 @@ namespace CoreUnitTests.PCL
             Attribute attribute = new Attribute()
             {
                 Location = "I am an atribute location",
-                Hash = "I am an attribute hash"
+                Hash = "I am an attribute hash",
+                Description = "key1"
             };
-            id.AddAttribute("key1", attribute);
+            id.AddAttribute(attribute);
 
             Attribute attribute2 = new Attribute()
             {
                 Location = "I am the second atribute location",
-                Hash = "I am the second attribute hash"
+                Hash = "I am the second attribute hash",
+                Description = "key2"
             };
-            id.AddAttribute("key2", attribute2);
+            id.AddAttribute(attribute2);
 
             Attribute attribute3 = new Attribute()
             {
                 Location = "I am the third atribute location",
-                Hash = "I am the third attribute hash"
+                Hash = "I am the third attribute hash",
+                Description = "key3"
             };
-            id.AddAttribute("key3", attribute3);
+            id.AddAttribute(attribute3);
 
             id = await _idFacade.DeployAsync(id);
             ID newId = await _idFacade.GetIDAsync(id.Address);
@@ -108,16 +113,18 @@ namespace CoreUnitTests.PCL
             Attribute attribute = new Attribute()
             {
                 Location = "I am an atribute location",
-                Hash = "I am an attribute hash"
+                Hash = "I am an attribute hash",
+                Description = "key1"
             };
-            id.AddAttribute("key1", attribute);
+            id.AddAttribute(attribute);
 
             Attribute attribute2 = new Attribute()
             {
                 Location = "I am the second atribute location",
-                Hash = "I am the second attribute hash"
+                Hash = "I am the second attribute hash",
+                Description = "key2"
             };
-            id.AddAttribute("key2", attribute2);
+            id.AddAttribute(attribute2);
 
             id = await _idFacade.DeployAsync(id);
             ID newId = await _idFacade.GetIDAsync(id.Address);
@@ -133,23 +140,26 @@ namespace CoreUnitTests.PCL
             Attribute attribute = new Attribute()
             {
                 Location = "I am an atribute location",
-                Hash = "I am an attribute hash"
+                Hash = "I am an attribute hash",
+                Description = "key1"
             };
-            id.AddAttribute("key1", attribute);
+            id.AddAttribute(attribute);
 
             Attribute attribute2 = new Attribute()
             {
                 Location = "I am the second atribute location",
-                Hash = "I am the second attribute hash"
+                Hash = "I am the second attribute hash",
+                Description = "key2"
             };
-            id.AddAttribute("key2", attribute2);
+            id.AddAttribute(attribute2);
 
             Attribute attribute3 = new Attribute()
             {
                 Location = "I am the third atribute location",
-                Hash = "I am the third attribute hash"
+                Hash = "I am the third attribute hash",
+                Description = "key3"
             };
-            id.AddAttribute("key3", attribute3);
+            id.AddAttribute(attribute3);
 
             id = await _idFacade.DeployAsync(id);
             string[] accessibleAttributes = new string[] { "key1", "key3" };

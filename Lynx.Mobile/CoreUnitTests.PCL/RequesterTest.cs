@@ -44,43 +44,48 @@ namespace CoreUnitTests.PCL
             {
                 Location = "1",
                 Hash = "1",
-                Content = new StringContent("Olivier")
+                Content = new StringContent("Olivier"),
+                Description = "firstname"
             };
 
             Attribute lastname = new Attribute()
             {
                 Location = "2",
                 Hash = "2",
-                Content = new StringContent("Brochu Dufour")
+                Content = new StringContent("Brochu Dufour"),
+                Description = "lastname"
             };
 
             Attribute age = new Attribute()
             {
                 Location = "3",
                 Hash = "3",
-                Content = new IntContent(24)
+                Content = new IntContent(24),
+                Description = "age"
             };
 
             Attribute cell = new Attribute()
             {
                 Location = "4",
                 Hash = "4",
-                Content = new StringContent("555-555-5555")
+                Content = new StringContent("555-555-5555"),
+                Description = "cell"
             };
 
             Attribute address = new Attribute()
             {
                 Location = "5",
                 Hash = "5",
-                Content = new StringContent("1 infinite loop, cupertino")
+                Content = new StringContent("1 infinite loop, cupertino"),
+                Description = "address"
             };
 
             _id = new ID();
-            _id.AddAttribute("firstname", firstname);
-            _id.AddAttribute("lastname", lastname);
-            _id.AddAttribute("age", age);
-            _id.AddAttribute("cell", cell);
-            _id.AddAttribute("address", address);
+            _id.AddAttribute(firstname);
+            _id.AddAttribute(lastname);
+            _id.AddAttribute(age);
+            _id.AddAttribute(cell);
+            _id.AddAttribute(address);
             _id.Address = "0x1234567";
 
             /////////////////////////

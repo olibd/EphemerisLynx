@@ -15,14 +15,14 @@ namespace Lynx.Core.Models.IDSubsystem
             Attributes = new Dictionary<string, Attribute>();
         }
 
-        public void AddAttribute(string type, Attribute attr)
+        public void AddAttribute(Attribute attr)
         {
-            Attributes.Add(type, attr);
+            Attributes.Add(attr.Description, attr);
         }
 
-        public Attribute GetAttribute(string key)
+        public Attribute GetAttribute(string description)
         {
-            return Attributes[key];
+            return Attributes[description];
         }
     }
 }

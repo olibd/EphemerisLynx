@@ -63,7 +63,7 @@ namespace Lynx.Core.Facade
             foreach (string key in id.Attributes.Keys)
             {
                 Attribute attribute = id.GetAttribute(key);
-                await AddAttributeAsync(id, encoder.Encode(key), attribute);
+                await AddAttributeAsync(id, attribute);
             }
             return id;
         }
@@ -89,13 +89,13 @@ namespace Lynx.Core.Facade
                 attributes = await GetAttributesAsync(newID);
             foreach (string key in attributes.Keys)
             {
-                newID.AddAttribute(key, attributes[key]);
+                newID.AddAttribute(attributes[key]);
             }
 
             return newID;
         }
 
-        public async Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute)
+        public async Task<Attribute> AddAttributeAsync(ID id, Attribute attribute)
         {
             IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
 
@@ -144,7 +144,7 @@ namespace Lynx.Core.Facade
                 {
                     //Get the attribute and add it to the dict
                     Attribute newAttribute = await GetAttributeByKey(idcService, attributeKey);
-                    dict.Add(keyStr, newAttribute);
+                    dict.Add(newAttribute.Description, newAttribute);
                 }
             }
             return dict;

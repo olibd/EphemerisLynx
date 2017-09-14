@@ -39,7 +39,6 @@ namespace Lynx.Core.Facade
         public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
         {
             Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-
             string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, encoder.Encode(attribute.Description), attribute.Hash, owner);
             TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
 
@@ -59,8 +58,11 @@ namespace Lynx.Core.Facade
 
         public async Task<Attribute> GetAttributeAsync(string address)
         {
-
             AttributeService ethAttribute = new AttributeService(Web3, AccountService.PrivateKey, address);
+
+            byte[] descriptionArr = await ethAttribute.DescriptionAsyncCall();
+            string description = Encoding.UTF8.GetString(descriptionArr, 0, descriptionArr.Length);
+            description = description.TrimEnd('\0');//remove null characters at the end of string
 
             //Populating attribute object with values from the smart contract
             Attribute attributeModel = new Attribute
@@ -68,7 +70,8 @@ namespace Lynx.Core.Facade
                 Address = address,
                 Hash = await ethAttribute.HashAsyncCall(),
                 Location = await ethAttribute.LocationAsyncCall(),
-                Owner = await ethAttribute.OwnerAsyncCall()
+                Owner = await ethAttribute.OwnerAsyncCall(),
+                Description = description
             };
 
             //Fetch the content of the attribute
