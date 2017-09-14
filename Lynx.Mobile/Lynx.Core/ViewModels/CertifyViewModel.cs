@@ -7,6 +7,7 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using MvvmCross.Core.Navigation;
 using System.Threading.Tasks;
 using Lynx.Core.Communications.Packets;
+using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
 {
@@ -15,8 +16,9 @@ namespace Lynx.Core.ViewModels
 		public ID ID { get; set; }
 		public List<CheckedAttribute> Attributes { get; set; }
         public SynAck _synAck;
-        public List<string> certifiedAttributes;
+        public List<string> _attributesToCertify;
 		private IMvxNavigationService _navigationService;
+		private IVerifier _verifier;
 
 		public class CheckedAttribute
 		{
@@ -42,9 +44,10 @@ namespace Lynx.Core.ViewModels
 			}
 		}
 
-		public CertifyViewModel(IMvxNavigationService navigationService)
+		public CertifyViewModel(IMvxNavigationService navigationService, IVerifier verifier)
         {
             _navigationService = navigationService;
+            _verifier = verifier;
         }
 
 		public override Task Initialize(ID Id)
@@ -55,7 +58,7 @@ namespace Lynx.Core.ViewModels
             {
                 Attributes.Add(new CheckedAttribute(this, false, attr.Description));
             }
-            certifiedAttributes = new List<string>(); 
+            _attributesToCertify = new List<string>(); 
             return base.Initialize();
 		}
 
@@ -64,23 +67,23 @@ namespace Lynx.Core.ViewModels
 			//TODO: Add starting logic here
 		}
 
-		private void UpdateCertifiedAttributes(string Description)
-		{
-			if (certifiedAttributes.Contains(Description))
-			{
-				certifiedAttributes.Remove(Description);
-			}
-			else
-			{
-				certifiedAttributes.Add(Description);
-			}
-		}
+        private void UpdateCertifiedAttributes(string attributeDescription)
+        {
+            if (_attributesToCertify.Contains(attributeDescription))
+            {
+                _attributesToCertify.Remove(attributeDescription);
+            }
+            else
+            {
+                _attributesToCertify.Add(attributeDescription);
+            }
+        }
 
         public IMvxCommand CertifyIDCommand => new MvxCommand(CertifyID);
 
 		private void CertifyID()
 		{
-			throw new NotImplementedException();
+			//_verifier.Certify(_attributesToCertify.ToArray());
 		}
     }
 }

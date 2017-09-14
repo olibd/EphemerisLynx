@@ -98,7 +98,7 @@ namespace Lynx.Core.ViewModels
             //create some dummy attributes
             Attribute firstname = new Attribute()
             {
-                Description = "Firstname",
+                Description = "firstname",
                 Content = new StringContent(Firstname),
                 Hash = "hash" + Firstname,
                 Location = "Location" + Firstname,
@@ -106,7 +106,7 @@ namespace Lynx.Core.ViewModels
 
             Attribute lastname = new Attribute()
             {
-                Description = "Lastname",
+                Description = "lastname",
                 Hash = "hash" + Lastname,
                 Location = "Location" + Lastname,
                 Content = new StringContent(Lastname)
@@ -114,7 +114,7 @@ namespace Lynx.Core.ViewModels
 
             Attribute cell = new Attribute()
             {
-                Description = "Cell",
+                Description = "cell",
                 Hash = "hash" + Cell,
                 Location = "Location" + Cell,
                 Content = new StringContent(Cell)
@@ -122,7 +122,7 @@ namespace Lynx.Core.ViewModels
 
             Attribute address = new Attribute()
             {
-                Description = "Address",
+                Description = "address",
                 Hash = "hash" + Address,
                 Location = "Location" + Address,
                 Content = new StringContent(Address)

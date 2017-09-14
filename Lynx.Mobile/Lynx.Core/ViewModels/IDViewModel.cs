@@ -9,6 +9,7 @@ using MvvmCross.Core.Navigation;
 using System.Threading.Tasks;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.Communications.Packets;
+using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
 {
@@ -20,12 +21,12 @@ namespace Lynx.Core.ViewModels
 
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
-        private Verifier _verifier;
+        private IVerifier _verifier;
+        private bool _scanned = false;
 
         public IDViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
-            //TODO: instantiate the Verifier
         }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
@@ -42,11 +43,18 @@ namespace Lynx.Core.ViewModels
 
         private async void QrCodeScan(string content)
         {
+            if (_scanned)
+                return;
+
+            _scanned = true;
+            _verifier = Mvx.Resolve<IVerifier>();
+
             //TODO: Setup the verifier callback
             await _verifier.ProcessSyn(content);
             _verifier.IdentityProfileReceived += async (sender, e) =>
             {
-                await _navigationService.Navigate<CertifyViewModel, ID>(e.SynAck.Id);
+                _scanned = false;
+                await _navigationService.Navigate<CertifyViewModel, IVerifier>((IVerifier)sender);
             };
         }
 

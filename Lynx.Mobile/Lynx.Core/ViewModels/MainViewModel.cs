@@ -18,9 +18,9 @@ namespace Lynx.Core.ViewModels
         {
             _navigationService = navigationService;
         }
-        public override void Appeared()
+        public override void ViewAppeared()
         {
-            base.Appeared();
+            base.ViewAppeared();
             _checkAndLoadID.Execute();
         }
         public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
