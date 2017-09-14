@@ -9,7 +9,9 @@ namespace CoreUnitTests
     public abstract class MapperTest<T> where T : IDBSerializable, new()
     {
         public T t { get; set; }
+        public T tRecovered { get; set; }
         public IMapper<T> Mapper { get; set; }
+        public IMapper<T> Mapper2 { get; set; }
 
         [Test]
         public virtual async Task TestSaveAsync()
@@ -19,13 +21,11 @@ namespace CoreUnitTests
             Assert.AreEqual(primaryKey, t.UID);
         }
 
-        [Ignore("Feature unimplemented in model classes")]
-        [Test]
+
         public virtual async Task TestGetAsync()
         {
             await TestSaveAsync();
-            Assert.AreNotEqual(0, t.UID);
-            T tRecovered = await Mapper.GetAsync(t.UID);
+            tRecovered = await Mapper2.GetAsync(t.UID);
             Assert.AreEqual(t.UID, tRecovered.UID);
         }
     }
