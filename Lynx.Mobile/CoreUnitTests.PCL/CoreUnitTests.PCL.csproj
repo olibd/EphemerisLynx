@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -49,6 +49,73 @@
     <Compile Include="FacadeTest.cs" />
     <Compile Include="HandshakeTokenFactoryTest.cs" />
     <Compile Include="TokenFactoryTest.cs" />
+    <None Include="CoreUnitTests.PCL.csproj" />
+    <None Include="bin\Debug\CoreUnitTests.PCL.dll" />
+    <None Include="bin\Debug\CoreUnitTests.PCL.pdb" />
+    <None Include="bin\Debug\EdjCase.JsonRpc.Client.dll" />
+    <None Include="bin\Debug\EdjCase.JsonRpc.Core.dll" />
+    <None Include="bin\Debug\Lynx.Core.dll" />
+    <None Include="bin\Debug\Lynx.Core.dll.config" />
+    <None Include="bin\Debug\Lynx.Core.pdb" />
+    <None Include="bin\Debug\MvvmCross.Core.dll" />
+    <None Include="bin\Debug\MvvmCross.Core.pdb" />
+    <None Include="bin\Debug\MvvmCross.Platform.dll" />
+    <None Include="bin\Debug\MvvmCross.Platform.pdb" />
+    <None Include="bin\Debug\NBitcoin.dll" />
+    <None Include="bin\Debug\NBitcoin.xml" />
+    <None Include="bin\Debug\Nethereum.Portable.dll" />
+    <None Include="bin\Debug\Newtonsoft.Json.dll" />
+    <None Include="bin\Debug\Newtonsoft.Json.xml" />
+    <None Include="bin\Debug\PubnubPCL.dll" />
+    <None Include="bin\Debug\SQLite-net.dll" />
+    <None Include="bin\Debug\SQLite-net.dll.mdb" />
+    <None Include="bin\Debug\SQLite-net.xml" />
+    <None Include="bin\Debug\SQLitePCLRaw.batteries_v2.dll" />
+    <None Include="bin\Debug\SQLitePCLRaw.core.dll" />
+    <None Include="bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <None Include="bin\Debug\crypto.dll" />
+    <None Include="bin\Debug\crypto.pdb" />
+    <None Include="bin\Debug\crypto.xml" />
+    <None Include="bin\Debug\eVi.abi.lib.pcl.dll" />
+    <None Include="bin\Debug\eVi.abi.lib.pcl.pdb" />
+    <None Include="bin\Debug\nunit.framework.dll" />
+    <None Include="bin\Debug\nunit.framework.xml" />
+    <None Include="bin\Release\CoreUnitTests.PCL.dll" />
+    <None Include="bin\Release\EdjCase.JsonRpc.Client.dll" />
+    <None Include="bin\Release\EdjCase.JsonRpc.Core.dll" />
+    <None Include="bin\Release\Lynx.Core.dll" />
+    <None Include="bin\Release\Lynx.Core.dll.config" />
+    <None Include="bin\Release\MvvmCross.Core.dll" />
+    <None Include="bin\Release\MvvmCross.Core.pdb" />
+    <None Include="bin\Release\MvvmCross.Platform.dll" />
+    <None Include="bin\Release\MvvmCross.Platform.pdb" />
+    <None Include="bin\Release\Nethereum.Portable.dll" />
+    <None Include="bin\Release\Newtonsoft.Json.dll" />
+    <None Include="bin\Release\Newtonsoft.Json.xml" />
+    <None Include="bin\Release\PubnubPCL.dll" />
+    <None Include="bin\Release\SQLite-net.dll" />
+    <None Include="bin\Release\SQLite-net.dll.mdb" />
+    <None Include="bin\Release\SQLite-net.xml" />
+    <None Include="bin\Release\SQLitePCLRaw.batteries_v2.dll" />
+    <None Include="bin\Release\SQLitePCLRaw.core.dll" />
+    <None Include="bin\Release\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <None Include="bin\Release\crypto.dll" />
+    <None Include="bin\Release\crypto.pdb" />
+    <None Include="bin\Release\crypto.xml" />
+    <None Include="bin\Release\eVi.abi.lib.pcl.dll" />
+    <None Include="bin\Release\nunit.framework.dll" />
+    <None Include="bin\Release\nunit.framework.xml" />
+    <None Include="obj\Debug\CoreUnitTests.PCL.csproj.CopyComplete" />
+    <None Include="obj\Debug\CoreUnitTests.PCL.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\CoreUnitTests.PCL.csproj.FileListAbsolute.txt" />
+    <None Include="obj\Debug\CoreUnitTests.PCL.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Debug\CoreUnitTests.PCL.dll" />
+    <None Include="obj\Debug\CoreUnitTests.PCL.pdb" />
+    <None Include="obj\Release\CoreUnitTests.PCL.csproj.CopyComplete" />
+    <None Include="obj\Release\CoreUnitTests.PCL.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Release\CoreUnitTests.PCL.csproj.FileListAbsolute.txt" />
+    <None Include="obj\Release\CoreUnitTests.PCL.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Release\CoreUnitTests.PCL.dll" />
     <Compile Include="AttributeFacadeTest.cs" />
     <Compile Include="CertificateFacadeTest.cs" />
   </ItemGroup>
