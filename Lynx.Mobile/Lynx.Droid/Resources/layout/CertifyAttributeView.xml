@@ -10,4 +10,6 @@
         android:layout_height="wrap_content"
         local:MvxBind="Checked IsChecked; Text Description"
         android:focusable="false" />
+    <include
+        layout="@layout/externalelement" />
 </LinearLayout>
