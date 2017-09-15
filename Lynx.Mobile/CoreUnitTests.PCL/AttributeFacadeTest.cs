@@ -37,6 +37,7 @@ namespace CoreUnitTests.PCL
             {
                 Hash = "I am an attribute hash",
                 Location = "I am an attribute location",
+                Description = "attrDescription"
             };
 
             Attribute deployed = await _attributeFacade.DeployAsync(attr, _accountService.GetAccountAddress());
@@ -51,6 +52,7 @@ namespace CoreUnitTests.PCL
 
             Assert.AreEqual(attribute.Hash, "I am an attribute hash");
             Assert.AreEqual(attribute.Location, "I am an attribute location");
+            Assert.AreEqual(attribute.Description, "attrDescription");
         }
 
         [Test]

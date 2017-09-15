@@ -224,7 +224,7 @@ namespace CoreUnitTests.PCL
                     id.AddAttribute(attr);
                 }
                 id.Address = address;
-                id.Owner = "0x" + _accountService.GetAccountAddress();
+                id.Owner = _accountService.GetAccountAddress();
 
                 return id;
             }
