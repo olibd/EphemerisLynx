@@ -27,7 +27,7 @@ namespace Lynx.Core
         /// <returns>The account address.</returns>
         public string GetAccountAddress()
         {
-            return EthECKey.GetPublicAddress(_privateKey);
+            return "0x" + EthECKey.GetPublicAddress(_privateKey);
         }
 
         public string PrivateKey
@@ -58,7 +58,7 @@ namespace Lynx.Core
         public static string GeneratePublicAddressFromPublicKey(string pubK)
         {
             ECKey eckey = new ECKey(Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(pubK), false);
-            string publicAddress = EthECKey.GetPublicAddress(eckey);
+            string publicAddress = "0x" + EthECKey.GetPublicAddress(eckey);
             return publicAddress;
         }
 

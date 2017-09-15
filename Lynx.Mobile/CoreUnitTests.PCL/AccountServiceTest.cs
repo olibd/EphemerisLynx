@@ -28,7 +28,7 @@ namespace CoreUnitTests.PCL
                 187, 17, 7, 247, 94, 193, 34, 3, 169, 8, 214, 95, 172, 102,
                 41, 146, 11, 31, 105, 167, 41, 144, 206, 106, 161, 43, 164,
                 204, 224 };
-            _publicAddress = "68004661F764c169805C8B6834cab7A65D448c74";
+            _publicAddress = "0x68004661F764c169805C8B6834cab7A65D448c74";
             _accountService = new AccountService(_privateKey);
         }
 
