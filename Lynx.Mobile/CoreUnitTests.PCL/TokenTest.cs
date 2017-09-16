@@ -22,8 +22,9 @@ namespace CoreUnitTests.PCL
         public virtual void GetEncodedTokenTest()
         {
             var encodedToken = _token.GetEncodedToken();
-
-            string[] splittedEncodedToken = encodedToken.Split('.');
+            //remove the type first
+            string[] splittedEncodedToken = encodedToken.Split(':');
+            splittedEncodedToken = splittedEncodedToken[1].Split('.');
             string jsonDecodedHeader = Base64Decode(splittedEncodedToken[0]);
             string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
 
@@ -44,9 +45,11 @@ namespace CoreUnitTests.PCL
         [Test]
         public virtual void GetUnsignedEncodedTokenTest()
         {
-            var encodedToken = _token.GetUnsignedEncodedToken();
+            string encodedToken = _token.GetUnsignedEncodedToken();
 
-            string[] splittedEncodedToken = encodedToken.Split('.');
+            //remove the type first
+            string[] splittedEncodedToken = encodedToken.Split(':');
+            splittedEncodedToken = splittedEncodedToken[1].Split('.');
 
             if (splittedEncodedToken.Length != 2)
             {
@@ -67,6 +70,16 @@ namespace CoreUnitTests.PCL
         public virtual void GetEncodedHeaderTest()
         {
             string jsonDecodedHeader = Base64Decode(_token.GetEncodedHeader());
+
+            Dictionary<string, string> decodedHeader = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
+            AssertDictionariesAreEqual(_header, decodedHeader);
+        }
+
+        [Test]
+        public virtual void GetTypedEncodedHeaderTest()
+        {
+            string[] splittedEncodedHeader = _token.GetTypedEncodedHeader().Split(':');
+            string jsonDecodedHeader = Base64Decode(splittedEncodedHeader[1]);
 
             Dictionary<string, string> decodedHeader = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
             AssertDictionariesAreEqual(_header, decodedHeader);

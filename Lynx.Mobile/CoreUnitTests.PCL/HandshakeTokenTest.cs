@@ -24,27 +24,30 @@ namespace CoreUnitTests.PCL
             {
                 Location = "1",
                 Hash = "1",
-                Content = new StringContent("Olivier")
+                Content = new StringContent("Olivier"),
+                Description = "firstname"
             };
 
             Attribute lastname = new Attribute()
             {
                 Location = "2",
                 Hash = "2",
-                Content = new StringContent("Brochu Dufour")
+                Content = new StringContent("Brochu Dufour"),
+                Description = "lastname"
             };
 
             Attribute age = new Attribute()
             {
                 Location = "3",
                 Hash = "3",
-                Content = new IntContent(24)
+                Content = new IntContent(24),
+                Description = "age"
             };
 
             _id = new ID();
-            _id.AddAttribute("Firstname", firstname);
-            _id.AddAttribute("Lastname", lastname);
-            _id.AddAttribute("Age", age);
+            _id.AddAttribute(firstname);
+            _id.AddAttribute(lastname);
+            _id.AddAttribute(age);
 
             /////////////////////////
             //Create an eth account//

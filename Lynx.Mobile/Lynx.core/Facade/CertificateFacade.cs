@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Lynx.Core.Interfaces;
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
+using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace Lynx.Core.Facade
 {
@@ -36,7 +37,11 @@ namespace Lynx.Core.Facade
                 Hash = await ethCertificate.HashAsyncCall(),
                 Location = await ethCertificate.LocationAsyncCall(),
                 Revoked = await ethCertificate.RevokedAsyncCall(),
-                Owner = await ethCertificate.OwnerAsyncCall()
+                Owner = await ethCertificate.OwnerAsyncCall(),
+                OwningAttribute = new Attribute()
+                {
+                    Address = await ethCertificate.OwningAttributeAsyncCall()
+                }
             };
 
             certificateModel.Content = _contentService.GetContent(certificateModel.Location, certificateModel.Hash);

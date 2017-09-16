@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
@@ -19,5 +20,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
         /// </summary>
         /// <returns>A JSON string representing the SYN payload</returns>
         string CreateEncodedSyn();
+        IAck Ack { get; set; }
+        event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
     }
 }

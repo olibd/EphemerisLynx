@@ -25,7 +25,7 @@ namespace CoreUnitTests.PCL
         private ID _id;
         private AccountService _accountService;
         private string _privateKey;
-        private ITokenCryptoService<IHandshakeToken> _tokenCryptoService;
+        private ITokenCryptoService<IToken> _tokenCryptoService;
         private IIDFacade _idFacade;
         private ICertificateFacade _certFacade;
         private IAttributeFacade _attributeFacade;
@@ -44,27 +44,48 @@ namespace CoreUnitTests.PCL
             {
                 Location = "1",
                 Hash = "1",
-                Content = new StringContent("Olivier")
+                Content = new StringContent("Olivier"),
+                Description = "firstname"
             };
 
             Attribute lastname = new Attribute()
             {
                 Location = "2",
                 Hash = "2",
-                Content = new StringContent("Brochu Dufour")
+                Content = new StringContent("Brochu Dufour"),
+                Description = "lastname"
             };
 
             Attribute age = new Attribute()
             {
                 Location = "3",
                 Hash = "3",
-                Content = new IntContent(24)
+                Content = new IntContent(24),
+                Description = "age"
+            };
+
+            Attribute cell = new Attribute()
+            {
+                Location = "4",
+                Hash = "4",
+                Content = new StringContent("555-555-5555"),
+                Description = "cell"
+            };
+
+            Attribute address = new Attribute()
+            {
+                Location = "5",
+                Hash = "5",
+                Content = new StringContent("1 infinite loop, cupertino"),
+                Description = "address"
             };
 
             _id = new ID();
-            _id.AddAttribute("Firstname", firstname);
-            _id.AddAttribute("Lastname", lastname);
-            _id.AddAttribute("Age", age);
+            _id.AddAttribute(firstname);
+            _id.AddAttribute(lastname);
+            _id.AddAttribute(age);
+            _id.AddAttribute(cell);
+            _id.AddAttribute(address);
             _id.Address = "0x1234567";
 
             /////////////////////////
@@ -72,8 +93,6 @@ namespace CoreUnitTests.PCL
             /////////////////////////
             _privateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
             _accountService = new AccountService(_privateKey);
-            _tokenCryptoService = new TokenCryptoService<IHandshakeToken>(new SECP256K1CryptoService());
-            _requester = new Requester(_tokenCryptoService, _accountService, _id, _idFacade);
 
             ////////////////////////
             //Create the ID Facade//
@@ -83,14 +102,21 @@ namespace CoreUnitTests.PCL
             _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
             _idFacade = new IDFacade("0x0", _web3, _attributeFacade, _accountService);
 
+            _tokenCryptoService = new TokenCryptoService<IToken>(new SECP256K1CryptoService());
+            _requester = new Requester(_tokenCryptoService, _accountService, _id, _idFacade, _attributeFacade, _certFacade);
         }
 
         [Test]
         public void CreateEncodedSynTest()
         {
-            string encodedToken = _requester.CreateEncodedSyn();
+            //check the type
+            string encodedSyn = _requester.CreateEncodedSyn();
+            Assert.True(encodedSyn.Contains(":"));
 
-            string[] splittedEncodedToken = encodedToken.Split('.');
+            //remove the type
+            string untypedEncodedToken = encodedSyn.Split(':')[1];
+
+            string[] splittedEncodedToken = untypedEncodedToken.Split('.');
 
             Assert.AreEqual(3, splittedEncodedToken.Length);
 

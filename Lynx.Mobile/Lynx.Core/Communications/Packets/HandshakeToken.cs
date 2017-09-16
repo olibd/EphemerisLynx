@@ -32,19 +32,6 @@ namespace Lynx.Core.Communications.Packets
             }
         }
 
-        public bool Encrypted
-        {
-            get
-            {
-                return Boolean.Parse(GetFromHeader("encrypted"));
-            }
-
-            set
-            {
-                SetOnHeader("encrypted", value.ToString());
-            }
-        }
-
         private Attribute[] _accessibleAttributes;
         public Attribute[] AccessibleAttributes
         {
@@ -83,6 +70,7 @@ namespace Lynx.Core.Communications.Packets
         protected HandshakeToken(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload)
         {
             Id = id;
+            id.Attributes.Values.CopyTo(_accessibleAttributes, 0);
         }
 
         protected HandshakeToken(Dictionary<string, string> header, Dictionary<string, string> payload) : base(ClearIdAddrFromHeader(header), payload)

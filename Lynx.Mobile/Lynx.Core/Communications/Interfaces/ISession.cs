@@ -32,6 +32,11 @@ namespace Lynx.Core.Communications.Interfaces
         /// </summary>
         /// <param name="handler">The event handler function - signature should be (object sender, string arg)</param>
         void AddMessageReceptionHandler(EventHandler<string> handler);
+
+        /// <summary>
+        /// Clears the message reception handlers.
+        /// </summary>
+        void ClearMessageReceptionHandlers();
     }
 
 }

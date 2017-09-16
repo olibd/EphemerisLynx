@@ -7,58 +7,85 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using MvvmCross.Core.Navigation;
 using System.Threading.Tasks;
 using Lynx.Core.Communications.Packets;
+using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
 {
-    public class CertifyViewModel : MvxViewModel<ID>
+    public class CertifyViewModel : MvxViewModel<IVerifier>
     {
-		public ID ID { get; set; }
-		public List<Attribute> Attributes { get; set; }
-        public SynAck _synAck;
-        public List<string> certifiedAttributes;
-		private IMvxNavigationService _navigationService;
+        public ID ID { get; set; }
+        public List<CheckedAttribute> Attributes { get; set; }
+        private List<string> _attributesToCertify;
+        private IMvxNavigationService _navigationService;
+        private IVerifier _verifier;
 
-		public CertifyViewModel(IMvxNavigationService navigationService)
+        public class CheckedAttribute
+        {
+            private CertifyViewModel _certifyViewModel;
+            public string Description { get { return attr.Description; } }
+            public IContent Content { get { return attr.Content; } }
+            private bool _isChecked;
+            private Attribute attr;
+
+            public bool IsChecked
+            {
+                get { return _isChecked; }
+                set
+                {
+                    _isChecked = value;
+                    _certifyViewModel.UpdateCertifiedAttributes(Description);
+                }
+            }
+
+            public CheckedAttribute(CertifyViewModel certifyViewModel, bool check, Attribute attribute)
+            {
+                _certifyViewModel = certifyViewModel;
+                _isChecked = check;
+                attr = attribute;
+            }
+        }
+
+        public CertifyViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
         }
 
-		public override Task Initialize(ID Id)
-		{
-            ID = Id;
-            Attributes = ID.Attributes.Values.ToList();
-            return base.Initialize();
-		}
-
-		public override void Start()
-		{
-			//TODO: Add starting logic here
-		}
-
-        public void UpdateCertifiedAttributes()
+        public override Task Initialize(IVerifier verifier)
         {
-            
+            _verifier = verifier;
+            ID = _verifier.SynAck.Id;
+            Attributes = new List<CheckedAttribute>();
+            foreach (Attribute attr in ID.Attributes.Values)
+            {
+                Attributes.Add(new CheckedAttribute(this, false, attr));
+            }
+            _attributesToCertify = new List<string>();
+            return base.Initialize();
         }
 
-		public IMvxCommand UpdateCertifiedAttributesCommand => new MvxCommand<string>(UpdateCertifiedAttributes);
-
-        public void UpdateCertifiedAttributes(string attributeDescription)
+        public override void Start()
         {
-			if (certifiedAttributes.Contains(attributeDescription))
-			{
-				certifiedAttributes.Remove(attributeDescription);
-			}
-			else
-			{
-				certifiedAttributes.Add(attributeDescription);
-			}
+            //TODO: Add starting logic here
+        }
+
+        private void UpdateCertifiedAttributes(string attributeDescription)
+        {
+            if (_attributesToCertify.Contains(attributeDescription))
+            {
+                _attributesToCertify.Remove(attributeDescription);
+            }
+            else
+            {
+                _attributesToCertify.Add(attributeDescription);
+            }
         }
 
         public IMvxCommand CertifyIDCommand => new MvxCommand(CertifyID);
 
-		private void CertifyID()
-		{
-			throw new NotImplementedException();
-		}
+        private void CertifyID()
+        {
+            _verifier.Certify(_attributesToCertify.ToArray());
+            _verifier.CertificatesSent += (sender, e) => { Close((this)); };
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace Lynx.Core
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
             Mvx.RegisterSingleton<ID>(() => new ID());
-            Mvx.RegisterSingleton<ITokenCryptoService<IHandshakeToken>>(() => new TokenCryptoService<IHandshakeToken>(Mvx.Resolve<IECCCryptoService>()));
+            Mvx.RegisterSingleton<ITokenCryptoService<IToken>>(() => new TokenCryptoService<IToken>(Mvx.Resolve<IECCCryptoService>()));
 
             Mvx.RegisterSingleton(() => _dataService);
 
@@ -51,8 +51,8 @@ namespace Lynx.Core
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
             RegisterAppStart<ViewModels.MainViewModel>();
 
-            Mvx.RegisterType<IRequester>(() => new Requester(Mvx.Resolve<ITokenCryptoService<IHandshakeToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>()));
-            Mvx.RegisterType<IVerifier>(() => new Verifier(Mvx.Resolve<ITokenCryptoService<IHandshakeToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>()));
+            Mvx.RegisterType<IRequester>(() => new Requester(Mvx.Resolve<ITokenCryptoService<IToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>(), Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<ICertificateFacade>()));
+            Mvx.RegisterType<IVerifier>(() => new Verifier(Mvx.Resolve<ITokenCryptoService<IToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>(), Mvx.Resolve<ICertificateFacade>()));
         }
     }
 }

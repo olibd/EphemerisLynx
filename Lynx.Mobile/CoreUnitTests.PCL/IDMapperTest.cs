@@ -18,27 +18,30 @@ namespace CoreUnitTests.PCL
             {
                 Location = "1",
                 Hash = "1",
-                Content = new StringContent("Olivier")
+                Content = new StringContent("Olivier"),
+                Description = "firstname"
             };
 
             Attribute lastname = new Attribute()
             {
                 Location = "2",
                 Hash = "2",
-                Content = new StringContent("Brochu Dufour")
+                Content = new StringContent("Brochu Dufour"),
+                Description = "lastname"
             };
 
             Attribute age = new Attribute()
             {
                 Location = "3",
                 Hash = "3",
-                Content = new IntContent(24)
+                Content = new IntContent(24),
+                Description = "age"
             };
 
             t = new ID();
-            t.AddAttribute("Firstname", firstname);
-            t.AddAttribute("Lastname", lastname);
-            t.AddAttribute("Age", age);
+            t.AddAttribute(firstname);
+            t.AddAttribute(lastname);
+            t.AddAttribute(age);
 
             Mapper = new IDMapper(":memory:", new AttributeMapper(":memory:", new ExternalElementMapper<Certificate>(":memory:")));
         }

@@ -7,6 +7,14 @@ namespace Lynx.Core.Communications.Packets
 {
     public class SynAck : HandshakeToken, ISynAck
     {
+        protected override string Type
+        {
+            get
+            {
+                return "synack";
+            }
+        }
+
         public SynAck() : base()
         {
         }

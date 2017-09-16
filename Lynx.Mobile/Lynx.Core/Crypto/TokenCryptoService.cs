@@ -20,13 +20,15 @@ namespace Lynx.Core.Crypto
         {
             byte[] encryptedPayloadBytes = _ieccCryptoService.Encrypt(Convert.FromBase64String(token.GetEncodedPayload()), pubkey, privkey);
             string encryptedPayload = Convert.ToBase64String(encryptedPayloadBytes);
-            return token.GetEncodedHeader() + "." + encryptedPayload;
+            return token.GetTypedEncodedHeader() + "." + encryptedPayload + "." + token.Signature;
         }
 
         public string Decrypt(string encryptedToken, byte[] privkey)
         {
             //dissamble the encrypted token to decrypt the payload
-            string[] splittedEncryptedToken = encryptedToken.Split('.');
+            string[] splittedEncryptedToken = encryptedToken.Split(':');
+            string typePrefix = splittedEncryptedToken[0];
+            splittedEncryptedToken = splittedEncryptedToken[1].Split('.');
 
             //get the public key
             string jsonDecodedHeader = Base64Decode(splittedEncryptedToken[0]);
@@ -38,8 +40,8 @@ namespace Lynx.Core.Crypto
             byte[] decryptedPayloadBytes = _ieccCryptoService.Decrypt(encryptedPayloadBytes, pubkey, privkey);
             string decryptedPayload = Convert.ToBase64String(decryptedPayloadBytes);
 
-            //reassemble the decrypted token
-            return splittedEncryptedToken[0] + "." + decryptedPayload;
+            //reassemble the decrypted token, add the signature if there is one
+            return typePrefix + ":" + splittedEncryptedToken[0] + "." + decryptedPayload + "." + splittedEncryptedToken[2];
         }
 
         public bool VerifySignature(T token)

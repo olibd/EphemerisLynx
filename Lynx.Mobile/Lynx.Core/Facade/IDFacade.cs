@@ -1,5 +1,4 @@
-﻿using System;
-using Lynx.Core.Facade.Interfaces;
+﻿using Lynx.Core.Facade.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,36 +63,39 @@ namespace Lynx.Core.Facade
             foreach (string key in id.Attributes.Keys)
             {
                 Attribute attribute = id.GetAttribute(key);
-                await AddAttributeAsync(id, encoder.Encode(key), attribute);
+                await AddAttributeAsync(id, attribute);
             }
             return id;
         }
 
-		//This function will only be used to create the initial ID object on login
-		public async Task<ID> GetIDAsync(string address, string[] accessibleAttributes = null)
-		{
-            IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, address);
+        //This function will only be used to create the initial ID object on login
+        public async Task<ID> GetIDAsync(string address, string[] accessibleAttributes = null)
+        {
+            IDService idService = new IDService(Web3, AccountService.PrivateKey, address);
+            string idcAddress = await idService.OwnerAsyncCall();
+            IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, idcAddress);
 
-			ID newID = new ID
-			{
-				ControllerAddress = address,
-				Address = await idcService.GetIDAsyncCall()
-			};
+            ID newID = new ID
+            {
+                ControllerAddress = idcAddress,
+                Address = address,
+                Owner = await idcService.OwnerAsyncCall()
+            };
             //Get attributes from the smart contract and add them to the ID object
             Dictionary<string, Attribute> attributes;
             if (accessibleAttributes != null)
                 attributes = await GetAttributesAsync(newID, accessibleAttributes);
             else
-			    attributes = await GetAttributesAsync(newID);
-			foreach (string key in attributes.Keys)
-			{
-				newID.AddAttribute(key, attributes[key]);
-			}
+                attributes = await GetAttributesAsync(newID);
+            foreach (string key in attributes.Keys)
+            {
+                newID.AddAttribute(attributes[key]);
+            }
 
-			return newID;
-		}
+            return newID;
+        }
 
-        public async Task<Attribute> AddAttributeAsync(ID id, byte[] key, Attribute attribute)
+        public async Task<Attribute> AddAttributeAsync(ID id, Attribute attribute)
         {
             IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
 
@@ -102,7 +104,7 @@ namespace Lynx.Core.Facade
                 attribute = await _attributeFacade.DeployAsync(attribute, id.Address);
 
 
-            await idcService.AddAttributeAsync(key, attribute.Address);
+            await idcService.AddAttributeAsync(attribute.Address);
 
             return attribute;
         }
@@ -117,8 +119,8 @@ namespace Lynx.Core.Facade
             {
                 //Get all attribute keys and addresses for the ID
                 byte[] attributeKey = await idcService.GetAttributeKeyAsyncCall(i);
-				//Get the attribute and add it to the dict
-				Attribute newAttribute = await GetAttributeByKey(idcService, attributeKey);
+                //Get the attribute and add it to the dict
+                Attribute newAttribute = await GetAttributeByKey(idcService, attributeKey);
                 string keyStr = Encoding.UTF8.GetString(attributeKey, 0, attributeKey.Length);
                 dict.Add(keyStr, newAttribute);
             }
@@ -126,34 +128,34 @@ namespace Lynx.Core.Facade
             return dict;
         }
 
-		public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
-		{
-			IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
-			Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
+        public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
+        {
+            IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
+            Dictionary<string, Attribute> dict = new Dictionary<string, Attribute>();
 
-			BigInteger attributes = await idcService.AttributeCountAsyncCall();
-			for (BigInteger i = 0; i < attributes; i++)
-			{
-				//Get all attribute keys and addresses for the ID
-				byte[] attributeKey = await idcService.GetAttributeKeyAsyncCall(i);
+            BigInteger attributes = await idcService.AttributeCountAsyncCall();
+            for (BigInteger i = 0; i < attributes; i++)
+            {
+                //Get all attribute keys and addresses for the ID
+                byte[] attributeKey = await idcService.GetAttributeKeyAsyncCall(i);
                 string keyStr = Encoding.UTF8.GetString(attributeKey, 0, attributeKey.Length);
                 keyStr = keyStr.TrimEnd('\0');//remove null characters at the end of string
                 if (accessibleAttributes.Contains(keyStr))
-				{
-					//Get the attribute and add it to the dict
-					Attribute newAttribute = await GetAttributeByKey(idcService, attributeKey);
-					dict.Add(keyStr, newAttribute);
+                {
+                    //Get the attribute and add it to the dict
+                    Attribute newAttribute = await GetAttributeByKey(idcService, attributeKey);
+                    dict.Add(newAttribute.Description, newAttribute);
                 }
-			}
+            }
             return dict;
-		}
+        }
 
-        private async Task<Attribute> GetAttributeByKey(IDControllerService idcService, byte[] attributeKey) 
+        private async Task<Attribute> GetAttributeByKey(IDControllerService idcService, byte[] attributeKey)
         {
-			string ethAttributeAddress = await idcService.GetAttributeAsyncCall(attributeKey);
-			//Get the attribute and add it to the dict
-			Attribute attribute = await _attributeFacade.GetAttributeAsync(ethAttributeAddress);
-            return attribute; 
+            string ethAttributeAddress = await idcService.GetAttributeAsyncCall(attributeKey);
+            //Get the attribute and add it to the dict
+            Attribute attribute = await _attributeFacade.GetAttributeAsync(ethAttributeAddress);
+            return attribute;
         }
 
     }

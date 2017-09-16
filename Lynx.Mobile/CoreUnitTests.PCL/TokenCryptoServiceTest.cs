@@ -80,7 +80,10 @@ namespace CoreUnitTests.PCL
             Assert.AreNotEqual(null, cipherData);
             string decryptedData = _tCS.Decrypt(cipherData, _account2.GetPrivateKeyAsByteArray());
             Assert.AreNotEqual(cipherData, decryptedData);
-            string[] splittedDecryptedData = decryptedData.Split('.');
+
+            string[] splittedDecryptedData = decryptedData.Split(':');
+            splittedDecryptedData = splittedDecryptedData[1].Split('.');
+
             Assert.AreEqual(token.GetEncodedHeader(), splittedDecryptedData[0]);
             Assert.AreEqual(token.GetEncodedPayload(), splittedDecryptedData[1]);
         }
