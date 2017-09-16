@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Facade.Interfaces;
+using Lynx.Core.Interfaces;
+using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
@@ -65,8 +67,13 @@ namespace Lynx.Core.ViewModels
         private async void FetchID()
         {
             ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
+
+            int UID = await Mvx.Resolve<IMapper<ID>>().SaveAsync(ID);
+            Mvx.Resolve<IPlatformSpecificDataService>().IDUID = UID;
+
             Attributes = ID.Attributes.Values.ToList();
             RaisePropertyChanged(() => Attributes);
+             //TODO: Tell the user when this is done
         }
 
         private async void RequestVerification()
