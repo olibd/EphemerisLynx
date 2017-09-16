@@ -33,7 +33,6 @@ namespace Lynx.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
-            Mvx.RegisterSingleton<ID>(() => new ID());
             Mvx.RegisterSingleton<ITokenCryptoService<IToken>>(() => new TokenCryptoService<IToken>(Mvx.Resolve<IECCCryptoService>()));
 
             Mvx.RegisterSingleton(() => _dataService);
@@ -45,7 +44,7 @@ namespace Lynx.Core
             Mvx.RegisterType<IMapper<ID>>(() => new IDMapper(dbfile, Mvx.Resolve<IMapper<Attribute>>()));
 
             //Configure the the eth node
-            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode("0x7c276dcaab99bd16163c1bcce671cad6a1ec0945", "http://jmon.tech:8545");
+            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode("0x3dd0864668c36d27b53a98137764c99f9fd5b7b2", "http://jmon.tech:8545");
 
             //Register the dummy ContentService as a singleton, temp solution
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());

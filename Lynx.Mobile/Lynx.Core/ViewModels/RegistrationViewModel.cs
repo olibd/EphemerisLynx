@@ -40,7 +40,8 @@ namespace Lynx.Core.ViewModels
         {
             ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
 
-            ID = Mvx.Resolve<ID>();
+            ID = new ID();
+            Mvx.RegisterSingleton(() => ID);
         }
 
         public override void Start()

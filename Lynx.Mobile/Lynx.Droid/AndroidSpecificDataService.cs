@@ -50,7 +50,8 @@ namespace Lynx.Droid
         public string GetDatabaseFile()
         {
             //TODO: use Environment.GetFolderPath to return a path in the application's Data folder
-            return ":memory:";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/db.sqlite";
+            return path;
         }
     }
 }

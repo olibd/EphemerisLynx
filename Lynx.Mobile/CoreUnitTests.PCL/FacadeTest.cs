@@ -18,7 +18,7 @@ namespace CoreUnitTests.PCL
         {
             _web3 = new Web3("http://jmon.tech:8545");
             _accountService = new AccountService();
-            _factoryService = new FactoryService(_web3, _accountService.PrivateKey, "0x492934308e98b590a626666b703a6ddf2120e85e");
+            _factoryService = new FactoryService(_web3, _accountService.PrivateKey, "0x3dd0864668c36d27b53a98137764c99f9fd5b7b2");
         }
 
     }

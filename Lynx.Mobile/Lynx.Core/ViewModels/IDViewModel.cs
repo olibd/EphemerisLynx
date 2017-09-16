@@ -9,6 +9,7 @@ using MvvmCross.Core.Navigation;
 using System.Threading.Tasks;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.Communications.Packets;
+using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
@@ -21,6 +22,8 @@ namespace Lynx.Core.ViewModels
 
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
+        public IMvxCommand UpdateID => new MvxCommand(FetchID);
+
         private IVerifier _verifier;
         private bool _scanned = false;
 
@@ -34,6 +37,7 @@ namespace Lynx.Core.ViewModels
         {
             ID = Mvx.Resolve<ID>();
             Attributes = Mvx.Resolve<ID>().Attributes.Values.ToList();
+            UpdateID.Execute();
         }
 
         public override void Start()
@@ -56,6 +60,13 @@ namespace Lynx.Core.ViewModels
                 _scanned = false;
                 await _navigationService.Navigate<CertifyViewModel, IVerifier>((IVerifier)sender);
             };
+        }
+
+        private async void FetchID()
+        {
+            ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
+            Attributes = ID.Attributes.Values.ToList();
+            RaisePropertyChanged(() => Attributes);
         }
 
         private async void RequestVerification()
