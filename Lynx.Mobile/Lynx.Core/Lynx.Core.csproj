@@ -102,6 +102,7 @@
     <Compile Include="PeerVerification\IssuedCertificatesAddedToIDEvent.cs" />
     <Compile Include="PeerVerification\InvalidTokenTypeException.cs" />
     <Compile Include="ViewModels\CertifyViewModel.cs" />
+    <Compile Include="Mappers\IDSubsystem\SQLiteMappers\NoSingleMappingFound.cs" />
     <Compile Include="PeerVerification\Interfaces\CertificatesSent.cs" />
     <Compile Include="PeerVerification\TokenPublicKeyMismatch.cs" />
   </ItemGroup>

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Lynx.Core.Mappers.IDSubsystem.SQLiteMappers;
 using Lynx.Core.Models.IDSubsystem;
 using NUnit.Framework;
+using PCLStorage;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 
 namespace CoreUnitTests.PCL
@@ -11,7 +12,7 @@ namespace CoreUnitTests.PCL
     public class AttributeMapperTest : MapperTest<Attribute>
     {
         [SetUp]
-        public virtual void Setup()
+        public virtual async Task Setup()
         {
             //create some dummy attributes
             t = new Attribute()
@@ -41,7 +42,11 @@ namespace CoreUnitTests.PCL
             t.AddCertificate(nameCert);
             t.AddCertificate(nameCert2);
 
-            Mapper = new AttributeMapper(":memory:", new ExternalElementMapper<Certificate>(":memory:"));
+            IFile file = await FileSystem.Current.LocalStorage.CreateFileAsync("mydata.db", CreationCollisionOption.ReplaceExisting);
+
+            var path = file.Path;
+
+            Mapper = new AttributeMapper(path, new ExternalElementMapper<Certificate>(path));
         }
 
         [Test]

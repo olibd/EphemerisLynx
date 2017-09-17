@@ -8,6 +8,11 @@ namespace Lynx.Core.Models.IDSubsystem
             Content = content;
         }
 
+        public IntContent(string content)
+        {
+            Content = int.Parse(content);
+        }
+
         public object Content { get; set; }
 
         public override string ToString()
