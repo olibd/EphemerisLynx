@@ -58,7 +58,6 @@ namespace CoreUnitTests.PCL
                 Description = "key"
             };
 
-            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
             Attribute addedAttrib = await _idFacade.AddAttributeAsync(deployed, attribute);
 
             Assert.NotNull(addedAttrib.Address);

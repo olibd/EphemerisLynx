@@ -39,7 +39,6 @@ namespace Lynx.Core.Facade
         public async Task<ID> DeployAsync(ID id)
         {
             FactoryService factory = new FactoryService(Web3, AccountService.PrivateKey, _factoryAddress);
-            Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
 
             //Use the provided Factory address to create an ID + IDController
             Event idCreationEvent = factory.GetEventReturnIDController();
