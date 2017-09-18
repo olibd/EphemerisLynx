@@ -37,8 +37,8 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// <param name="obj">Object.</param>
         private async Task SaveContent(T obj)
         {
-            //Serialize the content as a JSON string
-            string content = JsonConvert.SerializeObject(obj.Content);
+            //Serialize the content
+            string content = obj.Content.ToString();
 
             //Define the one to one mapping between the object and its content
             ExternalElementContentMapping contentMapping = new ExternalElementContentMapping()
@@ -53,6 +53,38 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             //save the mapping to the database
             Mapper<ExternalElementContentMapping> contentMapper = new Mapper<ExternalElementContentMapping>(_dbFilePath);
             await contentMapper.SaveAsync(contentMapping);
+        }
+
+        /// <summary>
+        /// Get object T given the UID.
+        /// </summary>
+        /// <returns>The object T.</returns>
+        /// <param name="UID">UID.</param>
+        public override async Task<T> GetAsync(int UID)
+        {
+            //get the base ExternalElement
+            T obj = await base.GetAsync(UID);
+
+            return await Task.Run(() =>
+            {
+                string typeOfT = typeof(T).ToString();
+                SQLiteConnection conn = new SQLiteConnection(_dbFilePath);
+                TableQuery<ExternalElementContentMapping> query = conn
+                    .Table<ExternalElementContentMapping>()
+                    .Where(mapping => mapping.ExtUID == obj.UID
+                           &&
+                           mapping.ExtType == typeOfT);
+
+                if (query.Count() != 1)
+                    throw new NoSingleMappingFound();
+
+                ExternalElementContentMapping contentMapping = query.First();
+
+                conn.Close();
+                obj.Content = Activator.CreateInstance(Type.GetType(contentMapping.ContentType), new object[] { contentMapping.SerilizedContent }) as IContent;
+
+                return obj;
+            });
         }
 
         /// <summary>

@@ -22,12 +22,9 @@ namespace Lynx.Droid.Views
     [Activity(Label = "View for IDViewModel")]
     public class IDView : MvxFragmentActivity
     {
-        private BottomSheetBehavior _bottomSheetBehavior;
         private LinearLayout _bottomSheet;
-        private CoordinatorLayout _IDViewLayout;
 
         private ZXingScannerFragment _scanner;
-        private IMvxCommand _qrCodeScanCommand;
 
         public IMvxCommand QrCodeScanCommand { get; set; }
 
@@ -36,17 +33,16 @@ namespace Lynx.Droid.Views
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.IDView);
             _bottomSheet = FindViewById<LinearLayout>(Resource.Id.bottom_sheet);
-            _bottomSheetBehavior = BottomSheetBehavior.From(_bottomSheet);
-            _IDViewLayout = FindViewById<CoordinatorLayout>(Resource.Id.IDViewLayout);
-            _bottomSheetBehavior.SetBottomSheetCallback(new BottomSheetInvalidateParentCallback());
 
-            _scanner = new ZXingScannerFragment();
-            _scanner.ScanningOptions = MobileBarcodeScanningOptions.Default;
+            _scanner = new ZXingScannerFragment
+            {
+                ScanningOptions = MobileBarcodeScanningOptions.Default
+            };
             SupportFragmentManager.BeginTransaction()
                 .Add(Resource.Id.ZXingScannerLayout, _scanner, "ZXINGSCANNER")
                 .Commit();
 
-            BindCommand();
+            BindCommands();
         }
 
         protected override void OnResume()
@@ -78,7 +74,7 @@ namespace Lynx.Droid.Views
             MobileBarcodeScanningOptions.Default);
         }
 
-        private void BindCommand()
+        private void BindCommands()
         {
             var set = this.CreateBindingSet<IDView, IDViewModel>();
             set.Bind(this)

@@ -40,7 +40,8 @@ namespace Lynx.Core.ViewModels
         {
             ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
 
-            ID = Mvx.Resolve<ID>();
+            ID = new ID();
+            Mvx.RegisterSingleton(() => ID);
         }
 
         public override void Start()
@@ -78,6 +79,7 @@ namespace Lynx.Core.ViewModels
 
             await DeployToBlockchain();
             await SaveIDToDB();
+
         }
 
         private async Task SaveIDToDB()
@@ -92,6 +94,9 @@ namespace Lynx.Core.ViewModels
         {
             _idFacade = Mvx.Resolve<IIDFacade>();
             await _idFacade.DeployAsync(ID);
+
+            Mvx.Resolve<IPlatformSpecificDataService>().IDAddress = ID.Address;
+
         }
 
         private void BuildID()

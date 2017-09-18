@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lynx.Core.Facade;
+using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Interfaces;
+using Lynx.Core.Mappers.IDSubsystem.Strategies;
+using Lynx.Core.Models.IDSubsystem;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Core.Navigation;
@@ -14,22 +18,31 @@ namespace Lynx.Core.ViewModels
     {
         private IMvxNavigationService _navigationService;
         private IMvxCommand _checkAndLoadID => new MvxCommand(CheckAndLoadID);
+        public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
+
         public MainViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
         }
-        public override void ViewAppeared()
+
+        public override void Start()
         {
-            base.ViewAppeared();
+            base.Start();
             _checkAndLoadID.Execute();
         }
-        public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
+
         private async void CheckAndLoadID()
         {
-            if (Mvx.Resolve<IPlatformSpecificDataService>().IDUID != -1)
+            IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
+            if (dataService.IDUID != -1)
             {
-                //TODO: Actually load the ID
-                var a = 1;
+                //TODO: Load from database, and fallback to loading from blockchain in case of exception
+                IIDFacade idFacade = Mvx.Resolve<IIDFacade>();
+
+                //ID id = await idFacade.GetIDAsync(dataService.IDAddress);
+                ID id = await Mvx.Resolve<IMapper<ID>>().GetAsync(dataService.IDUID);
+                Mvx.RegisterSingleton(() => id);
+                await _navigationService.Navigate<IDViewModel>();
             }
         }
         private async void NavigateRegistration()
