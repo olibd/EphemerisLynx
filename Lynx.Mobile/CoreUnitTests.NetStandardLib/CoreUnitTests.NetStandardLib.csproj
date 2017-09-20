@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CoreUnitTests.PCL.csproj" />
+    <None Include="CoreUnitTests.NetStandardLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\eVi.abi.lib.pcl\evi.abi.lib.netstandard\evi.abi.lib.netstandard.csproj" />
