@@ -9,7 +9,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
     /// other peers. It will process the Syn request and verify the data supplied
     /// by the peer.
     /// </summary>
-    public interface IVerifier
+    public interface IReceiver
     {
         event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
         event EventHandler<CertificatesSent> CertificatesSent;

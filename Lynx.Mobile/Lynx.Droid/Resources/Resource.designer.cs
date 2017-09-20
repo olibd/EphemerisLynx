@@ -48,29 +48,6 @@ namespace Lynx.Droid
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView = global::Lynx.Droid.Resource.Styleable.MvxListView;
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView_MvxDropDownItemTemplate = global::Lynx.Droid.Resource.Styleable.MvxListView_MvxDropDownItemTemplate;
 			global::MvvmCross.Binding.Droid.Resource.Styleable.MvxListView_MvxItemTemplate = global::Lynx.Droid.Resource.Styleable.MvxListView_MvxItemTemplate;
-			global::MvvmCross.Droid.Support.Core.UI.Resource.String.library_name = global::Lynx.Droid.Resource.String.library_name;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Attribute.MvxBind = global::Lynx.Droid.Resource.Attribute.MvxBind;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Attribute.MvxDropDownItemTemplate = global::Lynx.Droid.Resource.Attribute.MvxDropDownItemTemplate;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Attribute.MvxGroupItemTemplate = global::Lynx.Droid.Resource.Attribute.MvxGroupItemTemplate;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Attribute.MvxItemTemplate = global::Lynx.Droid.Resource.Attribute.MvxItemTemplate;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Attribute.MvxLang = global::Lynx.Droid.Resource.Attribute.MvxLang;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Attribute.MvxSource = global::Lynx.Droid.Resource.Attribute.MvxSource;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Attribute.MvxTemplate = global::Lynx.Droid.Resource.Attribute.MvxTemplate;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Id.MvvmCrossTagId = global::Lynx.Droid.Resource.Id.MvvmCrossTagId;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Id.MvxBindingTagUnique = global::Lynx.Droid.Resource.Id.MvxBindingTagUnique;
-			global::MvvmCross.Droid.Support.Fragment.Resource.String.library_name = global::Lynx.Droid.Resource.String.library_name;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxBinding = global::Lynx.Droid.Resource.Styleable.MvxBinding;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxBinding_MvxBind = global::Lynx.Droid.Resource.Styleable.MvxBinding_MvxBind;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxBinding_MvxLang = global::Lynx.Droid.Resource.Styleable.MvxBinding_MvxLang;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxControl = global::Lynx.Droid.Resource.Styleable.MvxControl;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxControl_MvxTemplate = global::Lynx.Droid.Resource.Styleable.MvxControl_MvxTemplate;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxExpandableListView = global::Lynx.Droid.Resource.Styleable.MvxExpandableListView;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxExpandableListView_MvxGroupItemTemplate = global::Lynx.Droid.Resource.Styleable.MvxExpandableListView_MvxGroupItemTemplate;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxImageView = global::Lynx.Droid.Resource.Styleable.MvxImageView;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxImageView_MvxSource = global::Lynx.Droid.Resource.Styleable.MvxImageView_MvxSource;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxListView = global::Lynx.Droid.Resource.Styleable.MvxListView;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxListView_MvxDropDownItemTemplate = global::Lynx.Droid.Resource.Styleable.MvxListView_MvxDropDownItemTemplate;
-			global::MvvmCross.Droid.Support.Fragment.Resource.Styleable.MvxListView_MvxItemTemplate = global::Lynx.Droid.Resource.Styleable.MvxListView_MvxItemTemplate;
 			global::ZXing.Mobile.Resource.Id.contentFrame = global::Lynx.Droid.Resource.Id.contentFrame;
 			global::ZXing.Mobile.Resource.Layout.zxingscanneractivitylayout = global::Lynx.Droid.Resource.Layout.zxingscanneractivitylayout;
 			global::ZXing.Mobile.Resource.Layout.zxingscannerfragmentlayout = global::Lynx.Droid.Resource.Layout.zxingscannerfragmentlayout;
@@ -2143,8 +2120,26 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
+			// aapt resource value: 0x7f020069
+			public const int avd_hide_password_1 = 2130837609;
+			
+			// aapt resource value: 0x7f02006a
+			public const int avd_hide_password_2 = 2130837610;
+			
+			// aapt resource value: 0x7f02006b
+			public const int avd_hide_password_3 = 2130837611;
+			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
+			
+			// aapt resource value: 0x7f02006c
+			public const int avd_show_password_1 = 2130837612;
+			
+			// aapt resource value: 0x7f02006d
+			public const int avd_show_password_2 = 2130837613;
+			
+			// aapt resource value: 0x7f02006e
+			public const int avd_show_password_3 = 2130837614;
 			
 			// aapt resource value: 0x7f020055
 			public const int design_bottom_navigation_item_background = 2130837589;

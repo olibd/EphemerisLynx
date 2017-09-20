@@ -11,13 +11,13 @@ using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
 {
-    public class CertifyViewModel : MvxViewModel<IVerifier>
+    public class CertifyViewModel : MvxViewModel<IReceiver>
     {
         public ID ID { get; set; }
         public List<CheckedAttribute> Attributes { get; set; }
         private List<string> _attributesToCertify;
         private IMvxNavigationService _navigationService;
-        private IVerifier _verifier;
+        private IReceiver _verifier;
 
         public class CheckedAttribute
         {
@@ -50,19 +50,6 @@ namespace Lynx.Core.ViewModels
             _navigationService = navigationService;
         }
 
-        public override Task Initialize(IVerifier verifier)
-        {
-            _verifier = verifier;
-            ID = _verifier.SynAck.Id;
-            Attributes = new List<CheckedAttribute>();
-            foreach (Attribute attr in ID.Attributes.Values)
-            {
-                Attributes.Add(new CheckedAttribute(this, false, attr));
-            }
-            _attributesToCertify = new List<string>();
-            return base.Initialize();
-        }
-
         public override void Start()
         {
             //TODO: Add starting logic here
@@ -86,6 +73,18 @@ namespace Lynx.Core.ViewModels
         {
             _verifier.Certify(_attributesToCertify.ToArray());
             _verifier.CertificatesSent += (sender, e) => { Close((this)); };
+        }
+
+        public override void Prepare(IReceiver verifier)
+        {
+            _verifier = verifier;
+            ID = _verifier.SynAck.Id;
+            Attributes = new List<CheckedAttribute>();
+            foreach (Attribute attr in ID.Attributes.Values)
+            {
+                Attributes.Add(new CheckedAttribute(this, false, attr));
+            }
+            _attributesToCertify = new List<string>();
         }
     }
 }

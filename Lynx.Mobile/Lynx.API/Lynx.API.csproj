@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+      <PackageTargetFallback>portable-net45+win+wpa81+wp80</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,4 +17,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lynx.CoreStandard\Lynx.CoreStandard.csproj" />
+  </ItemGroup>
 </Project>

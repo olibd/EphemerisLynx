@@ -31,6 +31,7 @@ namespace CoreUnitTests.PCL
                 Location = "location",
                 OwningAttribute = firstname,
                 Content = new StringContent("content"),
+                Owner = "0x123456778"
             };
 
             firstname.AddCertificate(firstnameCert);
@@ -48,7 +49,8 @@ namespace CoreUnitTests.PCL
                 Hash = "hash2",
                 Location = "location2",
                 OwningAttribute = lastname,
-                Content = new StringContent("content")
+                Content = new StringContent("content"),
+                Owner = "0x123456778"
             };
 
             lastname.AddCertificate(lastnameCert);

@@ -31,7 +31,7 @@ namespace CoreUnitTests.PCL
         private IIDFacade _idFacade1;
         private IIDFacade _idFacade2;
         private Requester _requester;
-        private Verifier _verifier;
+        private Receiver _verifier;
         private ID _id1;
         private ID _id2;
         private ISynAck _synAck;
@@ -63,7 +63,7 @@ namespace CoreUnitTests.PCL
             //Uses ID facade 2 because it wants to be able to load ID 2
             _requester = new Requester(_tkCrypto, _accountService1, _id1, _idFacade2, _attributeFacade, _certificateFacade);
             //Uses ID facade 1 because it wants to be able to load ID 1
-            _verifier = new Verifier(_tkCrypto, _accountService2, _id2, _idFacade1, _certificateFacade);
+            _verifier = new Receiver(_tkCrypto, _accountService2, _id2, _idFacade1, _certificateFacade);
         }
 
         public async Task SetupIDsAsync()

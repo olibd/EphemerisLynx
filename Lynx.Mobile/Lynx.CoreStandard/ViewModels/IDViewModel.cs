@@ -26,7 +26,7 @@ namespace Lynx.Core.ViewModels
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
         public IMvxCommand UpdateID => new MvxCommand(FetchID);
 
-        private IVerifier _verifier;
+        private IReceiver _verifier;
         private bool _scanned = false;
 
         public IDViewModel(IMvxNavigationService navigationService)
@@ -53,14 +53,14 @@ namespace Lynx.Core.ViewModels
                 return;
 
             _scanned = true;
-            _verifier = Mvx.Resolve<IVerifier>();
+            _verifier = Mvx.Resolve<IReceiver>();
 
             //TODO: Setup the verifier callback
             await _verifier.ProcessSyn(content);
             _verifier.IdentityProfileReceived += async (sender, e) =>
             {
                 _scanned = false;
-                await _navigationService.Navigate<CertifyViewModel, IVerifier>((IVerifier)sender);
+                await _navigationService.Navigate<CertifyViewModel, IReceiver>((IReceiver)sender);
             };
         }
 

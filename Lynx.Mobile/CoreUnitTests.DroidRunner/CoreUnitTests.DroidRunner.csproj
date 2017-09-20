@@ -114,6 +114,55 @@
     <Reference Include="SQLitePCLRaw.batteries_v2">
       <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.6\lib\MonoAndroid\SQLitePCLRaw.batteries_v2.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="EdjCase.JsonRpc.Core">
+      <HintPath>..\packages\EdjCase.JsonRpc.Core.1.0.4\lib\portable45-net45+win8+wpa81\EdjCase.JsonRpc.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EdjCase.JsonRpc.Client">
+      <HintPath>..\packages\EdjCase.JsonRpc.Client.1.0.5\lib\portable45-net45+win8+wpa81\EdjCase.JsonRpc.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Portable">
+      <HintPath>..\packages\Nethereum.Portable.1.0.6\lib\portable45-net45+win8+wpa81\Nethereum.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Platform">
+      <HintPath>..\packages\MvvmCross.Platform.5.2.0\lib\MonoAndroid\MvvmCross.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Platform.Droid">
+      <HintPath>..\packages\MvvmCross.Platform.5.2.0\lib\MonoAndroid\MvvmCross.Platform.Droid.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Core">
+      <HintPath>..\packages\MvvmCross.Core.5.2.0\lib\MonoAndroid\MvvmCross.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Droid">
+      <HintPath>..\packages\MvvmCross.Core.5.2.0\lib\MonoAndroid\MvvmCross.Droid.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLite-net">
+      <HintPath>..\packages\sqlite-net-pcl.1.4.118\lib\netstandard1.1\SQLite-net.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.1.3\lib\netstandard2.0\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Binding">
+      <HintPath>..\packages\MvvmCross.Binding.5.2.0\lib\MonoAndroid\MvvmCross.Binding.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Binding.Droid">
+      <HintPath>..\packages\MvvmCross.Binding.5.2.0\lib\MonoAndroid\MvvmCross.Binding.Droid.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Localization">
+      <HintPath>..\packages\MvvmCross.Binding.5.2.0\lib\MonoAndroid\MvvmCross.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Android.Export" />
+    <Reference Include="crypto">
+      <HintPath>..\..\eVi.abi.lib.pcl\packages\Portable.BouncyCastle.1.8.1.1\lib\portable-net4+sl5+wp8+win8+wpa81\crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="NBitcoin">
+      <HintPath>..\packages\NBitcoin.4.0.0.38\lib\netstandard1.3\NBitcoin.dll</HintPath>
+    </Reference>
+    <Reference Include="PubnubPCL">
+      <HintPath>..\packages\PubnubPCL.4.0.4.1\lib\netstandard1.4\PubnubPCL.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -140,9 +189,13 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoreUnitTests.PCL\CoreUnitTests.PCL.csproj">
-      <Project>{4B6D5EA0-2448-4749-A72F-CB520BD98D3E}</Project>
-      <Name>CoreUnitTests.PCL</Name>
+    <ProjectReference Include="..\CoreUnitTests.NetStandardLib\CoreUnitTests.NetStandardLib.csproj">
+      <Project>{094CA405-5667-4A9B-98B1-6C9B3EA3672E}</Project>
+      <Name>CoreUnitTests.NetStandardLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lynx.CoreStandard\Lynx.CoreStandard.csproj">
+      <Project>{FFCE422E-7B59-42E1-A7C6-429D891641AF}</Project>
+      <Name>Lynx.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
