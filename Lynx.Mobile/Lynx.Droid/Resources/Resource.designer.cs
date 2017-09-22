@@ -2243,8 +2243,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080087
 			public const int ZXingScannerLayout = 2131230855;
 			
-			// aapt resource value: 0x7f080090
-			public const int action0 = 2131230864;
+			// aapt resource value: 0x7f080091
+			public const int action0 = 2131230865;
 			
 			// aapt resource value: 0x7f080066
 			public const int action_bar = 2131230822;
@@ -2267,17 +2267,17 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080043
 			public const int action_bar_title = 2131230787;
 			
-			// aapt resource value: 0x7f08008d
-			public const int action_container = 2131230861;
+			// aapt resource value: 0x7f08008e
+			public const int action_container = 2131230862;
 			
 			// aapt resource value: 0x7f080067
 			public const int action_context_bar = 2131230823;
 			
-			// aapt resource value: 0x7f080094
-			public const int action_divider = 2131230868;
+			// aapt resource value: 0x7f080095
+			public const int action_divider = 2131230869;
 			
-			// aapt resource value: 0x7f08008e
-			public const int action_image = 2131230862;
+			// aapt resource value: 0x7f08008f
+			public const int action_image = 2131230863;
 			
 			// aapt resource value: 0x7f080003
 			public const int action_menu_divider = 2131230723;
@@ -2294,11 +2294,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080045
 			public const int action_mode_close_button = 2131230789;
 			
-			// aapt resource value: 0x7f08008f
-			public const int action_text = 2131230863;
+			// aapt resource value: 0x7f080090
+			public const int action_text = 2131230864;
 			
-			// aapt resource value: 0x7f08009d
-			public const int actions = 2131230877;
+			// aapt resource value: 0x7f08009e
+			public const int actions = 2131230878;
 			
 			// aapt resource value: 0x7f080046
 			public const int activity_chooser_view_content = 2131230790;
@@ -2306,11 +2306,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08001b
 			public const int add = 2131230747;
 			
-			// aapt resource value: 0x7f0800ab
-			public const int address_edittext = 2131230891;
+			// aapt resource value: 0x7f0800ac
+			public const int address_edittext = 2131230892;
 			
-			// aapt resource value: 0x7f0800aa
-			public const int address_layout = 2131230890;
+			// aapt resource value: 0x7f0800ab
+			public const int address_layout = 2131230891;
 			
 			// aapt resource value: 0x7f08005a
 			public const int alertTitle = 2131230810;
@@ -2336,14 +2336,14 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08004d
 			public const int buttonPanel = 2131230797;
 			
-			// aapt resource value: 0x7f080091
-			public const int cancel_action = 2131230865;
+			// aapt resource value: 0x7f080092
+			public const int cancel_action = 2131230866;
+			
+			// aapt resource value: 0x7f0800aa
+			public const int cell_edittext = 2131230890;
 			
 			// aapt resource value: 0x7f0800a9
-			public const int cell_edittext = 2131230889;
-			
-			// aapt resource value: 0x7f0800a8
-			public const int cell_layout = 2131230888;
+			public const int cell_layout = 2131230889;
 			
 			// aapt resource value: 0x7f080032
 			public const int center = 2131230770;
@@ -2363,8 +2363,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080076
 			public const int checkbox_meat = 2131230838;
 			
-			// aapt resource value: 0x7f080099
-			public const int chronometer = 2131230873;
+			// aapt resource value: 0x7f08009a
+			public const int chronometer = 2131230874;
 			
 			// aapt resource value: 0x7f08003b
 			public const int clip_horizontal = 2131230779;
@@ -2375,8 +2375,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080026
 			public const int collapseActionView = 2131230758;
 			
-			// aapt resource value: 0x7f0800ac
-			public const int contentFrame = 2131230892;
+			// aapt resource value: 0x7f0800ad
+			public const int contentFrame = 2131230893;
 			
 			// aapt resource value: 0x7f080050
 			public const int contentPanel = 2131230800;
@@ -2417,8 +2417,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080023
 			public const int end = 2131230755;
 			
-			// aapt resource value: 0x7f0800a3
-			public const int end_padder = 2131230883;
+			// aapt resource value: 0x7f0800a4
+			public const int end_padder = 2131230884;
 			
 			// aapt resource value: 0x7f08002c
 			public const int enterAlways = 2131230764;
@@ -2444,11 +2444,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080035
 			public const int fill_vertical = 2131230773;
 			
-			// aapt resource value: 0x7f0800a5
-			public const int firstname_edittext = 2131230885;
+			// aapt resource value: 0x7f0800a6
+			public const int firstname_edittext = 2131230886;
 			
-			// aapt resource value: 0x7f0800a4
-			public const int firstname_layout = 2131230884;
+			// aapt resource value: 0x7f0800a5
+			public const int firstname_layout = 2131230885;
 			
 			// aapt resource value: 0x7f080041
 			public const int @fixed = 2131230785;
@@ -2462,8 +2462,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08004b
 			public const int icon = 2131230795;
 			
-			// aapt resource value: 0x7f08009e
-			public const int icon_group = 2131230878;
+			// aapt resource value: 0x7f08009f
+			public const int icon_group = 2131230879;
 			
 			// aapt resource value: 0x7f080027
 			public const int ifRoom = 2131230759;
@@ -2474,8 +2474,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080089
 			public const int include = 2131230857;
 			
-			// aapt resource value: 0x7f08009a
-			public const int info = 2131230874;
+			// aapt resource value: 0x7f08009b
+			public const int info = 2131230875;
 			
 			// aapt resource value: 0x7f080000
 			public const int item_touch_helper_previous_elevation = 2131230720;
@@ -2483,20 +2483,20 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08007b
 			public const int largeLabel = 2131230843;
 			
-			// aapt resource value: 0x7f0800a7
-			public const int lastname_edittext = 2131230887;
+			// aapt resource value: 0x7f0800a8
+			public const int lastname_edittext = 2131230888;
 			
-			// aapt resource value: 0x7f0800a6
-			public const int lastname_layout = 2131230886;
+			// aapt resource value: 0x7f0800a7
+			public const int lastname_layout = 2131230887;
 			
 			// aapt resource value: 0x7f080036
 			public const int left = 2131230774;
 			
-			// aapt resource value: 0x7f08009f
-			public const int line1 = 2131230879;
+			// aapt resource value: 0x7f0800a0
+			public const int line1 = 2131230880;
 			
-			// aapt resource value: 0x7f0800a1
-			public const int line3 = 2131230881;
+			// aapt resource value: 0x7f0800a2
+			public const int line3 = 2131230882;
 			
 			// aapt resource value: 0x7f080011
 			public const int listMode = 2131230737;
@@ -2504,11 +2504,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08004a
 			public const int list_item = 2131230794;
 			
-			// aapt resource value: 0x7f0800ae
-			public const int masked = 2131230894;
+			// aapt resource value: 0x7f0800af
+			public const int masked = 2131230895;
 			
-			// aapt resource value: 0x7f080093
-			public const int media_actions = 2131230867;
+			// aapt resource value: 0x7f080094
+			public const int media_actions = 2131230868;
 			
 			// aapt resource value: 0x7f080024
 			public const int middle = 2131230756;
@@ -2534,14 +2534,14 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080012
 			public const int normal = 2131230738;
 			
-			// aapt resource value: 0x7f08009c
-			public const int notification_background = 2131230876;
+			// aapt resource value: 0x7f08009d
+			public const int notification_background = 2131230877;
+			
+			// aapt resource value: 0x7f080097
+			public const int notification_main_column = 2131230871;
 			
 			// aapt resource value: 0x7f080096
-			public const int notification_main_column = 2131230870;
-			
-			// aapt resource value: 0x7f080095
-			public const int notification_main_column_container = 2131230869;
+			public const int notification_main_column_container = 2131230870;
 			
 			// aapt resource value: 0x7f080039
 			public const int parallax = 2131230777;
@@ -2567,11 +2567,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080037
 			public const int right = 2131230775;
 			
-			// aapt resource value: 0x7f08009b
-			public const int right_icon = 2131230875;
+			// aapt resource value: 0x7f08009c
+			public const int right_icon = 2131230876;
 			
-			// aapt resource value: 0x7f080097
-			public const int right_side = 2131230871;
+			// aapt resource value: 0x7f080098
+			public const int right_side = 2131230872;
 			
 			// aapt resource value: 0x7f08001d
 			public const int screen = 2131230749;
@@ -2666,8 +2666,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080038
 			public const int start = 2131230776;
 			
-			// aapt resource value: 0x7f080092
-			public const int status_bar_latest_event_content = 2131230866;
+			// aapt resource value: 0x7f080093
+			public const int status_bar_latest_event_content = 2131230867;
 			
 			// aapt resource value: 0x7f080060
 			public const int submenuarrow = 2131230816;
@@ -2678,17 +2678,20 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080013
 			public const int tabMode = 2131230739;
 			
-			// aapt resource value: 0x7f0800a2
-			public const int text = 2131230882;
+			// aapt resource value: 0x7f0800a3
+			public const int text = 2131230883;
 			
-			// aapt resource value: 0x7f0800a0
-			public const int text2 = 2131230880;
+			// aapt resource value: 0x7f0800a1
+			public const int text2 = 2131230881;
 			
 			// aapt resource value: 0x7f080054
 			public const int textSpacerNoButtons = 2131230804;
 			
 			// aapt resource value: 0x7f080053
 			public const int textSpacerNoTitle = 2131230803;
+			
+			// aapt resource value: 0x7f08008d
+			public const int textView1 = 2131230861;
 			
 			// aapt resource value: 0x7f080085
 			public const int text_input_password_toggle = 2131230853;
@@ -2699,8 +2702,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08000d
 			public const int textinput_error = 2131230733;
 			
-			// aapt resource value: 0x7f080098
-			public const int time = 2131230872;
+			// aapt resource value: 0x7f080099
+			public const int time = 2131230873;
 			
 			// aapt resource value: 0x7f08004c
 			public const int title = 2131230796;
@@ -2735,8 +2738,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08000e
 			public const int view_offset_helper = 2131230734;
 			
-			// aapt resource value: 0x7f0800ad
-			public const int visible = 2131230893;
+			// aapt resource value: 0x7f0800ae
+			public const int visible = 2131230894;
 			
 			// aapt resource value: 0x7f080029
 			public const int withText = 2131230761;

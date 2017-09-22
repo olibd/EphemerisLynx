@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:local="http://schemas.android.com/apk/res-auto"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <Button
-    android:id="@+id/registerButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/register"
-    local:MvxBind="Click RegisterClickCommand" />
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        local:MvxBind="Click RegisterClickCommand" />
+  <TextView
+      android:id="@+id/textView1"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      local:MvxBind="Text MnemonicPhrase" />
 </LinearLayout>

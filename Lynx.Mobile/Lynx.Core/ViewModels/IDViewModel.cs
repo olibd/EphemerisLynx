@@ -68,8 +68,9 @@ namespace Lynx.Core.ViewModels
         {
             ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
 
-            int UID = await Mvx.Resolve<IMapper<ID>>().SaveAsync(ID);
-            Mvx.Resolve<IPlatformSpecificDataService>().IDUID = UID;
+            //BUG: Crash when saving with the mappers - requires a bit of time to debug and isn't critical for now
+            //int UID = await Mvx.Resolve<IMapper<ID>>().SaveAsync(ID);
+            //Mvx.Resolve<IPlatformSpecificDataService>().IDUID = UID;
 
             Attributes = ID.Attributes.Values.ToList();
             RaisePropertyChanged(() => Attributes);

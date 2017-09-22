@@ -6,5 +6,8 @@
         string IDAddress { get; set; }
 
         string GetDatabaseFile();
+
+        IAccountService LoadKeys();
+        void SaveKeys(IAccountService accountService);
     }
 }

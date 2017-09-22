@@ -12,6 +12,7 @@ using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using Lynx.Core.PeerVerification.Interfaces;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.Interfaces;
+using NBitcoin;
 
 namespace Lynx.Core
 {
@@ -28,6 +29,8 @@ namespace Lynx.Core
 
         public override void Initialize()
         {
+            RandomUtils.Random = new LynxSecureRandom();
+
             //Register dependencies
             CreatableTypes()
                 .EndingWith("Service")
