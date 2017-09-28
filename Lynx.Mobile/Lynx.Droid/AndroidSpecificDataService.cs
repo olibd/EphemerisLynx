@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using Android.Content;
 using Android.Preferences;
+using Lynx.Core;
 using Lynx.Core.Interfaces;
 
 namespace Lynx.Droid
@@ -50,8 +52,37 @@ namespace Lynx.Droid
         public string GetDatabaseFile()
         {
             //TODO: use Environment.GetFolderPath to return a path in the application's Data folder
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/db.sqlite";
-            return path;
+            return GetFileInDataDir("db.sqlite");
+        }
+
+        private string GetFileInDataDir(string file)
+        {
+           return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/" + file;
+        }
+
+        //TODO: Android keystore logic to safely store the private key
+        public IAccountService LoadKeys()
+        {
+            string path = GetFileInDataDir("keys");
+
+            try
+            {
+                string pkey = File.ReadAllText(path);
+                return new AccountService(pkey);
+            }
+            catch (IOException e)
+            {
+                return null;
+            }
+
+        }
+
+        //TODO: Android keystore logic to safely store the private key
+        public void SaveKeys(IAccountService accountService)
+        {
+            string key = accountService.PrivateKey;
+            string path = GetFileInDataDir("keys");
+            File.WriteAllText(path, key);
         }
     }
 }
