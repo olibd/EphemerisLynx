@@ -33,7 +33,7 @@ namespace Lynx.Core.PeerVerification
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
-            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<Ack>(e)));
+            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<Ack>(e)));
             _id = id;
             _attributeFacade = attributeFacade;
             _certificateFacade = certificateFacade;
@@ -65,7 +65,7 @@ namespace Lynx.Core.PeerVerification
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the verifier for certification
         /// </summary>
-        private void GenerateAndSendSynAck(Ack ack)
+        protected virtual void GenerateAndSendSynAck(Ack ack)
         {
             SynAck synAck = new SynAck()
             {
@@ -81,7 +81,7 @@ namespace Lynx.Core.PeerVerification
             _session.Send(encryptedToken);
         }
 
-        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
+        protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -98,15 +98,11 @@ namespace Lynx.Core.PeerVerification
                 default:
                     throw new InvalidTokenTypeException("The Token type received is invalid");
             }
-
-            //We can return null because the caller of this method is an anonymous method in an EventHandler
-            //and it won't use the returned data
-            return null;
         }
 
-        private async Task ProcessAck(string encryptedToken)
+        protected async Task ProcessAck(string encryptedToken)
         {
-            Ack ack = await base.ProcessEncryptedHandshakeToken<Ack>(encryptedToken);
+            Ack ack = await base.DecryptAndInstantiateHandshakeToken<Ack>(encryptedToken);
 
             VerifyHandshakeTokenIDOwnership(ack);
 
