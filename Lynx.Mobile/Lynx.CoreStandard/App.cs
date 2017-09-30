@@ -29,6 +29,7 @@ namespace Lynx.Core
 
         public override void Initialize()
         {
+            //Initializing NBitcoin's RNG
             RandomUtils.Random = new LynxSecureRandom();
 
             //Register dependencies
