@@ -21,6 +21,7 @@ namespace Lynx.Core
         public AccountService(Mnemonic mnemonic)
         {
             Key privKey = mnemonic.DeriveExtKey().PrivateKey;
+            //Protocol version is arbitrary since we're not generating Bitcoin keypairs here
             _privateKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHex(privKey.ToBytes(ProtocolVersion
                 .BIP0031_VERSION));
         }

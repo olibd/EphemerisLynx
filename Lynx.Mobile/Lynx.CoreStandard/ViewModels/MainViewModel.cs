@@ -13,18 +13,28 @@ using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Core.Navigation;
 using NBitcoin;
+using Lynx.Core.Interactions;
 
 namespace Lynx.Core.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
+        private const int _numWordsToCheck = 4;
+
+        public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
+        public IMvxCommand BeginMnemonicCheck => new MvxCommand(StartMnemonicVerification);
+        public IMvxInteraction<MnemonicCheckInteraction> CreateButtons => _createButtons;
+
         private IMvxNavigationService _navigationService;
         private IMvxCommand _checkAndLoadID => new MvxCommand(CheckAndLoadID);
-        public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
 
         private string _mnemonicPhrase;
+        private Mnemonic _mnemonic;
+        private Stack<string> _mnemonicBackupWords;
+        private Stack<int> _wordsToVerify;
+        private MvxInteraction<MnemonicCheckInteraction> _createButtons = new MvxInteraction<MnemonicCheckInteraction>();
 
-        public string MnemonicPhrase
+        public string MnemonicText
         {
             get => _mnemonicPhrase;
         }
@@ -32,6 +42,8 @@ namespace Lynx.Core.ViewModels
         public MainViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
+            _mnemonicBackupWords = new Stack<string>();
+            _wordsToVerify = new Stack<int>();
         }
 
         public override void Start()
@@ -70,13 +82,15 @@ namespace Lynx.Core.ViewModels
                 dataService.SaveKeys(accountService);
 
                 _mnemonicPhrase = "Mnemonic phrase: " + mnemonic.ToString();
+                _mnemonic = mnemonic;
             }
             else
             {
                 _mnemonicPhrase = "Loading existing keys, no seed phrase generated";
             }
 
-            RaisePropertyChanged(() => MnemonicPhrase);
+
+            RaisePropertyChanged(() => MnemonicText);
 
             Mvx.RegisterType(() => accountService);
         }
@@ -87,5 +101,73 @@ namespace Lynx.Core.ViewModels
             //TODO: Encrypt file, store key in keystore, fingerprint locked
             await _navigationService.Navigate<RegistrationViewModel>();
         }
+
+        #region Mnemonic phrase confirmation
+
+        private void StartMnemonicVerification()
+        {
+            //Used to add words that are not part of the mnemonic
+            _mnemonicBackupWords = new Stack<string>(new Mnemonic(Wordlist.English, WordCount.Twelve).Words);
+            _wordsToVerify = new Stack<int>(GenerateRandomValues(4, WordCount.Twelve));
+
+            List<string> buttons = new List<string>();
+            foreach(int i in _wordsToVerify)
+                buttons.Add(_mnemonic.Words[i]);
+
+            for(int i = 0; i < _numWordsToCheck - _wordsToVerify.Count; i++)
+            {
+                buttons.Add(_mnemonicBackupWords.Pop());
+            }
+
+            Random random = new Random();
+            buttons.OrderBy(x => random.Next());
+
+            MnemonicCheckInteraction interaction = new MnemonicCheckInteraction()
+            {
+                buttons = buttons,
+                onButtonClick = VerifyButtonInput
+            };
+
+            _createButtons.Raise(interaction);
+
+        }
+
+        private void VerifyButtonInput(string text)
+        {
+            string[] mnemonicWords = _mnemonicPhrase.Split(' ');
+            if (text == mnemonicWords[_wordsToVerify.Peek()])
+            {
+                _wordsToVerify.Pop();
+                if (_wordsToVerify.Count == 0)
+                    VerificationSuccess();
+                else
+                {
+                    VerifyNext();
+                }
+            }
+        }
+
+        private void VerifyNext()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void VerificationSuccess()
+        {
+            throw new NotImplementedException();
+        }
+
+        private List<int> GenerateRandomValues(int amount, WordCount wordCount)
+        {
+            Random random = new Random();
+            List<int> values = Enumerable.Range(0, (int)wordCount)
+                .OrderBy(x => random.Next())
+                .Take(amount)
+                .ToList();
+
+            return values;
+        }
+
+        #endregion
     }
 }

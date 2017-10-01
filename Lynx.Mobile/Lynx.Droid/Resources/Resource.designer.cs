@@ -2481,6 +2481,9 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08004a
 			public const int list_item = 2131230794;
 			
+			// aapt resource value: 0x7f08008c
+			public const int mainView = 2131230860;
+			
 			// aapt resource value: 0x7f0800af
 			public const int masked = 2131230895;
 			
@@ -2537,9 +2540,6 @@ namespace Lynx.Droid
 			
 			// aapt resource value: 0x7f08005f
 			public const int radio = 2131230815;
-			
-			// aapt resource value: 0x7f08008c
-			public const int registerButton = 2131230860;
 			
 			// aapt resource value: 0x7f080037
 			public const int right = 2131230775;
@@ -3118,8 +3118,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f090012
 			public const int abc_toolbar_collapse_description = 2131296274;
 			
-			// aapt resource value: 0x7f090031
-			public const int address = 2131296305;
+			// aapt resource value: 0x7f090032
+			public const int address = 2131296306;
 			
 			// aapt resource value: 0x7f09002b
 			public const int app_name = 2131296299;
@@ -3127,26 +3127,29 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f090021
 			public const int appbar_scrolling_view_behavior = 2131296289;
 			
+			// aapt resource value: 0x7f09002d
+			public const int beginverify = 2131296301;
+			
 			// aapt resource value: 0x7f090022
 			public const int bottom_sheet_behavior = 2131296290;
 			
-			// aapt resource value: 0x7f090030
-			public const int cell = 2131296304;
+			// aapt resource value: 0x7f090031
+			public const int cell = 2131296305;
 			
-			// aapt resource value: 0x7f090032
-			public const int certify = 2131296306;
+			// aapt resource value: 0x7f090033
+			public const int certify = 2131296307;
 			
 			// aapt resource value: 0x7f090023
 			public const int character_counter_pattern = 2131296291;
 			
-			// aapt resource value: 0x7f09002e
-			public const int firstname = 2131296302;
+			// aapt resource value: 0x7f09002f
+			public const int firstname = 2131296303;
 			
 			// aapt resource value: 0x7f09002a
 			public const int hello = 2131296298;
 			
-			// aapt resource value: 0x7f09002f
-			public const int lastname = 2131296303;
+			// aapt resource value: 0x7f090030
+			public const int lastname = 2131296304;
 			
 			// aapt resource value: 0x7f090029
 			public const int library_name = 2131296297;
@@ -3166,8 +3169,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f090028
 			public const int path_password_strike_through = 2131296296;
 			
-			// aapt resource value: 0x7f09002d
-			public const int recover = 2131296301;
+			// aapt resource value: 0x7f09002e
+			public const int recover = 2131296302;
 			
 			// aapt resource value: 0x7f09002c
 			public const int register = 2131296300;
