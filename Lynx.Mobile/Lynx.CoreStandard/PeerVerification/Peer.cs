@@ -5,6 +5,7 @@ using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Interfaces;
+using Lynx.Core.Models.IDSubsystem;
 
 namespace Lynx.Core.PeerVerification
 {
@@ -44,10 +45,10 @@ namespace Lynx.Core.PeerVerification
         /// </summary>
         /// <param name="encryptedHandshakeToken">The JSON-encoded SYNACK</param>
         /// <returns>The HandshakeToken object</returns>
-        protected virtual async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken) where T : HandshakeToken, new()
+        protected virtual async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null) where T : HandshakeToken, new()
         {
             string decryptedToken = _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
-            HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade);
+            HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade, id);
             T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
 
             return handshakeToken;

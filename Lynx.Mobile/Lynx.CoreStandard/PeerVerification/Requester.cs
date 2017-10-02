@@ -81,7 +81,7 @@ namespace Lynx.Core.PeerVerification
             _session.Send(encryptedToken);
         }
 
-        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
+        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 

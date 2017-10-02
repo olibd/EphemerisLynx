@@ -83,7 +83,7 @@ namespace Lynx.Core.PeerVerification
                                                         "public Key");
         }
 
-        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
+        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -108,7 +108,7 @@ namespace Lynx.Core.PeerVerification
 
         private async Task ProcessSynAck(string encryptedSynAck)
         {
-            SynAck unverifiedSynAck = await base.ProcessEncryptedHandshakeToken<SynAck>(encryptedSynAck);
+            SynAck unverifiedSynAck = await base.ProcessEncryptedHandshakeToken<SynAck>(encryptedSynAck, _syn.Id);
 
 
             if (unverifiedSynAck.PublicKey != _syn.PublicKey)
