@@ -29,13 +29,14 @@ namespace CoreUnitTests
             string messageReceived = "";
             string message = "This is a test message";
 
-            _session1 = new PubNubSession(delegate { });
-            _session2 = new PubNubSession(
+            _session1 = new AblySession(delegate { }, "1");
+            _session2 = new AblySession(
                 delegate (object sender, string eventArgs)
                 {
                     resetEvent.Set();
                     messageReceived = eventArgs;
-                }
+                },
+                "2"
             );
 
             string sessionKey = _session1.Open();

@@ -38,7 +38,7 @@ namespace Lynx.Core.PeerVerification
             _accountService = accountService;
             _idFacade = idFacade;
             _certificateFacade = certificateFacade;
-            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<SynAck>(e)));
+            _session = new AblySession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<SynAck>(e)), id.Address);
         }
 
         /// <summary>
@@ -105,7 +105,6 @@ namespace Lynx.Core.PeerVerification
         private async Task ProcessSynAck(string encryptedSynAck)
         {
             SynAck unverifiedSynAck = await base.DecryptAndInstantiateHandshakeToken<SynAck>(encryptedSynAck);
-
 
             if (unverifiedSynAck.PublicKey != _syn.PublicKey)
                 throw new TokenPublicKeyMismatch();

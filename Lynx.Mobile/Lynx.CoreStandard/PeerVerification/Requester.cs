@@ -20,10 +20,10 @@ namespace Lynx.Core.PeerVerification
 
     public class Requester : Peer, IRequester
     {
-        private ISession _session;
+        protected ISession _session;
         private ID _id;
-        private ITokenCryptoService<IToken> _tokenCryptoService;
-        private IAccountService _accountService;
+        protected ITokenCryptoService<IToken> _tokenCryptoService;
+        protected IAccountService _accountService;
         private ICertificateFacade _certificateFacade;
         private Attribute[] _accessibleAttributes;
         private IAttributeFacade _attributeFacade;
@@ -33,7 +33,7 @@ namespace Lynx.Core.PeerVerification
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
-            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<Ack>(e)));
+            _session = new AblySession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<Ack>(e)), id.Address);
             _id = id;
             _attributeFacade = attributeFacade;
             _certificateFacade = certificateFacade;

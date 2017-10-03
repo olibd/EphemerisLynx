@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Lynx.Core.Communications;
-using Lynx.Core.Communications.Interfaces;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Crypto;
@@ -15,22 +13,14 @@ namespace Lynx.Core.PeerVerification
 {
     public class InfoRequester : Requester
     {
-		private ISession _session;
 		private ID _id;
-		private ITokenCryptoService<IToken> _tokenCryptoService;
-		private IAccountService _accountService;
 		private Attribute[] _accessibleAttributes;
         private string[] _requestedAttributes;
-        private IIDFacade _idFacade;
         public event EventHandler<HandshakeCompleteEvent> handshakeComplete;
 
         public InfoRequester(string[] requestedAttributes, ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, id, idFacade, attributeFacade, certificateFacade)
         {
-			_tokenCryptoService = tokenCryptoService;
-			_accountService = accountService;
-            _idFacade = idFacade;
-			_session = new PubNubSession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<Ack>(e)));
-			_id = id;
+            _id = id;
 			_accessibleAttributes = new Attribute[]{
 				_id.Attributes["firstname"],
 				_id.Attributes["lastname"],

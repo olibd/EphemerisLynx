@@ -13,6 +13,7 @@
     <PackageReference Include="NBitcoin" Version="4.0.0.38" />
     <PackageReference Include="PubnubPCL" Version="4.0.4.1" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="ably.io" Version="0.8.5" />
   </ItemGroup>
   <ItemGroup>
     <None Update="packages.config">
