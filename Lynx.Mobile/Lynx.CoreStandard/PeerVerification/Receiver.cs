@@ -24,9 +24,11 @@ namespace Lynx.Core.PeerVerification
         private ISession _session;
         private IIDFacade _idFacade;
         private ISynAck _synAck;
+        private InfoRequestSynAck _infoRequestSynAck;
         private ISyn _syn;
         private ICertificateFacade _certificateFacade;
         public ISynAck SynAck { get { return _synAck; } }
+        public InfoRequestSynAck InfoRequestSynAck { get { return _infoRequestSynAck; } }
 
         public event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
         public event EventHandler<CertificatesSent> CertificatesSent;
@@ -146,8 +148,6 @@ namespace Lynx.Core.PeerVerification
 					InfoRequestSynAck = infoRequestSynAck
 				};
 				InfoRequestReceived.Invoke(this, e);
-
-                GenerateAndSendResponse(infoRequestSynAck);
             }
             else
                 throw new SignatureDoesntMatchException("The signature was not " +
@@ -158,7 +158,7 @@ namespace Lynx.Core.PeerVerification
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the requesting service
         /// </summary>
-        private void GenerateAndSendResponse(InfoRequestSynAck infoRequestSynAck)
+        public void GenerateAndSendResponse(InfoRequestSynAck infoRequestSynAck)
         {
             string[] requestedAttributesDescription = infoRequestSynAck.RequestedAttributes;
             Attribute[] requestedAttributes = new Attribute[requestedAttributesDescription.Length];
