@@ -38,7 +38,7 @@ namespace Lynx.Core.PeerVerification
             _accountService = accountService;
             _idFacade = idFacade;
             _certificateFacade = certificateFacade;
-            _session = new AblySession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<SynAck>(e)), id.Address);
+            _session = new AblySession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<SynAck>(e)), id.Address);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Lynx.Core.PeerVerification
                                                         "public Key");
         }
 
-        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
+        protected async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -100,16 +100,11 @@ namespace Lynx.Core.PeerVerification
                 default:
                     throw new InvalidTokenTypeException("The Token type received is invalid");
             }
-
-            //We can return null because the caller of this method is an anonymous method in an EventHandler
-            //and it won't use the returned data
-            return null;
         }
 
         private async Task ProcessSynAck(string encryptedSynAck)
         {
-            SynAck unverifiedSynAck = await base.ProcessEncryptedHandshakeToken<SynAck>(encryptedSynAck, _syn.Id);
-
+            SynAck unverifiedSynAck = await base.DecryptAndInstantiateHandshakeToken<SynAck>(encryptedSynAck, _syn.Id);
 
             if (unverifiedSynAck.PublicKey != _syn.PublicKey)
                 throw new TokenPublicKeyMismatch();
