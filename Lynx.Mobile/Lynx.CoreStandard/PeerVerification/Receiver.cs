@@ -38,7 +38,7 @@ namespace Lynx.Core.PeerVerification
             _accountService = accountService;
             _idFacade = idFacade;
             _certificateFacade = certificateFacade;
-            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<SynAck>(e)));
+            _session = new AblySession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<SynAck>(e)), id.Address);
         }
 
         /// <summary>

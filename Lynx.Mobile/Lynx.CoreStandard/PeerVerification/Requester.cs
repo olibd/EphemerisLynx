@@ -33,7 +33,7 @@ namespace Lynx.Core.PeerVerification
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
-            _session = new PubNubSession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<Ack>(e)));
+            _session = new AblySession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<Ack>(e)), id.Address);
             _id = id;
             _attributeFacade = attributeFacade;
             _certificateFacade = certificateFacade;
