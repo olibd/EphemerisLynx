@@ -7,7 +7,7 @@
 
         string GetDatabaseFile();
 
-        IAccountService LoadKeys();
-        void SaveKeys(IAccountService accountService);
+        IAccountService LoadAccount();
+        void SaveAccount(IAccountService accountService);
     }
 }

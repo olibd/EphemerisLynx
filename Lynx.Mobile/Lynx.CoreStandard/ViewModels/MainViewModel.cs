@@ -58,18 +58,16 @@ namespace Lynx.Core.ViewModels
         private void LoadKeys()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
-            IAccountService accountService = dataService.LoadKeys();
+            IAccountService accountService = dataService.LoadAccount();
 
             if (accountService == null)
             {
                 //We do not have any keys yet
 
-                Mnemonic mnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve);
+                accountService = new AccountService();
+                dataService.SaveAccount(accountService);
 
-                accountService = new AccountService(mnemonic);
-                dataService.SaveKeys(accountService);
-
-                _mnemonicPhrase = "Mnemonic phrase: " + mnemonic.ToString();
+                _mnemonicPhrase = "Mnemonic phrase: " + accountService.MnemonicPhrase;
             }
             else
             {
