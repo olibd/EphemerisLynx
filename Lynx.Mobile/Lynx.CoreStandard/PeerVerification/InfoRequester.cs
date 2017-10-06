@@ -72,7 +72,7 @@ namespace Lynx.Core.PeerVerification
             VerifyHandshakeTokenIDOwnership(infoRequestResponse);
 
             HandshakeCompleteEvent e;
-			if (_tokenCryptoService.VerifySignature(infoRequestResponse))
+            if (_tokenCryptoService.VerifySignature(infoRequestResponse))
             {
 				e = new HandshakeCompleteEvent()
 				{
