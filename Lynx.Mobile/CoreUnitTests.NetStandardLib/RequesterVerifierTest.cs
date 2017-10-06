@@ -81,7 +81,7 @@ namespace CoreUnitTests.PCL
         {
             string encodedSyn = _infoRequester.CreateEncodedSyn();
 
-			//Wait handle will wait the test until the handshake is complete 
+            //Wait handle will wait the test until the handshake is complete
             //and the requested attributes are received 
 			ManualResetEvent waitHandle = new ManualResetEvent(false);
 
@@ -97,12 +97,12 @@ namespace CoreUnitTests.PCL
 
 			if (waitHandle.WaitOne(100000))
 			{
-				//Check that the number of recieved attributes is the same as 
+                //Check that the number of recieved attributes is the same as
                 //the number of requested attributes
 				Assert.AreEqual(_requestedAttributes.Length, id.Attributes.Count);
 
-				//Check that the keys of recieved attributes is the same as 
-				//the keys of the requested attributes
+                //Check that the keys of recieved attributes is the same as 
+                //the keys of the requested attributes
 				foreach (string key in _requestedAttributes)
 				{
                     Assert.True(id.Attributes.ContainsKey(key));
