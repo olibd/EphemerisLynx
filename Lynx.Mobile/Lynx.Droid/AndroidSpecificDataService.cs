@@ -61,7 +61,7 @@ namespace Lynx.Droid
         }
 
         //TODO: Android keystore logic to safely store the private key
-        public IAccountService LoadKeys()
+        public IAccountService LoadAccount()
         {
             string path = GetFileInDataDir("keys");
 
@@ -78,7 +78,7 @@ namespace Lynx.Droid
         }
 
         //TODO: Android keystore logic to safely store the private key
-        public void SaveKeys(IAccountService accountService)
+        public void SaveAccount(IAccountService accountService)
         {
             string key = accountService.PrivateKey;
             string path = GetFileInDataDir("keys");
