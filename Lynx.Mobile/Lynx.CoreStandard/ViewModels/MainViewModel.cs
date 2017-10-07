@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Lynx.Core.Crypto;
@@ -19,39 +20,35 @@ namespace Lynx.Core.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
-        private const int _numWordsToCheck = 4;
-
-        public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
-        public IMvxCommand BeginMnemonicCheck => new MvxCommand(StartMnemonicVerification);
+        public IMvxCommand MainButtonClick => _mainButtonClick;
         public IMvxInteraction<MnemonicCheckInteraction> CreateButtons => _createButtons;
 
-        private IMvxNavigationService _navigationService;
-        private IMvxCommand _checkAndLoadID => new MvxCommand(CheckAndLoadID);
+        public string DisplayText => _displayText;
+        public string MainButtonText => _mainButtonText;
 
-        private string _mnemonicPhrase;
-        private Mnemonic _mnemonic;
-        private Stack<string> _mnemonicBackupWords;
-        private Stack<int> _wordsToVerify;
-        private MvxInteraction<MnemonicCheckInteraction> _createButtons = new MvxInteraction<MnemonicCheckInteraction>();
+        private readonly IMvxNavigationService _navigationService;
+        private IMvxCommand CheckAndLoadId => new MvxCommand(CheckAndLoadID);
 
-        public string MnemonicText
-        {
-            get => _mnemonicPhrase;
-        }
+        private string _displayText;
+        private MnemonicConfirmation _confirmation;
+        private readonly MvxInteraction<MnemonicCheckInteraction> _createButtons = new MvxInteraction<MnemonicCheckInteraction>();
+        private IAccountService _accountService;
+        private string _mainButtonText;
+        private IMvxCommand _mainButtonClick;
 
         public MainViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
-            _mnemonicBackupWords = new Stack<string>();
-            _wordsToVerify = new Stack<int>();
         }
 
         public override void Start()
         {
             base.Start();
-            LoadKeys();
-            _checkAndLoadID.Execute();
+            bool didAccountExist = SetupAccount();
+            if(didAccountExist)
+                CheckAndLoadId.Execute();
         }
+
         private async void CheckAndLoadID()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
@@ -67,104 +64,91 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        private void LoadKeys()
+        /// <summary>
+        /// Sets up the AccountService, loading it if a key is saved and gneerating it otherwise.
+        /// </summary>
+        /// <returns>True if it was loaded, False if it was generated</returns>
+        private bool SetupAccount()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
-            IAccountService accountService = dataService.LoadAccount();
+            _accountService = dataService.LoadAccount();
 
-            if (accountService == null)
+            if (_accountService == null)
             {
+                GenerateAccount();
+                return false;
                 //We do not have any keys yet
-
-                accountService = new AccountService();
-                dataService.SaveAccount(accountService);
-
-                _mnemonicPhrase = "Mnemonic phrase: " + accountService.MnemonicPhrase;
             }
             else
             {
-                _mnemonicPhrase = "Loading existing keys, no seed phrase generated";
+                _displayText = "Loaded existing keys, no seed phrase generated";
+                EditMainButton("Register new ID", NavigateRegistration);
+                return true;
             }
+        }
 
+        private void GenerateAccount()
+        {
+            _accountService = new AccountService();
+            _displayText = "Mnemonic phrase: " + _accountService.MnemonicPhrase;
+            CreateMnemonicConfirmation(_accountService.MnemonicPhrase);
+            RaisePropertyChanged(() => DisplayText);
+        }
 
-            RaisePropertyChanged(() => MnemonicText);
+        /// <summary>
+        /// Resets the mnemonic confirmation process, generating a new key.
+        /// </summary>
+        private void ResetConfirmation()
+        {
+            _createButtons.Raise(new MnemonicCheckInteraction(){buttons = {}, onButtonClick = {}});
+            GenerateAccount();
+        }
 
-            Mvx.RegisterType(() => accountService);
+        private void CreateMnemonicConfirmation(string mnemonic)
+        {
+            _confirmation = new MnemonicConfirmation(mnemonic, _createButtons, VerificationSuccess,
+                text =>
+                {
+                    _displayText = text;
+                    RaisePropertyChanged(() => DisplayText);
+                }
+            );
+            EditMainButton("I have backed up my seed phrase", StartMnemonicVerification);
+        }
+
+        private void StartMnemonicVerification()
+        {
+            EditMainButton("Generate new seed phrase", ResetConfirmation);
+            _confirmation.StartMnemonicVerification();
+        }
+
+        private void EditMainButton(string text, Action action)
+        {
+            _mainButtonClick = new MvxCommand(action, () => true);
+            _mainButtonText = text;
+
+            RaisePropertyChanged(() => MainButtonClick);
+            RaisePropertyChanged(() => MainButtonText);
         }
 
         private async void NavigateRegistration()
         {
-            //TODO: Generate private key and save into file
-            //TODO: Encrypt file, store key in keystore, fingerprint locked
+            Mvx.RegisterType(() => _accountService);
             await _navigationService.Navigate<RegistrationViewModel>();
-        }
-
-        #region Mnemonic phrase confirmation
-
-        private void StartMnemonicVerification()
-        {
-            //Used to add words that are not part of the mnemonic
-            _mnemonicBackupWords = new Stack<string>(new Mnemonic(Wordlist.English, WordCount.Twelve).Words);
-            _wordsToVerify = new Stack<int>(GenerateRandomValues(4, WordCount.Twelve));
-
-            List<string> buttons = new List<string>();
-            foreach(int i in _wordsToVerify)
-                buttons.Add(_mnemonic.Words[i]);
-
-            for(int i = 0; i < _numWordsToCheck - _wordsToVerify.Count; i++)
-            {
-                buttons.Add(_mnemonicBackupWords.Pop());
-            }
-
-            Random random = new Random();
-            buttons.OrderBy(x => random.Next());
-
-            MnemonicCheckInteraction interaction = new MnemonicCheckInteraction()
-            {
-                buttons = buttons,
-                onButtonClick = VerifyButtonInput
-            };
-
-            _createButtons.Raise(interaction);
-
-        }
-
-        private void VerifyButtonInput(string text)
-        {
-            string[] mnemonicWords = _mnemonicPhrase.Split(' ');
-            if (text == mnemonicWords[_wordsToVerify.Peek()])
-            {
-                _wordsToVerify.Pop();
-                if (_wordsToVerify.Count == 0)
-                    VerificationSuccess();
-                else
-                {
-                    VerifyNext();
-                }
-            }
-        }
-
-        private void VerifyNext()
-        {
-            throw new NotImplementedException();
         }
 
         private void VerificationSuccess()
         {
-            throw new NotImplementedException();
+            //TODO: Encrypt file, store key in keystore, fingerprint locked
+            Mvx.Resolve<IPlatformSpecificDataService>().SaveAccount(_accountService);
+
+            _displayText = "Seed phrase verified, new keys registered";
+            RaisePropertyChanged(() => DisplayText);
+
+            _createButtons.Raise(new MnemonicCheckInteraction());
+
+            EditMainButton("Register new ID", NavigateRegistration);
         }
 
-        private List<int> GenerateRandomValues(int amount, WordCount wordCount)
-        {
-            Random random = new Random();
-            List<int> values = Enumerable.Range(0, (int)wordCount)
-                .OrderBy(x => random.Next())
-                .Take(amount)
-                .ToList();
-
-            return values;
-        }
-
-        #endregion
     }
 }

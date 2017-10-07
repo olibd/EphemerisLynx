@@ -22,6 +22,7 @@ namespace Lynx.Droid.Views
     class MainView : MvxActivity
     {
         private IMvxInteraction<MnemonicCheckInteraction> _createButtons;
+        private List<Button> verificationButtons = new List<Button>();
 
         public IMvxInteraction<MnemonicCheckInteraction> CreateButtons
         {
@@ -39,11 +40,21 @@ namespace Lynx.Droid.Views
         private void CreateMnemonicVerificationButtons(object sender, MvxValueEventArgs<MnemonicCheckInteraction> e)
         {
             LinearLayout layout = FindViewById<LinearLayout>(Resource.Id.mainView);
+
+            //Clear out the buttons 
+            if(verificationButtons.Count != 0)
+                foreach(Button btn in verificationButtons)
+                    layout.RemoveView(btn);
+
+            if (e.Value.buttons == null) return;
+
             foreach (string word in e.Value.buttons)
             {
                 Button btn = new Button(this);
                 btn.Text = word;
                 btn.Click += (o, a) => e.Value.onButtonClick(word);
+                verificationButtons.Add(btn);
+                layout.AddView(btn);
             }
         }
 
@@ -53,6 +64,7 @@ namespace Lynx.Droid.Views
             SetContentView(Resource.Layout.MainView);
             CreateBindings();
         }
+
 
         private void CreateBindings()
         {

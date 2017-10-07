@@ -5,7 +5,7 @@ namespace Lynx.Core.Interactions
 {
     public class MnemonicCheckInteraction
     {
-        public List<string> buttons;
+        public IEnumerable<string> buttons;
         public Action<string> onButtonClick;
     }
 }
