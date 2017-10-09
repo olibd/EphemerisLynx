@@ -40,8 +40,8 @@ namespace Lynx.Core.Communications.Packets
 			{
 				if (value != null)
 				{
+                    _requestedAttributes = value;
 					SetOnPayload("reqAttr", JsonConvert.SerializeObject(_requestedAttributes));
-					_requestedAttributes = value;
 				}
 				else
 				{
