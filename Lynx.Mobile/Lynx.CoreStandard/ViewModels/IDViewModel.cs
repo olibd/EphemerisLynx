@@ -70,14 +70,14 @@ namespace Lynx.Core.ViewModels
 
         private async void FetchID()
         {
-            ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
+            //ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
 
-            int UID = await Mvx.Resolve<IMapper<ID>>().SaveAsync(ID);
-            Mvx.Resolve<IPlatformSpecificDataService>().IDUID = UID;
+            //int UID = await Mvx.Resolve<IMapper<ID>>().SaveAsync(ID);
+            //Mvx.Resolve<IPlatformSpecificDataService>().IDUID = UID;
 
-            Attributes = ID.Attributes.Values.ToList();
-            RaisePropertyChanged(() => Attributes);
-             //TODO: Tell the user when this is done
+            //Attributes = ID.Attributes.Values.ToList();
+            //RaisePropertyChanged(() => Attributes);
+            //TODO: Tell the user when this is done
         }
 
         private async void RequestVerification()

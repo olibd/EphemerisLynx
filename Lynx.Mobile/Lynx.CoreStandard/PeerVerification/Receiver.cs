@@ -86,7 +86,7 @@ namespace Lynx.Core.PeerVerification
                                                         "public Key");
         }
 
-        protected async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
+        protected async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -107,7 +107,7 @@ namespace Lynx.Core.PeerVerification
 
         private async Task ProcessSynAck(string encryptedSynAck)
         {
-            SynAck unverifiedSynAck = await base.DecryptAndInstantiateHandshakeToken<SynAck>(encryptedSynAck);
+            SynAck unverifiedSynAck = await base.DecryptAndInstantiateHandshakeToken<SynAck>(encryptedSynAck, _syn.Id);
 
             if (unverifiedSynAck.PublicKey != _syn.PublicKey)
                 throw new TokenPublicKeyMismatch();

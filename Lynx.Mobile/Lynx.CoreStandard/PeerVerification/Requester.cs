@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace Lynx.Core.PeerVerification
         protected ITokenCryptoService<IToken> _tokenCryptoService;
         protected IAccountService _accountService;
         private ICertificateFacade _certificateFacade;
-        private Attribute[] _accessibleAttributes;
+        protected Attribute[] _accessibleAttributes;
         private IAttributeFacade _attributeFacade;
         public event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
 
@@ -37,12 +37,9 @@ namespace Lynx.Core.PeerVerification
             _id = id;
             _attributeFacade = attributeFacade;
             _certificateFacade = certificateFacade;
-            _accessibleAttributes = new Attribute[]{
-                _id.Attributes["firstname"],
-                _id.Attributes["lastname"],
-                _id.Attributes["cell"],
-                _id.Attributes["address"]
-            };
+
+            _accessibleAttributes = new Attribute[_id.Attributes.Values.Count];
+            _id.Attributes.Values.CopyTo(_accessibleAttributes, 0);
         }
 
         public IAck Ack { get; set; }
@@ -81,7 +78,7 @@ namespace Lynx.Core.PeerVerification
             _session.Send(encryptedToken);
         }
 
-        protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
+        protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 

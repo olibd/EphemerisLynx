@@ -246,7 +246,15 @@ namespace CoreUnitTests.PCL
             public async Task<ID> GetIDAsync(string address, string[] accessibleAttributes)
             {
                 ID id = new ID();
+                await GetAttributesAsync(id, accessibleAttributes);
+                id.Address = address;
+                id.Owner = _accountService.GetAccountAddress();
 
+                return id;
+            }
+
+            public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
+            {
                 if (accessibleAttributes == null)
                     accessibleAttributes = new string[] { "firstname", "lastname", "cell", "address", "extra" };
 
@@ -263,15 +271,8 @@ namespace CoreUnitTests.PCL
 
                     id.AddAttribute(attr);
                 }
-                id.Address = address;
-                id.Owner = _accountService.GetAccountAddress();
 
-                return id;
-            }
-
-            public Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
-            {
-                throw new NotImplementedException();
+                return id.Attributes;
             }
         }
 

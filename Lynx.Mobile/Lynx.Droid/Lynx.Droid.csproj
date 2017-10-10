@@ -179,6 +179,12 @@
     <Reference Include="MvvmCross.Droid.Support.Fragment">
       <HintPath>..\packages\MvvmCross.Droid.Support.Fragment.5.2.0\lib\MonoAndroid70\MvvmCross.Droid.Support.Fragment.dll</HintPath>
     </Reference>
+    <Reference Include="MsgPack">
+      <HintPath>..\packages\MsgPack.Cli.0.9.1\lib\MonoAndroid10\MsgPack.dll</HintPath>
+    </Reference>
+    <Reference Include="IO.Ably">
+      <HintPath>..\packages\ably.io.0.8.5\lib\monoandroid\IO.Ably.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidSpecificDataService.cs" />
