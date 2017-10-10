@@ -26,6 +26,7 @@ using Lynx.Core.Facade;
 using Lynx.Core.PeerVerification;
 using Nethereum.Web3;
 using Lynx.Core.Interfaces;
+using Lynx.Core;
 
 namespace Lynx.API
 {
@@ -46,6 +47,7 @@ namespace Lynx.API
             //TODO: temporary for testing purposes, hangfire is deployed in memory
             var inMemory = GlobalConfiguration.Configuration.UseMemoryStorage();
             services.AddHangfire(x => x.UseStorage(inMemory));
+            RegisterLynxCoreDependencies(services);
             services.AddMvc();
         }
 
@@ -67,7 +69,7 @@ namespace Lynx.API
             var sp = services.BuildServiceProvider();
             services.AddSingleton<ITokenCryptoService<IToken>>(new TokenCryptoService<IToken>(sp.GetService<IECCCryptoService>()));
 
-            string dbfile = _dataService.GetDatabaseFile();
+            string dbfile = "idDatabase.db";
 
             services.AddSingleton<IMapper<Certificate>>(new ExternalElementMapper<Certificate>(dbfile));
             sp = services.BuildServiceProvider();
@@ -78,8 +80,69 @@ namespace Lynx.API
             //Register the dummy ContentService as a singleton, temp solution
             services.AddSingleton<IContentService>(new DummyContentService());
 
-            Web3 web3 = new Web3("http://jmon.tech:8545");
+            Web3 web3 = new Web3("http://4bf33ea8.ngrok.io");
             services.AddSingleton<Web3>(web3);
+
+            SeedDatabases(services);
+        }
+
+        //TODO: TEMPORARY, FOR TESTING PURPOSES
+        private void SeedDatabases(IServiceCollection services)
+        {
+            var sp = services.BuildServiceProvider();
+
+            SeedID(sp).Wait();
+        }
+
+        private async Task SeedID(IServiceProvider sp)
+        {
+            AccountService accountService = new AccountService("9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769");
+            IContentService contServ = sp.GetService<IContentService>();
+            ICertificateFacade certFacade = new CertificateFacade(sp.GetService<Web3>(), contServ, accountService);
+            IAttributeFacade attrFacade = new AttributeFacade(sp.GetService<Web3>(), certFacade, contServ, accountService);
+            IIDFacade idFacade = new IDFacade("0x455E342dEdc41bc3C82eb3C4E830bF172100B1d9", sp.GetService<Web3>(), attrFacade, accountService);
+
+            //create some dummy attributes
+            Attribute name = new Attribute()
+            {
+                Location = "1",
+                Hash = "1",
+                Content = new StringContent("Ephemeris"),
+                Description = "name"
+            };
+
+            Attribute address = new Attribute()
+            {
+                Location = "2",
+                Hash = "2",
+                Content = new StringContent("31 rue des Pommmiers"),
+                Description = "address"
+            };
+
+            Attribute phone = new Attribute()
+            {
+                Location = "3",
+                Hash = "3",
+                Content = new StringContent("555-555-5555"),
+                Description = "phone"
+            };
+
+
+            ID id = new ID();
+            id.AddAttribute(name);
+            id.AddAttribute(address);
+            id.AddAttribute(phone);
+
+            try
+            {
+                id = await idFacade.DeployAsync(id);
+            }
+            catch (Exception e)
+            {
+                var o = e;
+            }
+
+            await sp.GetService<IMapper<ID>>().SaveAsync(id);
         }
     }
 }
