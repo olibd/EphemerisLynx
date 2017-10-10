@@ -27,6 +27,7 @@ using Lynx.Core.PeerVerification;
 using Nethereum.Web3;
 using Lynx.Core.Interfaces;
 using Lynx.Core;
+using Hangfire.Console;
 
 namespace Lynx.API
 {
@@ -46,18 +47,26 @@ namespace Lynx.API
             services.AddDbContext<SessionContext>(opt => opt.UseInMemoryDatabase("Sessions"));
             //TODO: temporary for testing purposes, hangfire is deployed in memory
             var inMemory = GlobalConfiguration.Configuration.UseMemoryStorage();
-            services.AddHangfire(x => x.UseStorage(inMemory));
+            services.AddHangfire(config =>
+            {
+                config.UseStorage(inMemory);
+                config.UseConsole();
+            });
             RegisterLynxCoreDependencies(services);
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            GlobalConfiguration.Configuration
+                               .UseActivator(new HangfireActivator(serviceProvider));
+
             app.UseHangfireServer();
             app.UseHangfireDashboard();
             app.UseMvc();
@@ -90,7 +99,6 @@ namespace Lynx.API
         private void SeedDatabases(IServiceCollection services)
         {
             var sp = services.BuildServiceProvider();
-
             SeedID(sp).Wait();
         }
 
