@@ -67,9 +67,11 @@ namespace Lynx.Core.Communications
 
         private string GenerateChannelName()
         {
-            RandomBytesGenerator rng = new RandomBytesGenerator();
+            byte[] randomBytes = new byte[32];
+            Random rng = new Random();
+            rng.NextBytes(randomBytes);
             Sha3Keccack hasher = new Sha3Keccack();
-            string key = Encoding.UTF8.GetString(rng.GenerateRandomBytes(32), 0, 32);
+            string key = Encoding.UTF8.GetString(randomBytes, 0, 32);
             var ret = hasher.CalculateHash(key);
             return ret;
         }
