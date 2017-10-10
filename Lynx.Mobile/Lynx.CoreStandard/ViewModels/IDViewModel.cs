@@ -62,6 +62,10 @@ namespace Lynx.Core.ViewModels
                 _scanned = false;
                 await _navigationService.Navigate<CertifyViewModel, IReceiver>((IReceiver)sender);
             };
+			_verifier.InfoRequestReceived += async (sender, e) =>
+			{
+				await _navigationService.Navigate<InfoRequestViewModel, Receiver>((Receiver)sender);
+			};
         }
 
         private async void FetchID()
