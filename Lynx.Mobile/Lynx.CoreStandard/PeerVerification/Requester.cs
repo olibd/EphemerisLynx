@@ -160,5 +160,15 @@ namespace Lynx.Core.PeerVerification
 
             IssuedCertificatesAddedToID.Invoke(this, e);
         }
+
+        public void ResumeSession(string sessionID)
+        {
+            _session.Open();
+        }
+
+        public string SuspendSession()
+        {
+            return _session.SessionID;
+        }
     }
 }

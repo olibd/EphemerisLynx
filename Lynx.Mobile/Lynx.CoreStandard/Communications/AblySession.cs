@@ -24,6 +24,9 @@ namespace Lynx.Core.Communications
             _publicAddress = publicAddress;
         }
 
+
+        public string SessionID { get { return _channel.Name; } }
+
         public void AddMessageReceptionHandler(EventHandler<string> handler)
         {
             _handlers.Add(handler);
@@ -72,8 +75,8 @@ namespace Lynx.Core.Communications
             rng.NextBytes(randomBytes);
             Sha3Keccack hasher = new Sha3Keccack();
             string key = Encoding.UTF8.GetString(randomBytes, 0, 32);
-            var ret = hasher.CalculateHash(key);
-            return ret;
+            hasher.CalculateHash(key);
+            return hasher.CalculateHash(key);
         }
     }
 }

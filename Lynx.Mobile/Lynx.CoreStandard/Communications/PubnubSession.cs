@@ -14,6 +14,8 @@ namespace Lynx.Core.Communications
         private Stack<PubNubCallback> _messageReceptionHandlerStack;
         private string _channel;
 
+        public string SessionID { get { return _channel; } }
+
         public PubNubSession(EventHandler<string> messageEventHandler)
         {
             _messageReceptionHandlerStack = new Stack<PubNubCallback>();
