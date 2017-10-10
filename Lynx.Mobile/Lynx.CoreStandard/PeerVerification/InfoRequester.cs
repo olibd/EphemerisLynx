@@ -23,7 +23,7 @@ namespace Lynx.Core.PeerVerification
             _requestedAttributes = requestedAttributes;
         }
 
-        protected override async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
+        protected override async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
