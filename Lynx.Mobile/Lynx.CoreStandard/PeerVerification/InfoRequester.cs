@@ -14,19 +14,12 @@ namespace Lynx.Core.PeerVerification
     public class InfoRequester : Requester
     {
         private ID _id;
-        private Attribute[] _accessibleAttributes;
         private string[] _requestedAttributes;
         public event EventHandler<HandshakeCompleteEvent> handshakeComplete;
 
         public InfoRequester(string[] requestedAttributes, ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, id, idFacade, attributeFacade, certificateFacade)
         {
             _id = id;
-            _accessibleAttributes = new Attribute[]{
-                _id.Attributes["firstname"],
-                _id.Attributes["lastname"],
-                _id.Attributes["cell"],
-                _id.Attributes["address"]
-            };
             _requestedAttributes = requestedAttributes;
         }
 
