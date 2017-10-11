@@ -7,48 +7,48 @@ using Newtonsoft.Json;
 namespace Lynx.Core.Communications.Packets
 {
     public class InfoRequestSynAck : SynAck
-	{
-		protected override string Type
-		{
-			get
-			{
-				return "inforeqsynack";
-			}
-		}
+    {
+        protected override string Type
+        {
+            get
+            {
+                return "inforeqsynack";
+            }
+        }
 
-		public InfoRequestSynAck() : base()
-		{
-		}
+        public InfoRequestSynAck() : base()
+        {
+        }
 
-		public InfoRequestSynAck(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload, id)
-		{
-		}
+        public InfoRequestSynAck(Dictionary<string, string> header, Dictionary<string, string> payload, ID id) : base(header, payload, id)
+        {
+        }
 
-		public InfoRequestSynAck(Dictionary<string, string> header, Dictionary<string, string> payload) : base(header, payload)
-		{
-		}
+        public InfoRequestSynAck(Dictionary<string, string> header, Dictionary<string, string> payload) : base(header, payload)
+        {
+        }
 
-        private string[] _requestedAttributes;
-		public string[] RequestedAttributes
-		{
-			get
-			{
-				return _requestedAttributes;
-			}
+        public string[] RequestedAttributes
+        {
+            get
+            {
+                if (PayloadContains("reqAttr"))
+                    return JsonConvert.DeserializeObject<string[]>(GetFromPayload("reqAttr"));
+                else
+                    return null;
+            }
 
-			set
-			{
-				if (value != null)
-				{
-                    _requestedAttributes = value;
-					SetOnPayload("reqAttr", JsonConvert.SerializeObject(_requestedAttributes));
-				}
-				else
-				{
-					RemoveFromPayload("reqAttr");
-					_requestedAttributes = null;
-				}
-			}
-		}
-	}
+            set
+            {
+                if (value != null)
+                {
+                    SetOnPayload("reqAttr", JsonConvert.SerializeObject(value));
+                }
+                else
+                {
+                    RemoveFromPayload("reqAttr");
+                }
+            }
+        }
+    }
 }
