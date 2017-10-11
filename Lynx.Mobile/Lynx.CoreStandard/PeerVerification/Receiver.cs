@@ -138,11 +138,12 @@ namespace Lynx.Core.PeerVerification
 
             if (_tokenCryptoService.VerifySignature(infoRequestSynAck))
             {
-				InfoRequestReceivedEvent e = new InfoRequestReceivedEvent()
-				{
-					InfoRequestSynAck = infoRequestSynAck
-				};
-				InfoRequestReceived.Invoke(this, e);
+                _infoRequestSynAck = infoRequestSynAck;
+                InfoRequestReceivedEvent e = new InfoRequestReceivedEvent()
+                {
+                    InfoRequestSynAck = _infoRequestSynAck
+                };
+                InfoRequestReceived.Invoke(this, e);
             }
             else
                 throw new SignatureDoesntMatchException("The signature was not " +
