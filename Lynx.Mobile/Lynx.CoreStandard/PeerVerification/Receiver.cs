@@ -154,13 +154,12 @@ namespace Lynx.Core.PeerVerification
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the requesting service
         /// </summary>
-        public void GenerateAndSendResponse(InfoRequestSynAck infoRequestSynAck)
+        public void AuthorizeReadRequest(string[] keysOfAttributesToAuthorize)
         {
-            string[] requestedAttributesDescription = infoRequestSynAck.RequestedAttributes;
-            Attribute[] requestedAttributes = new Attribute[requestedAttributesDescription.Length];
-            for (int i = 0; i < requestedAttributesDescription.Length; i++)
+            Attribute[] authorizedAttr = new Attribute[keysOfAttributesToAuthorize.Length];
+            for (int i = 0; i < keysOfAttributesToAuthorize.Length; i++)
             {
-                requestedAttributes[i] = _id.Attributes[requestedAttributesDescription[i]];
+                authorizedAttr[i] = _id.Attributes[keysOfAttributesToAuthorize[i]];
             }
 
             InfoRequestResponse response = new InfoRequestResponse()
@@ -168,10 +167,10 @@ namespace Lynx.Core.PeerVerification
                 Id = _id,
                 PublicKey = _accountService.PublicKey,
                 Encrypted = true,
-                AccessibleAttributes = requestedAttributes
+                AccessibleAttributes = authorizedAttr
             };
 
-            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(infoRequestSynAck.PublicKey);
+            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(_infoRequestSynAck.PublicKey);
             _tokenCryptoService.Sign(response, _accountService.GetPrivateKeyAsByteArray());
             string encryptedToken = _tokenCryptoService.Encrypt(response, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
