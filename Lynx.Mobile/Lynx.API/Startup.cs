@@ -27,6 +27,7 @@ using Lynx.Core.PeerVerification;
 using Nethereum.Web3;
 using Lynx.Core.Interfaces;
 using Lynx.Core;
+using Hangfire.Console;
 
 namespace Lynx.API
 {
@@ -46,18 +47,26 @@ namespace Lynx.API
             services.AddDbContext<SessionContext>(opt => opt.UseInMemoryDatabase("Sessions"));
             //TODO: temporary for testing purposes, hangfire is deployed in memory
             var inMemory = GlobalConfiguration.Configuration.UseMemoryStorage();
-            services.AddHangfire(x => x.UseStorage(inMemory));
+            services.AddHangfire(config =>
+            {
+                config.UseStorage(inMemory);
+                config.UseConsole();
+            });
             RegisterLynxCoreDependencies(services);
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            GlobalConfiguration.Configuration
+                               .UseActivator(new HangfireActivator(serviceProvider));
+
             app.UseHangfireServer();
             app.UseHangfireDashboard();
             app.UseMvc();
@@ -90,7 +99,6 @@ namespace Lynx.API
         private void SeedDatabases(IServiceCollection services)
         {
             var sp = services.BuildServiceProvider();
-
             SeedID(sp).Wait();
         }
 
@@ -105,15 +113,15 @@ namespace Lynx.API
             //create some dummy attributes
             Attribute name = new Attribute()
             {
-                Location = "1",
-                Hash = "1",
+                Hash = "hash" + "Ephemeris",
+                Location = "Location" + "Ephemeris",
                 Content = new StringContent("Ephemeris"),
                 Description = "name"
             };
 
             Attribute address = new Attribute()
             {
-                Location = "2",
+                Location = "Location" + "2",
                 Hash = "2",
                 Content = new StringContent("31 rue des Pommmiers"),
                 Description = "address"
@@ -121,7 +129,7 @@ namespace Lynx.API
 
             Attribute phone = new Attribute()
             {
-                Location = "3",
+                Location = "Location" + "3",
                 Hash = "3",
                 Content = new StringContent("555-555-5555"),
                 Description = "phone"

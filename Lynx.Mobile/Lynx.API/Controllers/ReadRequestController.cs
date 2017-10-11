@@ -23,6 +23,7 @@ using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Communications.Packets.Interfaces;
 using System.Threading;
 using System.Net.Http;
+using Lynx.API.Worker.DTO;
 
 namespace Lynx.API.Controllers
 {
@@ -30,9 +31,6 @@ namespace Lynx.API.Controllers
     public class ReadRequestController : Controller
     {
         private ClientContext _clientContext;
-        private IIDFacade _idFacade;
-        private IAttributeFacade _attrFacade;
-        private ICertificateFacade _certFacade;
         private IServiceProvider _serviceProvider;
         private ID _id;
         private IMapper<ID> _idMapper;
@@ -69,50 +67,39 @@ namespace Lynx.API.Controllers
 
             if (GetClientByApiKey("1234") == null)
             {
-                Client client = new Client()
+                Client newClient = new Client()
                 {
                     APIKey = "1234",
                     IDUID = 1,
                     PrivateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769"
                 };
 
-                _clientContext.Add(client);
+                _clientContext.Add(newClient);
                 _clientContext.SaveChanges();
             }
 
-            Client newClient;
-            if ((newClient = GetClientByApiKey(value.APIKey)) == null)
+            Client client;
+            if ((client = GetClientByApiKey(value.APIKey)) == null)
                 return Unauthorized();
 
-            ID id = await _idMapper.GetAsync(newClient.IDUID);
 
-            await Setup(newClient);
-
-            string syn = PrepareSyn(id);
+            InfoRequestWorker worker = new InfoRequestWorker(_clientContext, _idMapper, _web3, _serviceProvider);
+            InfoRequestSessionDTO dto = await worker.InitiateJob(client);
 
             /*_infoRequester.handshakeComplete += (sender, e) =>
             {
                 new HttpClient().PostAsync(value.CallbackEndpoint, new System.Net.Http.StringContent(e.Id.Address));
             };*/
 
-            BackgroundJob.Enqueue(() => InfoRequestWorker.CompleteInfoRequest(_infoRequester, value.CallbackEndpoint));
+            BackgroundJob.Enqueue<InfoRequestWorker>(w => w.CompleteJob(dto, value.CallbackEndpoint, null));
 
             StringToSVGValueConverter valConv = new StringToSVGValueConverter();
-            string qrEncodedSyn = valConv.Convert(syn).Content;
+            string qrEncodedSyn = valConv.Convert(dto.EncodedSyn).Content;
 
             ContentResult content = Content(qrEncodedSyn);
             content.ContentType = "image/svg+xml";
 
             return content;
-        }
-
-        private string PrepareSyn(ID id)
-        {
-            string[] reqAttr = new string[] { "firstname", "lastname", "cell", "address" };
-            _infoRequester = new InfoRequester(reqAttr,
-                    _serviceProvider.GetService<ITokenCryptoService<IToken>>(),
-                    _accountService, id, _idFacade, _attrFacade, _certFacade);
-            return _infoRequester.CreateEncodedSyn();
         }
 
         // PUT api/readrequest/5
@@ -130,16 +117,6 @@ namespace Lynx.API.Controllers
         private Client GetClientByApiKey(string apiKey)
         {
             return _clientContext.Clients.SingleOrDefault(c => c.APIKey == apiKey);
-        }
-
-        private async Task Setup(Client client)
-        {
-            _accountService = new AccountService(client.PrivateKey);
-            _id = await _idMapper.GetAsync(client.IDUID);
-            IContentService contServ = _serviceProvider.GetService<IContentService>();
-            _certFacade = new CertificateFacade(_web3, contServ, _accountService);
-            _attrFacade = new AttributeFacade(_certFacade, contServ, _accountService);
-            _idFacade = new IDFacade("0x455E342dEdc41bc3C82eb3C4E830bF172100B1d9", _web3, _attrFacade, _accountService);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Lynx.Core.PeerVerification
             _requestedAttributes = requestedAttributes;
         }
 
-        protected override async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
+        protected override async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -61,7 +61,7 @@ namespace Lynx.Core.PeerVerification
 
         private async Task ProcessInfoRequestResponse(string encryptedToken)
         {
-            InfoRequestResponse infoRequestResponse = await DecryptAndInstantiateHandshakeToken<InfoRequestResponse>(encryptedToken);
+            InfoRequestResponse infoRequestResponse = await DecryptAndInstantiateHandshakeToken<InfoRequestResponse>(encryptedToken, Ack.Id);
             VerifyHandshakeTokenIDOwnership(infoRequestResponse);
 
             HandshakeCompleteEvent e;

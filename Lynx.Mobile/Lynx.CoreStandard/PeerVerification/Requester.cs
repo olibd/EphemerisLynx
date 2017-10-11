@@ -37,7 +37,6 @@ namespace Lynx.Core.PeerVerification
             _id = id;
             _attributeFacade = attributeFacade;
             _certificateFacade = certificateFacade;
-
             _accessibleAttributes = new Attribute[_id.Attributes.Values.Count];
             _id.Attributes.Values.CopyTo(_accessibleAttributes, 0);
         }
@@ -78,7 +77,7 @@ namespace Lynx.Core.PeerVerification
             _session.Send(encryptedToken);
         }
 
-        protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
+        protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -160,6 +159,16 @@ namespace Lynx.Core.PeerVerification
             };
 
             IssuedCertificatesAddedToID.Invoke(this, e);
+        }
+
+        public void ResumeSession(string sessionID)
+        {
+            _session.Open();
+        }
+
+        public string SuspendSession()
+        {
+            return _session.SessionID;
         }
     }
 }
