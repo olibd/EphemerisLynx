@@ -61,7 +61,7 @@ namespace Lynx.Core.PeerVerification
 
         private async Task ProcessInfoRequestResponse(string encryptedToken)
         {
-            InfoRequestResponse infoRequestResponse = await DecryptAndInstantiateHandshakeToken<InfoRequestResponse>(encryptedToken);
+            InfoRequestResponse infoRequestResponse = await DecryptAndInstantiateHandshakeToken<InfoRequestResponse>(encryptedToken, Ack.Id);
             VerifyHandshakeTokenIDOwnership(infoRequestResponse);
 
             HandshakeCompleteEvent e;
