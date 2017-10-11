@@ -57,15 +57,18 @@ namespace Lynx.Core.ViewModels
 
             //TODO: Setup the verifier callback
             await _verifier.ProcessSyn(content);
+
             _verifier.IdentityProfileReceived += async (sender, e) =>
             {
                 _scanned = false;
                 await _navigationService.Navigate<CertifyViewModel, IReceiver>((IReceiver)sender);
             };
-			_verifier.InfoRequestReceived += async (sender, e) =>
-			{
-				await _navigationService.Navigate<InfoRequestViewModel, Receiver>((Receiver)sender);
-			};
+
+            _verifier.InfoRequestReceived += async (sender, e) =>
+            {
+                _scanned = false;
+                await _navigationService.Navigate<InfoRequestViewModel, IReceiver>((IReceiver)sender);
+            };
         }
 
         private async void FetchID()
