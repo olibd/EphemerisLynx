@@ -128,10 +128,7 @@ namespace Lynx.Core.PeerVerification
 
         private async Task ProcessInfoRequestSynAck(string encryptedInfoRequestToken)
         {
-
-            string decryptedToken = _tokenCryptoService.Decrypt(encryptedInfoRequestToken, _accountService.GetPrivateKeyAsByteArray());
-            HandshakeTokenFactory<InfoRequestSynAck> handshakeTokenFactory = new HandshakeTokenFactory<InfoRequestSynAck>(_idFacade, _syn.Id);
-            InfoRequestSynAck infoRequestSynAck = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
+            InfoRequestSynAck infoRequestSynAck = await base.DecryptAndInstantiateHandshakeToken<SynAck>(encryptedInfoRequestToken, _syn.Id);
 
             if (infoRequestSynAck.PublicKey != _syn.PublicKey)
                 throw new TokenPublicKeyMismatch();

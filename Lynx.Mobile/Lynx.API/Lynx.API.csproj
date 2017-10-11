@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-      <PackageTargetFallback>portable-net45+win+wpa81+wp80</PackageTargetFallback>
+      <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win+wpa81+wp80;</AssetTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +25,7 @@
     <PackageReference Include="ably.io" Version="0.8.5" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.3" />
     <PackageReference Include="Hangfire.Console" Version="1.3.8" />
+    <PackageReference Include="EdjCase.JsonRpc.Client" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>
