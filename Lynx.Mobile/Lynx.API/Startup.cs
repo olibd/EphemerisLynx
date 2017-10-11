@@ -113,15 +113,15 @@ namespace Lynx.API
             //create some dummy attributes
             Attribute name = new Attribute()
             {
-                Location = "1",
-                Hash = "1",
+                Hash = "hash" + "Ephemeris",
+                Location = "Location" + "Ephemeris",
                 Content = new StringContent("Ephemeris"),
                 Description = "name"
             };
 
             Attribute address = new Attribute()
             {
-                Location = "2",
+                Location = "Location" + "2",
                 Hash = "2",
                 Content = new StringContent("31 rue des Pommmiers"),
                 Description = "address"
@@ -129,7 +129,7 @@ namespace Lynx.API
 
             Attribute phone = new Attribute()
             {
-                Location = "3",
+                Location = "Location" + "3",
                 Hash = "3",
                 Content = new StringContent("555-555-5555"),
                 Description = "phone"
