@@ -91,7 +91,7 @@ namespace Lynx.API
             IContentService contServ = _serviceProvider.GetService<IContentService>();
             _certFacade = new CertificateFacade(_web3, contServ, _accountService);
             _attrFacade = new AttributeFacade(_web3, _certFacade, contServ, _accountService);
-            _idFacade = new IDFacade("0x455E342dEdc41bc3C82eb3C4E830bF172100B1d9", _web3, _attrFacade, _accountService);
+            _idFacade = new IDFacade(StaticRessources.FactoryContractAddress, _web3, _attrFacade, _accountService);
         }
 
         public async Task<InfoRequestSessionDTO> InitiateJob(Client client)

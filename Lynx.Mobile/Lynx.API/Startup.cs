@@ -89,7 +89,7 @@ namespace Lynx.API
             //Register the dummy ContentService as a singleton, temp solution
             services.AddSingleton<IContentService>(new DummyContentService());
 
-            Web3 web3 = new Web3("http://4bf33ea8.ngrok.io");
+            Web3 web3 = new Web3(StaticRessources.RpcEndpointUrl);
             services.AddSingleton<Web3>(web3);
 
             SeedDatabases(services);
@@ -108,7 +108,7 @@ namespace Lynx.API
             IContentService contServ = sp.GetService<IContentService>();
             ICertificateFacade certFacade = new CertificateFacade(sp.GetService<Web3>(), contServ, accountService);
             IAttributeFacade attrFacade = new AttributeFacade(sp.GetService<Web3>(), certFacade, contServ, accountService);
-            IIDFacade idFacade = new IDFacade("0x455E342dEdc41bc3C82eb3C4E830bF172100B1d9", sp.GetService<Web3>(), attrFacade, accountService);
+            IIDFacade idFacade = new IDFacade(StaticRessources.FactoryContractAddress, sp.GetService<Web3>(), attrFacade, accountService);
 
             //create some dummy attributes
             Attribute name = new Attribute()
