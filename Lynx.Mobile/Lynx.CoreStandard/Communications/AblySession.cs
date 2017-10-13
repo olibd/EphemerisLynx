@@ -40,6 +40,7 @@ namespace Lynx.Core.Communications
         public void Close()
         {
             _channel.Unsubscribe();
+            _ably.Close();
         }
 
         public void Open(string networkAddress)
@@ -75,8 +76,8 @@ namespace Lynx.Core.Communications
             rng.NextBytes(randomBytes);
             Sha3Keccack hasher = new Sha3Keccack();
             string key = Encoding.UTF8.GetString(randomBytes, 0, 32);
-            hasher.CalculateHash(key);
-            return hasher.CalculateHash(key);
+            string hash = hasher.CalculateHash(key);
+            return hash.Substring(0, 7);
         }
     }
 }
