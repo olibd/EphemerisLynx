@@ -201,6 +201,7 @@
     <Compile Include="Views\CertifyView.cs" />
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="DebugTrace.cs" />
+    <Compile Include="Views\InfoRequestView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -216,6 +217,7 @@
     <None Include="ToDo-MvvmCross\_ Droid UI.txt" />
     <AndroidResource Include="Resources\layout\SplashScreen.axml" />
     <AndroidResource Include="Resources\drawable\splash.png" />
+    <AndroidResource Include="Resources\layout\InfoRequestView.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
