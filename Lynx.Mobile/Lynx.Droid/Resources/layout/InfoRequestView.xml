@@ -20,7 +20,7 @@
         <Mvx.MvxListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            local:MvxBind="ItemsSource requestedAttributes" />
+            local:MvxBind="ItemsSource _requestedAttributes" />
         <Button
             android:id="@+id/provideInfoButton"
             android:layout_width="match_parent"
