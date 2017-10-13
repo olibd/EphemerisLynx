@@ -27,7 +27,7 @@ namespace Lynx.Core.PeerVerification
         private ICertificateFacade _certificateFacade;
         protected Attribute[] _accessibleAttributes;
         private IAttributeFacade _attributeFacade;
-        public event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
+        public event EventHandler<IssuedCertificatesAddedToIDEvent> HandshakeComplete;
 
         public Requester(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
         {
@@ -158,7 +158,8 @@ namespace Lynx.Core.PeerVerification
                 CertificatesAdded = addedCertificate,
             };
 
-            IssuedCertificatesAddedToID.Invoke(this, e);
+            _session.Close();
+            HandshakeComplete.Invoke(this, e);
         }
 
         public void ResumeSession(string sessionID)

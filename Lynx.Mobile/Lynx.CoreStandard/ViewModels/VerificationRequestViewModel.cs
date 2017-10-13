@@ -27,7 +27,7 @@ namespace Lynx.Core.ViewModels
         public void Init()
         {
             ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
-            _requester.IssuedCertificatesAddedToID += (sender, e) =>
+            _requester.HandshakeComplete += (sender, e) =>
             {
                 DeployConfirm();
             };

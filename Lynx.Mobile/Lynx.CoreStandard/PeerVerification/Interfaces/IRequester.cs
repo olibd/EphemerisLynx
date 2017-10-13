@@ -23,6 +23,6 @@ namespace Lynx.Core.PeerVerification.Interfaces
         void ResumeSession(string sessionID);
         string SuspendSession();
         IAck Ack { get; set; }
-        event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
+        event EventHandler<IssuedCertificatesAddedToIDEvent> HandshakeComplete;
     }
 }

@@ -15,7 +15,7 @@ namespace Lynx.Core.PeerVerification
     {
         private ID _id;
         private string[] _requestedAttributes;
-        public event EventHandler<HandshakeCompleteEvent> handshakeComplete;
+        public new event EventHandler<HandshakeCompleteEvent> HandshakeComplete;
 
         public InfoRequester(string[] requestedAttributes, ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, id, idFacade, attributeFacade, certificateFacade)
         {
@@ -71,7 +71,9 @@ namespace Lynx.Core.PeerVerification
                 {
                     Id = infoRequestResponse.Id,
                 };
-                handshakeComplete.Invoke(this, e);
+
+                _session.Close();
+                HandshakeComplete.Invoke(this, e);
             }
             else
                 throw new SignatureDoesntMatchException("The signature was not " +
