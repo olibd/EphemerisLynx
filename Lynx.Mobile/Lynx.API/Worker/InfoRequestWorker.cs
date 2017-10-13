@@ -26,6 +26,7 @@ using System.Net.Http;
 using Lynx.API.Worker.DTO;
 using Hangfire.Server;
 using Hangfire.Console;
+using Newtonsoft.Json;
 
 namespace Lynx.API
 {
@@ -113,21 +114,19 @@ namespace Lynx.API
 
             try
             {
-                _infoRequester.ResumeSession(dto.SessionID);
-
                 ManualResetEvent waitHandle = new ManualResetEvent(false);
                 ID id = null;
-                _infoRequester.handshakeComplete += (sender, e) =>
+                _infoRequester.HandshakeComplete += (sender, e) =>
                 {
                     id = e.Id;
                     waitHandle.Set();
                 };
-
+                _infoRequester.ResumeSession(dto.SessionID);
                 context.WriteLine("Job Resumed");
 
                 if (waitHandle.WaitOne(100000))
                 {
-                    await new HttpClient().PostAsync(callbackEndpoint, new System.Net.Http.StringContent(id.Address));
+                    await new HttpClient().PostAsync(callbackEndpoint, new System.Net.Http.StringContent(JsonConvert.SerializeObject(id)));
                     context.WriteLine("Job Completed");
                 }
                 else
