@@ -164,12 +164,14 @@ namespace Lynx.Core.PeerVerification
 
         public void ResumeSession(string sessionID)
         {
-            _session.Open();
+            _session.Open(sessionID);
         }
 
         public string SuspendSession()
         {
-            return _session.SessionID;
+            string sId = _session.SessionID;
+            _session.Close();
+            return sId;
         }
     }
 }
