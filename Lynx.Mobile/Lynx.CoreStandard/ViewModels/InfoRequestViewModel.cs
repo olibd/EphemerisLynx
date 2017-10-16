@@ -31,6 +31,7 @@ namespace Lynx.Core.ViewModels
         private void ProvideInfo()
         {
             _receiver.AuthorizeReadRequest(_infoRequestSynAck.RequestedAttributes);
+            _receiver.InfoRequestAuthorized += (sender, e) => { Close((this)); };
         }
 
         public override void Prepare(IReceiver parameter)
