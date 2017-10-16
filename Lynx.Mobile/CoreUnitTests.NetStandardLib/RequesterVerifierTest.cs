@@ -66,8 +66,8 @@ namespace CoreUnitTests.PCL
             _requester = new Requester(_tkCrypto, _accountService1, _id1, _idFacade2, _attributeFacade, _certificateFacade);
             //Uses ID facade 2 because it wants to be able to load ID 2
             _infoRequester = new InfoRequester(_requestedAttributes, _tkCrypto, _accountService1, _id1, _idFacade2, _attributeFacade, _certificateFacade);
-			//Uses ID facade 1 because it wants to be able to load ID 1
-			_verifier = new Receiver(_tkCrypto, _accountService2, _id2, _idFacade1, _certificateFacade);
+            //Uses ID facade 1 because it wants to be able to load ID 1
+            _verifier = new Receiver(_tkCrypto, _accountService2, _id2, _idFacade1, _certificateFacade);
         }
 
         public async Task SetupIDsAsync()
@@ -83,33 +83,33 @@ namespace CoreUnitTests.PCL
 
             //Wait handle will wait the test until the handshake is complete
             //and the requested attributes are received 
-			ManualResetEvent waitHandle = new ManualResetEvent(false);
+            ManualResetEvent waitHandle = new ManualResetEvent(false);
 
             ID id = null;
 
-			_infoRequester.handshakeComplete += (sender, e) =>
-			{
-				id = e.Id;
-				waitHandle.Set();
-			};
+            _infoRequester.HandshakeComplete += (sender, e) =>
+            {
+                id = e.Id;
+                waitHandle.Set();
+            };
 
             _verifier.ProcessSyn(encodedSyn).Wait();
 
-			if (waitHandle.WaitOne(100000))
-			{
+            if (waitHandle.WaitOne(100000))
+            {
                 //Check that the number of recieved attributes is the same as
                 //the number of requested attributes
-				Assert.AreEqual(_requestedAttributes.Length, id.Attributes.Count);
+                Assert.AreEqual(_requestedAttributes.Length, id.Attributes.Count);
 
                 //Check that the keys of recieved attributes is the same as 
                 //the keys of the requested attributes
-				foreach (string key in _requestedAttributes)
-				{
+                foreach (string key in _requestedAttributes)
+                {
                     Assert.True(id.Attributes.ContainsKey(key));
-				}
-			}
-			else
-				Assert.Fail();
+                }
+            }
+            else
+                Assert.Fail();
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace CoreUnitTests.PCL
                 certsSent = true;
             };
 
-            _requester.IssuedCertificatesAddedToID += (sender, e) =>
+            _requester.HandshakeComplete += (sender, e) =>
             {
                 issuedCertificate = e.CertificatesAdded;
                 waitHandle.Set();
