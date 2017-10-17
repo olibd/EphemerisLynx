@@ -32,11 +32,8 @@ namespace Lynx.API.Controllers
     {
         private ClientContext _clientContext;
         private IServiceProvider _serviceProvider;
-        private ID _id;
         private IMapper<ID> _idMapper;
-        private IAccountService _accountService;
         private Web3 _web3;
-        private InfoRequester _infoRequester;
 
         public ReadRequestController(ClientContext clientContext, IMapper<ID> idMapper, Web3 web3, IServiceProvider serviceProvider)
         {
@@ -46,25 +43,11 @@ namespace Lynx.API.Controllers
             _serviceProvider = serviceProvider;
         }
 
-        // GET api/readrequest
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/readrequest/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/readrequest
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]ReadRequestDTO value)
         {
-
+            //TODO: Temporary seeding of the database, for demonstration purposes
             if (GetClientByApiKey("1234") == null)
             {
                 Client newClient = new Client()
@@ -78,40 +61,23 @@ namespace Lynx.API.Controllers
                 _clientContext.SaveChanges();
             }
 
+            //Get the client by the supplied API key
             Client client;
             if ((client = GetClientByApiKey(value.APIKey)) == null)
                 return Unauthorized();
 
-
+            //Setup the Info Request Job
             InfoRequestWorker worker = new InfoRequestWorker(_clientContext, _idMapper, _web3, _serviceProvider);
-            InfoRequestSessionDTO dto = await worker.InitiateJob(client);
+            InfoRequestJobDTO dto = await worker.InitiateJob(client);
+            BackgroundJob.Enqueue<InfoRequestWorker>(w => w.CompleteJob(dto, value.CallbackEndpoint));
 
-            /*_infoRequester.handshakeComplete += (sender, e) =>
-            {
-                new HttpClient().PostAsync(value.CallbackEndpoint, new System.Net.Http.StringContent(e.Id.Address));
-            };*/
-
-            BackgroundJob.Enqueue<InfoRequestWorker>(w => w.CompleteJob(dto, value.CallbackEndpoint, null));
-
-            StringToSVGValueConverter valConv = new StringToSVGValueConverter();
+            //Prepare the SYN for output
+            StringToQRSVGValueConverter valConv = new StringToQRSVGValueConverter();
             string qrEncodedSyn = valConv.Convert(dto.EncodedSyn).Content;
-
             ContentResult content = Content(qrEncodedSyn);
             content.ContentType = "image/svg+xml";
 
             return content;
-        }
-
-        // PUT api/readrequest/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/readrequest/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
 
         private Client GetClientByApiKey(string apiKey)

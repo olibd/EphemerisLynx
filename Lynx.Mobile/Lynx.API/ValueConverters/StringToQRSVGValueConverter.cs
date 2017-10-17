@@ -7,8 +7,16 @@ using static ZXing.Rendering.SvgRenderer;
 
 namespace Lynx.API.ValueConverters
 {
-    public class StringToSVGValueConverter
+    /// <summary>
+    /// String to QR SVG value converter.
+    /// </summary>
+    public class StringToQRSVGValueConverter
     {
+        /// <summary>
+        /// Convert the specified string value. To an SVG QR code
+        /// </summary>
+        /// <returns>The convert.</returns>
+        /// <param name="value">Value.</param>
         public SvgImage Convert(string value)
         {
 

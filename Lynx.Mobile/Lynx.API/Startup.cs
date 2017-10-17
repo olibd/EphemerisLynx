@@ -44,7 +44,6 @@ namespace Lynx.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ClientContext>(opt => opt.UseInMemoryDatabase("ClientsList"));
-            services.AddDbContext<SessionContext>(opt => opt.UseInMemoryDatabase("Sessions"));
             //TODO: temporary for testing purposes, hangfire is deployed in memory
             var inMemory = GlobalConfiguration.Configuration.UseMemoryStorage();
             services.AddHangfire(config =>

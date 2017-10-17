@@ -30,6 +30,11 @@ using Newtonsoft.Json;
 
 namespace Lynx.API
 {
+    /// <summary>
+    /// The info request worker is a class that can be used to initiate a fire
+    /// and forget info request task with Hangfire. This is useful when you want
+    /// to run a task after an HTTP request is completed.
+    /// </summary>
     public class InfoRequestWorker
     {
         private ClientContext _clientContext;
@@ -95,10 +100,16 @@ namespace Lynx.API
             _idFacade = new IDFacade(StaticRessources.FactoryContractAddress, _web3, _attrFacade, _accountService);
         }
 
-        public async Task<InfoRequestSessionDTO> InitiateJob(Client client)
+        /// <summary>
+        /// Initiates and suspends the job.
+        /// </summary>
+        /// <returns>A DTO containing information about the state of the
+        /// suspended job. This DTO is used to complete the job</returns>
+        /// <param name="client">Client.</param>
+        public async Task<InfoRequestJobDTO> InitiateJob(Client client)
         {
             await Setup(client);
-            InfoRequestSessionDTO dto = new InfoRequestSessionDTO()
+            InfoRequestJobDTO dto = new InfoRequestJobDTO()
             {
                 ClientID = client.Id,
                 EncodedSyn = _infoRequester.CreateEncodedSyn(),
@@ -108,38 +119,35 @@ namespace Lynx.API
             return dto;
         }
 
-        public async Task CompleteJob(InfoRequestSessionDTO dto, string callbackEndpoint, PerformContext context)
+        /// <summary>
+        /// Completes the job. To be call in Hangfire
+        /// </summary>
+        /// <returns>The job.</returns>
+        /// <param name="dto">Suspended Job DTO, used to restore and
+        /// complete the job.</param>
+        /// <param name="callbackEndpoint">Callback endpoint (where the
+        /// result of the job should be sent).</param>
+        public async Task CompleteJob(InfoRequestJobDTO dto, string callbackEndpoint)
         {
             await Setup(dto.ClientID);
 
-            try
+            ManualResetEvent waitHandle = new ManualResetEvent(false);
+            ID id = null;
+            _infoRequester.HandshakeComplete += (sender, e) =>
             {
-                ManualResetEvent waitHandle = new ManualResetEvent(false);
-                ID id = null;
-                _infoRequester.HandshakeComplete += (sender, e) =>
-                {
-                    id = e.Id;
-                    waitHandle.Set();
-                };
-                _infoRequester.ResumeSession(dto.SessionID);
-                context.WriteLine("Job Resumed");
+                id = e.Id;
+                waitHandle.Set();
+            };
+            _infoRequester.ResumeSession(dto.SessionID);
 
-                if (waitHandle.WaitOne(100000))
-                {
-                    await new HttpClient().PostAsync(callbackEndpoint, new System.Net.Http.StringContent(JsonConvert.SerializeObject(id)));
-                    context.WriteLine("Job Completed");
-                }
-                else
-                {
-                    await new HttpClient().PostAsync(callbackEndpoint, new System.Net.Http.StringContent("error"));
-                    context.WriteLine("Job Failed");
-                }
-            }
-            catch (Exception e)
+            if (waitHandle.WaitOne(100000))
             {
-                await new HttpClient().PostAsync(callbackEndpoint, new System.Net.Http.StringContent(e.Message + "--------" + e.StackTrace));
+                await new HttpClient().PostAsync(callbackEndpoint, new System.Net.Http.StringContent(JsonConvert.SerializeObject(id)));
             }
-
+            else
+            {
+                await new HttpClient().PostAsync(callbackEndpoint, new System.Net.Http.StringContent("error"));
+            }
         }
     }
 }
