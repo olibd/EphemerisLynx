@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -199,7 +199,7 @@
       <Project>{094CA405-5667-4A9B-98B1-6C9B3EA3672E}</Project>
       <Name>CoreUnitTests.NetStandardLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lynx.CoreStandard\Lynx.CoreStandard.csproj">
+    <ProjectReference Include="..\Lynx.CoreStandard\Lynx.Core.csproj">
       <Project>{FFCE422E-7B59-42E1-A7C6-429D891641AF}</Project>
       <Name>Lynx.Core</Name>
     </ProjectReference>

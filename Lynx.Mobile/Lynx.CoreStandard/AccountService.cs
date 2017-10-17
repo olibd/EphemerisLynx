@@ -3,17 +3,39 @@ using Lynx.Core.Interfaces;
 using NBitcoin.Crypto;
 using Nethereum.Core.Signing.Crypto;
 using System.Text;
+using Lynx.Core.Crypto;
+using NBitcoin;
+using NBitcoin.Protocol;
+using Org.BouncyCastle.Security;
 
 namespace Lynx.Core
 {
     public class AccountService : IAccountService
     {
 
-        private readonly string _privateKey = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
+        private readonly string _privateKey;
+        private Mnemonic _mnemonic;
+
+        public string MnemonicPhrase
+        {
+            get => _mnemonic.ToString();
+        }
 
         public AccountService()
         {
+            _mnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve);
 
+            Key privKey = _mnemonic.DeriveExtKey().PrivateKey;
+            _privateKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHex(privKey.ToBytes(ProtocolVersion
+                .BIP0031_VERSION));
+        }
+
+        public AccountService(Mnemonic mnemonic)
+        {
+            _mnemonic = mnemonic;
+            Key privKey = mnemonic.DeriveExtKey().PrivateKey;
+            _privateKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHex(privKey.ToBytes(ProtocolVersion
+                .BIP0031_VERSION));
         }
 
         public AccountService(string privateKey)

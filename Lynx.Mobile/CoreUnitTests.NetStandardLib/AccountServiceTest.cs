@@ -1,5 +1,6 @@
 ﻿using System;
 using Lynx.Core;
+using NBitcoin;
 using NUnit.Framework;
 
 namespace CoreUnitTests.PCL
@@ -30,6 +31,21 @@ namespace CoreUnitTests.PCL
                 204, 224 };
             _publicAddress = "0x68004661F764c169805C8B6834cab7A65D448c74";
             _accountService = new AccountService(_privateKey);
+        }
+
+        [Test]
+        public void TestGenerateFromMnemonic()
+        {
+            RandomUtils.Random = new UnsecureRandom();
+            AccountService aService1 = new AccountService();
+
+            string phrase = aService1.MnemonicPhrase;
+            Mnemonic recoveredMnemonic = new Mnemonic(phrase, Wordlist.English);
+
+            AccountService aService2 = new AccountService(recoveredMnemonic);
+
+            Assert.AreEqual(aService1.PublicKey, aService2.PublicKey);
+            Assert.AreEqual(aService1.PrivateKey, aService2.PrivateKey);
         }
 
         [Test]
