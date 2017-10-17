@@ -33,6 +33,7 @@ namespace Lynx.Core.PeerVerification
         public event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
         public event EventHandler<CertificatesSent> CertificatesSent;
         public event EventHandler<InfoRequestReceivedEvent> InfoRequestReceived;
+        public event EventHandler<InfoRequestAuthorizedEvent> InfoRequestAuthorized;
 
         public Receiver(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
         {
@@ -171,6 +172,9 @@ namespace Lynx.Core.PeerVerification
             _tokenCryptoService.Sign(response, _accountService.GetPrivateKeyAsByteArray());
             string encryptedToken = _tokenCryptoService.Encrypt(response, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
+
+            InfoRequestAuthorizedEvent e = new InfoRequestAuthorizedEvent();
+            InfoRequestAuthorized.Invoke(this, e);
         }
 
 
