@@ -173,7 +173,8 @@ namespace Lynx.Core.PeerVerification
             string encryptedToken = _tokenCryptoService.Encrypt(response, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
 
-            InfoRequestAuthorized.Invoke(this, new InfoRequestAuthorizedEvent());
+            InfoRequestAuthorizedEvent e = new InfoRequestAuthorizedEvent();
+            InfoRequestAuthorized.Invoke(this, e);
         }
 
 
