@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using ZXing;
+﻿using ZXing;
 using ZXing.Common;
 using ZXing.Rendering;
 using static ZXing.Rendering.SvgRenderer;

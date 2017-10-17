@@ -1,31 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Lynx.API.Models;
-using Lynx.API.ValueConverters;
 using Lynx.Core;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Interfaces;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models.IDSubsystem;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Lynx.Core.Facade;
 using Nethereum.Web3;
-using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Communications.Packets.Interfaces;
 using System.Threading;
 using System.Net.Http;
 using Lynx.API.Worker.DTO;
-using Hangfire.Server;
-using Hangfire.Console;
 using Newtonsoft.Json;
 
 namespace Lynx.API
