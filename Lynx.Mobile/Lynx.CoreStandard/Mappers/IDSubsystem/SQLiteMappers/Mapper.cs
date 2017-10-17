@@ -40,16 +40,10 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 
             return await Task.Run(() =>
             {
-                try
-                {
-                    obj = _db.Get<T>(UID);
-                    _idMap.Add(obj.UID, obj);
-                    _db.Close();
-                }
-                catch (Exception e)
-                {
-                    var l = e;
-                }
+
+                obj = _db.Get<T>(UID);
+                _idMap.Add(obj.UID, obj);
+                _db.Close();
 
                 return obj;
             });
@@ -82,18 +76,11 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         {
             return await Task.Run(() =>
             {
-                try
-                {
-                    if (_db.Find<T>(obj.UID) != null)
-                        return _db.Update(obj);
-                    else
-                        return _db.Insert(obj);
-                }
-                catch (Exception e)
-                {
-                    var l = e;
-                    return 0;
-                }
+                if (_db.Find<T>(obj.UID) != null)
+                    return _db.Update(obj);
+                else
+                    return _db.Insert(obj);
+
 
             });
         }
