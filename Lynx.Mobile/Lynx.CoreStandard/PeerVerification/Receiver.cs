@@ -127,6 +127,9 @@ namespace Lynx.Core.PeerVerification
             IdentityProfileReceived.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Processes an InfoRequestSynAck containing requested attributes and fires an event 
+        /// </summary>
         private async Task ProcessInfoRequestSynAck(string encryptedInfoRequestToken)
         {
             InfoRequestSynAck infoRequestSynAck = await base.DecryptAndInstantiateHandshakeToken<InfoRequestSynAck>(encryptedInfoRequestToken, _syn.Id);
@@ -137,6 +140,8 @@ namespace Lynx.Core.PeerVerification
             if (_tokenCryptoService.VerifySignature(infoRequestSynAck))
             {
                 _infoRequestSynAck = infoRequestSynAck;
+
+                //this event is fired to display an activity showing the requested attributes
                 InfoRequestReceivedEvent e = new InfoRequestReceivedEvent()
                 {
                     InfoRequestSynAck = _infoRequestSynAck

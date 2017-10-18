@@ -14,6 +14,8 @@ namespace Lynx.Core.ViewModels
         private IMvxNavigationService _navigationService;
         private IReceiver _receiver;
         private InfoRequestSynAck _infoRequestSynAck;
+
+        //a list of requested information by the API
         public List<string> _requestedAttributes { get; set; }
 
         public InfoRequestViewModel(IMvxNavigationService navigationService)
