@@ -20,21 +20,12 @@ namespace Lynx.Core.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
-        public IMvxCommand MainButtonClick => _mainButtonClick;
-        public IMvxInteraction<MnemonicValidationInteraction> CreateButtons => _createButtons;
-
-        public string DisplayText => _displayText;
-        public string MainButtonText => _mainButtonText;
+        public IMvxCommand RegistrationButtonClick => new MvxCommand(NavigateRegistration);
 
         private readonly IMvxNavigationService _navigationService;
         private IMvxCommand CheckAndLoadId => new MvxCommand(CheckAndLoadID);
 
-        private string _displayText;
-        private IMnemonicValidation _validation;
-        private readonly MvxInteraction<MnemonicValidationInteraction> _createButtons = new MvxInteraction<MnemonicValidationInteraction>();
         private IAccountService _accountService;
-        private string _mainButtonText;
-        private IMvxCommand _mainButtonClick;
 
         public MainViewModel(IMvxNavigationService navigationService)
         {
@@ -52,7 +43,7 @@ namespace Lynx.Core.ViewModels
             }
             catch (NoAccountExistsException e)
             {
-                GenerateAccount();
+                StartMnemonicValidation();
             }
         }
 
@@ -62,9 +53,7 @@ namespace Lynx.Core.ViewModels
             if (dataService.IDUID != -1)
             {
                 //TODO: Load from database, and fallback to loading from blockchain in case of exception
-                IIDFacade idFacade = Mvx.Resolve<IIDFacade>();
 
-                //ID id = await idFacade.GetIDAsync(dataService.IDAddress);
                 ID id = await Mvx.Resolve<IMapper<ID>>().GetAsync(dataService.IDUID);
                 Mvx.RegisterSingleton(() => id);
                 await _navigationService.Navigate<IDViewModel>();
@@ -83,60 +72,11 @@ namespace Lynx.Core.ViewModels
             {
                 throw new NoAccountExistsException();
             }
-            else
-            {
-                UpdateInfoText("Loaded existing keys");
-                EditMainButton("Register new ID", NavigateRegistration);
-            }
-        }
-
-        private void GenerateAccount()
-        {
-            _accountService = new AccountService();
-            UpdateInfoText("Your mnemonic phrase is: " + _accountService.MnemonicPhrase);
-            CreateMnemonicValidation(_accountService.MnemonicPhrase);
-        }
-
-        /// <summary>
-        /// Resets the mnemonic confirmation process, generating a new key.
-        /// </summary>
-        private void ResetValidation()
-        {
-            _createButtons.Raise(new MnemonicValidationInteraction(){buttons = {}, onButtonClick = {}});
-            GenerateAccount();
-        }
-
-        private void CreateMnemonicValidation(string mnemonic)
-        {
-            _validation = new MnemonicValidation(mnemonic);
-
-            _validation.OnValidationSuccess += (s, a) => ValidationSuccess();
-            _validation.InfoTextUpdate += (s, str) => UpdateInfoText(str);
-            _validation.ValidationWordsChanged += (s, interaction) => _createButtons.Raise(interaction);
-
-            EditMainButton("I have backed up my seed phrase", StartMnemonicValidation);
-            // Do that in new view
         }
 
         private void StartMnemonicValidation()
         {
-            EditMainButton("Generate new seed phrase", ResetValidation);
-            _validation.StartMnemonicValidation();
-        }
-
-        private void EditMainButton(string text, Action action)
-        {
-            _mainButtonClick = new MvxCommand(action, () => true);
-            _mainButtonText = text;
-
-            RaisePropertyChanged(() => MainButtonClick);
-            RaisePropertyChanged(() => MainButtonText);
-        }
-
-        private void UpdateInfoText(string text)
-        {
-            _displayText = text;
-            RaisePropertyChanged(() => DisplayText);
+            new MvxCommand(async () => await _navigationService.Navigate<MnemonicValidationViewModel>()).Execute();
         }
 
         private async void NavigateRegistration()
@@ -144,19 +84,5 @@ namespace Lynx.Core.ViewModels
             Mvx.RegisterType(() => _accountService);
             await _navigationService.Navigate<RegistrationViewModel>();
         }
-
-        private void ValidationSuccess()
-        {
-            //TODO: Encrypt file, store key in keystore, fingerprint locked
-            Mvx.Resolve<IPlatformSpecificDataService>().SaveAccount(_accountService);
-
-            _displayText = "Seed phrase verified, new keys registered";
-            RaisePropertyChanged(() => DisplayText);
-
-            _createButtons.Raise(new MnemonicValidationInteraction());
-
-            EditMainButton("Register new ID", NavigateRegistration);
-        }
-
     }
 }

@@ -5,16 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/mainView">
-    <TextView
-        android:id="@+id/textView1"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        local:MvxBind="Text DisplayText" />
     <Button
-        android:id="@+id/mainButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/beginverify"
-        local:MvxBind="Click MainButtonClick; Text MainButtonText" />
+        android:text="@string/register"
+        local:MvxBind="Click RegistrationButtonClick" />
 </LinearLayout>

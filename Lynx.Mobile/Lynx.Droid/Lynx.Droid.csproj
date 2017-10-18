@@ -191,6 +191,7 @@
   <ItemGroup>
     <Compile Include="AndroidSpecificDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\MnemonicValidationView.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\RegistrationView.cs" />
     <Compile Include="SplashScreen.cs" />
@@ -215,6 +216,9 @@
     </AndroidResource>
     <AndroidResource Include="Resources\layout\CertifyAttributeView.xml" />
     <AndroidResource Include="Resources\layout\CertifyView.xml" />
+    <AndroidResource Include="Resources\layout\MnemonicValidationView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <None Include="ToDo-MvvmCross\_ Droid UI.txt" />
     <AndroidResource Include="Resources\layout\SplashScreen.axml" />
     <AndroidResource Include="Resources\drawable\splash.png" />
