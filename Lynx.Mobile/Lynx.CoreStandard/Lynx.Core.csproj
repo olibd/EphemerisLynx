@@ -24,12 +24,10 @@
     <Folder Include="Communications\" />
     <Folder Include="Crypto\" />
     <Folder Include="Facade\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Mappers\" />
     <Folder Include="Models\" />
     <Folder Include="PeerVerification\" />
     <Folder Include="ValueConverters\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\eVi.abi.lib.pcl\evi.abi.lib.netstandard\evi.abi.lib.netstandard.csproj" />

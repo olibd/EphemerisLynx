@@ -3,37 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lynx.Core.Interactions;
-using MvvmCross.Core.ViewModels;
+using Lynx.Core.Interfaces;
 using NBitcoin;
-using Org.BouncyCastle.Asn1.X509;
 
 namespace Lynx.Core
 {
-    class MnemonicConfirmation
+    class MnemonicValidation : IMnemonicValidation
     {
-        private readonly MvxInteraction<MnemonicCheckInteraction> _createButtons;
-        private readonly Action _verificationSuccess;
-        private readonly Action<string> _updateText;
+        public event EventHandler<string> InfoTextUpdate;
+        public event EventHandler OnValidationSuccess;  
+        public event EventHandler<MnemonicValidationInteraction> ValidationWordsChanged;  
 
         private string[] _mnemonic;
         private Stack<string> _mnemonicBackupWords;
         private Stack<int> _wordsToVerify;
         private List<string> _buttons;
 
-        private int failedAttempts = 0;
-
-        public MnemonicConfirmation(string mnemonic, MvxInteraction<MnemonicCheckInteraction> createButtonsInteraction, Action successAction, Action<string> updateTextAction)
+        public MnemonicValidation(string mnemonic)
         {
             _mnemonic = mnemonic.Split(' ');
-            _createButtons = createButtonsInteraction;
-            _verificationSuccess = successAction;
-            _updateText = updateTextAction;
 
             _mnemonicBackupWords = new Stack<string>();
             _wordsToVerify = new Stack<int>();
         }
 
-        public void StartMnemonicVerification()
+        public void StartMnemonicValidation()
         {
             //Used to add words that are not part of the mnemonic
             _mnemonicBackupWords = new Stack<string>(new Mnemonic(Wordlist.English, WordCount.Twelve).Words);
@@ -59,7 +53,7 @@ namespace Lynx.Core
             {
                 _wordsToVerify.Pop();
                 if (_wordsToVerify.Count == 0)
-                    _verificationSuccess();
+                    OnValidationSuccess(this, new EventArgs());
                 else
                 {
                     VerifyNext();
@@ -67,25 +61,24 @@ namespace Lynx.Core
             }
             else
             {
-                failedAttempts++;
-                StartMnemonicVerification();
+                StartMnemonicValidation();
             }
         }
 
         private void VerifyNext()
         {
-            _updateText("Please enter the word from your seed phrase in position " +
-                                     (_wordsToVerify.Peek() + 1).ToString() + " (" + _wordsToVerify.Count + " left)");
+            InfoTextUpdate(this, "Please enter the word from your seed phrase in position " +
+                                     (_wordsToVerify.Peek() + 1) + " (" + _wordsToVerify.Count + " left)");
 
             Random rng = new Random();
 
-            MnemonicCheckInteraction interaction = new MnemonicCheckInteraction()
+            MnemonicValidationInteraction interaction = new MnemonicValidationInteraction()
             {
                 buttons = _buttons.OrderBy(x => rng.Next()),
                 onButtonClick = VerifyButtonInput
             };
 
-            _createButtons.Raise(interaction);
+            ValidationWordsChanged(this, interaction);
         }
 
         private List<int> GenerateRandomValues(int amount, WordCount wordCount)

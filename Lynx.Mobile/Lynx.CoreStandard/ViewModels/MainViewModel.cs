@@ -21,7 +21,7 @@ namespace Lynx.Core.ViewModels
     public class MainViewModel : MvxViewModel
     {
         public IMvxCommand MainButtonClick => _mainButtonClick;
-        public IMvxInteraction<MnemonicCheckInteraction> CreateButtons => _createButtons;
+        public IMvxInteraction<MnemonicValidationInteraction> CreateButtons => _createButtons;
 
         public string DisplayText => _displayText;
         public string MainButtonText => _mainButtonText;
@@ -30,8 +30,8 @@ namespace Lynx.Core.ViewModels
         private IMvxCommand CheckAndLoadId => new MvxCommand(CheckAndLoadID);
 
         private string _displayText;
-        private MnemonicConfirmation _confirmation;
-        private readonly MvxInteraction<MnemonicCheckInteraction> _createButtons = new MvxInteraction<MnemonicCheckInteraction>();
+        private IMnemonicValidation _validation;
+        private readonly MvxInteraction<MnemonicValidationInteraction> _createButtons = new MvxInteraction<MnemonicValidationInteraction>();
         private IAccountService _accountService;
         private string _mainButtonText;
         private IMvxCommand _mainButtonClick;
@@ -44,9 +44,16 @@ namespace Lynx.Core.ViewModels
         public override void Start()
         {
             base.Start();
-            bool didAccountExist = SetupAccount();
-            if(didAccountExist)
+            
+            try
+            {
+                SetupAccount();
                 CheckAndLoadId.Execute();
+            }
+            catch (NoAccountExistsException e)
+            {
+                GenerateAccount();
+            }
         }
 
         private async void CheckAndLoadID()
@@ -65,61 +72,56 @@ namespace Lynx.Core.ViewModels
         }
 
         /// <summary>
-        /// Sets up the AccountService, loading it if a key is saved and gneerating it otherwise.
+        /// Sets up the AccountService, loading it if a key is saved.
         /// </summary>
-        /// <returns>True if it was loaded, False if it was generated</returns>
-        private bool SetupAccount()
+        private void SetupAccount() 
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
             _accountService = dataService.LoadAccount();
 
             if (_accountService == null)
             {
-                GenerateAccount();
-                return false;
-                //We do not have any keys yet
+                throw new NoAccountExistsException();
             }
             else
             {
-                _displayText = "Loaded existing keys, no seed phrase generated";
+                UpdateInfoText("Loaded existing keys");
                 EditMainButton("Register new ID", NavigateRegistration);
-                return true;
             }
         }
 
         private void GenerateAccount()
         {
             _accountService = new AccountService();
-            _displayText = "Mnemonic phrase: " + _accountService.MnemonicPhrase;
-            CreateMnemonicConfirmation(_accountService.MnemonicPhrase);
-            RaisePropertyChanged(() => DisplayText);
+            UpdateInfoText("Your mnemonic phrase is: " + _accountService.MnemonicPhrase);
+            CreateMnemonicValidation(_accountService.MnemonicPhrase);
         }
 
         /// <summary>
         /// Resets the mnemonic confirmation process, generating a new key.
         /// </summary>
-        private void ResetConfirmation()
+        private void ResetValidation()
         {
-            _createButtons.Raise(new MnemonicCheckInteraction(){buttons = {}, onButtonClick = {}});
+            _createButtons.Raise(new MnemonicValidationInteraction(){buttons = {}, onButtonClick = {}});
             GenerateAccount();
         }
 
-        private void CreateMnemonicConfirmation(string mnemonic)
+        private void CreateMnemonicValidation(string mnemonic)
         {
-            _confirmation = new MnemonicConfirmation(mnemonic, _createButtons, VerificationSuccess,
-                text =>
-                {
-                    _displayText = text;
-                    RaisePropertyChanged(() => DisplayText);
-                }
-            );
-            EditMainButton("I have backed up my seed phrase", StartMnemonicVerification);
+            _validation = new MnemonicValidation(mnemonic);
+
+            _validation.OnValidationSuccess += (s, a) => ValidationSuccess();
+            _validation.InfoTextUpdate += (s, str) => UpdateInfoText(str);
+            _validation.ValidationWordsChanged += (s, interaction) => _createButtons.Raise(interaction);
+
+            EditMainButton("I have backed up my seed phrase", StartMnemonicValidation);
+            // Do that in new view
         }
 
-        private void StartMnemonicVerification()
+        private void StartMnemonicValidation()
         {
-            EditMainButton("Generate new seed phrase", ResetConfirmation);
-            _confirmation.StartMnemonicVerification();
+            EditMainButton("Generate new seed phrase", ResetValidation);
+            _validation.StartMnemonicValidation();
         }
 
         private void EditMainButton(string text, Action action)
@@ -131,13 +133,19 @@ namespace Lynx.Core.ViewModels
             RaisePropertyChanged(() => MainButtonText);
         }
 
+        private void UpdateInfoText(string text)
+        {
+            _displayText = text;
+            RaisePropertyChanged(() => DisplayText);
+        }
+
         private async void NavigateRegistration()
         {
             Mvx.RegisterType(() => _accountService);
             await _navigationService.Navigate<RegistrationViewModel>();
         }
 
-        private void VerificationSuccess()
+        private void ValidationSuccess()
         {
             //TODO: Encrypt file, store key in keystore, fingerprint locked
             Mvx.Resolve<IPlatformSpecificDataService>().SaveAccount(_accountService);
@@ -145,7 +153,7 @@ namespace Lynx.Core.ViewModels
             _displayText = "Seed phrase verified, new keys registered";
             RaisePropertyChanged(() => DisplayText);
 
-            _createButtons.Raise(new MnemonicCheckInteraction());
+            _createButtons.Raise(new MnemonicValidationInteraction());
 
             EditMainButton("Register new ID", NavigateRegistration);
         }
