@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wpa81</PackageTargetFallback>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win+wpa81+wp80;</AssetTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +14,7 @@
     <PackageReference Include="PubnubPCL" Version="4.0.4.1" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="ably.io" Version="0.8.5" />
+    <PackageReference Include="Plugin.Fingerprint" Version="1.4.5" />
   </ItemGroup>
   <ItemGroup>
     <None Update="packages.config">

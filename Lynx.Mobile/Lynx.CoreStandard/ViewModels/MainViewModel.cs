@@ -51,7 +51,8 @@ namespace Lynx.Core.ViewModels
                 //ID id = await idFacade.GetIDAsync(dataService.IDAddress);
                 ID id = await Mvx.Resolve<IMapper<ID>>().GetAsync(dataService.IDUID);
                 Mvx.RegisterSingleton(() => id);
-                await _navigationService.Navigate<IDViewModel>();
+                //await _navigationService.Navigate<IDViewModel>();
+                await _navigationService.Navigate<FingerprintLoginViewModel>();
             }
         }
 
@@ -84,6 +85,7 @@ namespace Lynx.Core.ViewModels
             //TODO: Generate private key and save into file
             //TODO: Encrypt file, store key in keystore, fingerprint locked
             await _navigationService.Navigate<RegistrationViewModel>();
+            //await _navigationService.Navigate<FingerprintLoginViewModel>();
         }
     }
 }

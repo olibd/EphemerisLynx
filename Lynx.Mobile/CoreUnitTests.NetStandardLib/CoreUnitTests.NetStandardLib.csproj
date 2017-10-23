@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win+wpa81+wp80;</AssetTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>

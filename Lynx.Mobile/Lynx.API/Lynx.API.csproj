@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-      <PackageTargetFallback>portable-net45+win+wpa81+wp80</PackageTargetFallback>
+      <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win+wpa81+wp80;</AssetTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
