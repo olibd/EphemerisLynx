@@ -89,7 +89,7 @@ namespace CoreUnitTests.PCL
 
             _infoRequester.HandshakeComplete += (sender, e) =>
             {
-                id = e.Id;
+                id = e.ReceivedID;
                 waitHandle.Set();
             };
 

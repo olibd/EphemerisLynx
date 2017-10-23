@@ -125,7 +125,7 @@ namespace Lynx.API
             ID id = null;
             _infoRequester.HandshakeComplete += (sender, e) =>
             {
-                id = e.Id;
+                id = e.ReceivedID;
                 waitHandle.Set();
             };
             _infoRequester.ResumeSession(dto.SessionID);
