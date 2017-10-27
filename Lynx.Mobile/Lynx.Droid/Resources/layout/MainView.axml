@@ -5,15 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <Button
+        android:id="@+id/fingerprintLoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fingerprint_login"
+        local:MvxBind="Click FingerprintLoginCommand" />
+    <TextView
+        android:id="@+id/textView1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        local:MvxBind="Text FingerprintAuthenticationMessage" />
+    <Button
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/register"
         local:MvxBind="Click RegisterClickCommand" />
-  <TextView
-      android:id="@+id/textView1"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      local:MvxBind="Text MnemonicPhrase" />
+    <TextView
+        android:id="@+id/textView1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        local:MvxBind="Text MnemonicPhrase" />
 </LinearLayout>

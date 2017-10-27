@@ -12,6 +12,7 @@ using Lynx.Core.Models.IDSubsystem;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Core.Navigation;
+using Plugin.Fingerprint;
 using NBitcoin;
 
 namespace Lynx.Core.ViewModels
@@ -21,12 +22,20 @@ namespace Lynx.Core.ViewModels
         private IMvxNavigationService _navigationService;
         private IMvxCommand _checkAndLoadID => new MvxCommand(CheckAndLoadID);
         public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
+        public IMvxCommand FingerprintLoginCommand => new MvxCommand(FingerprintLoginAsync);
 
         private string _mnemonicPhrase;
 
         public string MnemonicPhrase
         {
             get => _mnemonicPhrase;
+        }
+
+        private string _fingerprintAuthenticationMessage;
+
+        public string FingerprintAuthenticationMessage
+        {
+            get => _fingerprintAuthenticationMessage;
         }
 
         public MainViewModel(IMvxNavigationService navigationService)
@@ -51,8 +60,7 @@ namespace Lynx.Core.ViewModels
                 //ID id = await idFacade.GetIDAsync(dataService.IDAddress);
                 ID id = await Mvx.Resolve<IMapper<ID>>().GetAsync(dataService.IDUID);
                 Mvx.RegisterSingleton(() => id);
-                //await _navigationService.Navigate<IDViewModel>();
-                await _navigationService.Navigate<FingerprintLoginViewModel>();
+                FingerprintLoginCommand.Execute();
             }
         }
 
@@ -85,7 +93,30 @@ namespace Lynx.Core.ViewModels
             //TODO: Generate private key and save into file
             //TODO: Encrypt file, store key in keystore, fingerprint locked
             await _navigationService.Navigate<RegistrationViewModel>();
-            //await _navigationService.Navigate<FingerprintLoginViewModel>();
         }
+
+        private async void FingerprintLoginAsync()
+        {
+            var result = await CrossFingerprint.Current.IsAvailableAsync(true);
+            if (result)
+            {
+                var auth = await CrossFingerprint.Current.AuthenticateAsync("Scan fingerprint to access your ID.");
+                if (auth.Authenticated)
+                {
+                    await _navigationService.Navigate<IDViewModel>();
+                }
+                else
+                {
+                    _fingerprintAuthenticationMessage = "Fingerprint Authentication Failed!";
+                    RaisePropertyChanged(() => FingerprintAuthenticationMessage);
+                }
+            }
+            else
+            {
+                _fingerprintAuthenticationMessage = "A fingerprint needs to be registered on the phone.";
+                RaisePropertyChanged(() => FingerprintAuthenticationMessage);
+            }
+        }
+
     }
 }
