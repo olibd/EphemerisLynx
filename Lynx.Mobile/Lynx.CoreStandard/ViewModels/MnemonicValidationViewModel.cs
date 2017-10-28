@@ -59,10 +59,15 @@ namespace Lynx.Core.ViewModels
         /// </summary>
         private void ResetValidation()
         {
+            // Passing an empty list of buttons simply deletes all existing buttons
             _createButtons.Raise(new MnemonicValidationInteraction(){buttons = {}, onButtonClick = {}});
             GenerateAccount();
         }
 
+        /// <summary>
+        /// Creates the instance of MnemonicValidation that will perform the validation, but does not start the process yet
+        /// </summary>
+        /// <param name="mnemonic"></param>
         private void CreateMnemonicValidation(string mnemonic)
         {
             _validation = new MnemonicValidation(mnemonic);
@@ -72,7 +77,6 @@ namespace Lynx.Core.ViewModels
             _validation.ValidationWordsChanged += (s, interaction) => _createButtons.Raise(interaction);
 
             EditMainButton("I have backed up my seed phrase", StartMnemonicValidation);
-            // Do that in new view
         }
 
         private void StartMnemonicValidation()

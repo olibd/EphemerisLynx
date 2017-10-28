@@ -42,7 +42,7 @@ namespace Lynx.Core.ViewModels
             }
             catch (NoAccountExistsException e)
             {
-                StartMnemonicValidation();
+                await StartMnemonicValidation();
             }
         }
 
@@ -73,9 +73,9 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        private void StartMnemonicValidation()
+        private async Task StartMnemonicValidation()
         {
-            new MvxCommand(async () => await _navigationService.Navigate<MnemonicValidationViewModel>()).Execute();
+            await _navigationService.Navigate<MnemonicValidationViewModel>();
         }
 
         private async void NavigateRegistration()
