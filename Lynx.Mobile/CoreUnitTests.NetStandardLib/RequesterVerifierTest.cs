@@ -31,12 +31,14 @@ namespace CoreUnitTests.PCL
         private IIDFacade _idFacade1;
         private IIDFacade _idFacade2;
         private Requester _requester;
+        private InfoRequester _infoRequester;
         private Receiver _verifier;
         private ID _id1;
         private ID _id2;
         private ISynAck _synAck;
         private readonly string[] _allAttributes = { "firstname", "lastname", "cell", "address", "extra" };
         private readonly string[] _accessibleAttributes = { "firstname", "lastname", "cell", "address" };
+        private readonly string[] _requestedAttributes = { "firstname", "lastname", "cell" };
         private readonly string idAddr1 = "0x1FD8397e8108ada12eC07976D92F773364ba46e7";
         private readonly string idAddr2 = "0x00a329c0648769A73afAc7F9381E08FB43dBEA72";
         private IAttributeFacade _attributeFacade;
@@ -62,6 +64,8 @@ namespace CoreUnitTests.PCL
 
             //Uses ID facade 2 because it wants to be able to load ID 2
             _requester = new Requester(_tkCrypto, _accountService1, _id1, _idFacade2, _attributeFacade, _certificateFacade);
+            //Uses ID facade 2 because it wants to be able to load ID 2
+            _infoRequester = new InfoRequester(_requestedAttributes, _tkCrypto, _accountService1, _id1, _idFacade2, _attributeFacade, _certificateFacade);
             //Uses ID facade 1 because it wants to be able to load ID 1
             _verifier = new Receiver(_tkCrypto, _accountService2, _id2, _idFacade1, _certificateFacade);
         }
@@ -73,11 +77,47 @@ namespace CoreUnitTests.PCL
         }
 
         [Test]
+        public void InfoRequestHandshakeTest()
+        {
+            string encodedSyn = _infoRequester.CreateEncodedSyn();
+
+            //Wait handle will wait the test until the handshake is complete
+            //and the requested attributes are received 
+            ManualResetEvent waitHandle = new ManualResetEvent(false);
+
+            ID id = null;
+
+            _infoRequester.HandshakeComplete += (sender, e) =>
+            {
+                id = e.ReceivedID;
+                waitHandle.Set();
+            };
+
+            _verifier.ProcessSyn(encodedSyn).Wait();
+
+            if (waitHandle.WaitOne(100000))
+            {
+                //Check that the number of recieved attributes is the same as
+                //the number of requested attributes
+                Assert.AreEqual(_requestedAttributes.Length, id.Attributes.Count);
+
+                //Check that the keys of recieved attributes is the same as 
+                //the keys of the requested attributes
+                foreach (string key in _requestedAttributes)
+                {
+                    Assert.True(id.Attributes.ContainsKey(key));
+                }
+            }
+            else
+                Assert.Fail();
+        }
+
+        [Test]
         public void VerificationRequestHandshakeTest()
         {
             string encodedSyn = _requester.CreateEncodedSyn();
 
-            //Wait handle will wait the test until the handshake is comple
+            //Wait handle will wait the test until the handshake is complete
             ManualResetEvent waitHandle = new ManualResetEvent(false);
 
             //Setup callback for when the handshake is complete
@@ -91,7 +131,7 @@ namespace CoreUnitTests.PCL
 
             if (waitHandle.WaitOne(100000))
             {
-                //Check that all accessible attribute are present in the SynAck
+                //Check that all accessible attributes are present in the SynAck
                 foreach (string attrKey in _accessibleAttributes)
                 {
                     Assert.IsNotNull(_synAck.Id.GetAttribute(attrKey));
@@ -132,7 +172,7 @@ namespace CoreUnitTests.PCL
                 certsSent = true;
             };
 
-            _requester.IssuedCertificatesAddedToID += (sender, e) =>
+            _requester.HandshakeComplete += (sender, e) =>
             {
                 issuedCertificate = e.CertificatesAdded;
                 waitHandle.Set();
@@ -206,7 +246,15 @@ namespace CoreUnitTests.PCL
             public async Task<ID> GetIDAsync(string address, string[] accessibleAttributes)
             {
                 ID id = new ID();
+                await GetAttributesAsync(id, accessibleAttributes);
+                id.Address = address;
+                id.Owner = _accountService.GetAccountAddress();
 
+                return id;
+            }
+
+            public async Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
+            {
                 if (accessibleAttributes == null)
                     accessibleAttributes = new string[] { "firstname", "lastname", "cell", "address", "extra" };
 
@@ -223,15 +271,8 @@ namespace CoreUnitTests.PCL
 
                     id.AddAttribute(attr);
                 }
-                id.Address = address;
-                id.Owner = _accountService.GetAccountAddress();
 
-                return id;
-            }
-
-            public Task<Dictionary<string, Attribute>> GetAttributesAsync(ID id, string[] accessibleAttributes)
-            {
-                throw new NotImplementedException();
+                return id.Attributes;
             }
         }
 

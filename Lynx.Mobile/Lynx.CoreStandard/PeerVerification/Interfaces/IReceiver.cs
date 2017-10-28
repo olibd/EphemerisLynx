@@ -1,6 +1,7 @@
 using Lynx.Core.Communications.Packets.Interfaces;
 using System.Threading.Tasks;
 using System;
+using Lynx.Core.Communications.Packets;
 
 namespace Lynx.Core.PeerVerification.Interfaces
 {
@@ -13,13 +14,16 @@ namespace Lynx.Core.PeerVerification.Interfaces
     {
         event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
         event EventHandler<CertificatesSent> CertificatesSent;
+        event EventHandler<InfoRequestReceivedEvent> InfoRequestReceived;
+        event EventHandler<InfoRequestAuthorizedEvent> InfoRequestAuthorized;
         ISynAck SynAck { get; }
+        InfoRequestSynAck InfoRequestSynAck { get; }
         /// <summary>
         /// Parses a JSON-encoded SYN and verifies its integrity.
         /// </summary>
         /// <param name="syn">The JSON-encoded SYN</param>
         Task ProcessSyn(string syn);
-
         Task Certify(string[] keysOfAttributesToCertifify);
+        void AuthorizeReadRequest(string[] keysOfAttributesToAuthorize);
     }
 }

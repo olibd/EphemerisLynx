@@ -187,6 +187,12 @@
     <Reference Include="MvvmCross.Droid.Support.Fragment">
       <HintPath>..\packages\MvvmCross.Droid.Support.Fragment.5.2.0\lib\MonoAndroid70\MvvmCross.Droid.Support.Fragment.dll</HintPath>
     </Reference>
+    <Reference Include="MsgPack">
+      <HintPath>..\packages\MsgPack.Cli.0.9.1\lib\MonoAndroid10\MsgPack.dll</HintPath>
+    </Reference>
+    <Reference Include="IO.Ably">
+      <HintPath>..\packages\ably.io.0.8.5\lib\monoandroid\IO.Ably.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidSpecificDataService.cs" />
@@ -204,6 +210,7 @@
     <Compile Include="Views\CertifyView.cs" />
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="DebugTrace.cs" />
+    <Compile Include="Views\InfoRequestView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -222,6 +229,7 @@
     <None Include="ToDo-MvvmCross\_ Droid UI.txt" />
     <AndroidResource Include="Resources\layout\SplashScreen.axml" />
     <AndroidResource Include="Resources\drawable\splash.png" />
+    <AndroidResource Include="Resources\layout\InfoRequestView.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />

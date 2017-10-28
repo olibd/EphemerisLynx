@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,29 +20,25 @@ namespace Lynx.Core.PeerVerification
 
     public class Requester : Peer, IRequester
     {
-        private ISession _session;
+        protected ISession _session;
         private ID _id;
-        private ITokenCryptoService<IToken> _tokenCryptoService;
-        private IAccountService _accountService;
+        protected ITokenCryptoService<IToken> _tokenCryptoService;
+        protected IAccountService _accountService;
         private ICertificateFacade _certificateFacade;
-        private Attribute[] _accessibleAttributes;
+        protected Attribute[] _accessibleAttributes;
         private IAttributeFacade _attributeFacade;
-        public event EventHandler<IssuedCertificatesAddedToIDEvent> IssuedCertificatesAddedToID;
+        public event EventHandler<IssuedCertificatesAddedToIDEvent> HandshakeComplete;
 
         public Requester(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
         {
             _tokenCryptoService = tokenCryptoService;
             _accountService = accountService;
-            _session = new AblySession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<Ack>(e)), id.Address);
+            _session = new AblySession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<Ack>(e)), id.Address);
             _id = id;
             _attributeFacade = attributeFacade;
             _certificateFacade = certificateFacade;
-            _accessibleAttributes = new Attribute[]{
-                _id.Attributes["firstname"],
-                _id.Attributes["lastname"],
-                _id.Attributes["cell"],
-                _id.Attributes["address"]
-            };
+            _accessibleAttributes = new Attribute[_id.Attributes.Values.Count];
+            _id.Attributes.Values.CopyTo(_accessibleAttributes, 0);
         }
 
         public IAck Ack { get; set; }
@@ -65,7 +61,7 @@ namespace Lynx.Core.PeerVerification
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the verifier for certification
         /// </summary>
-        private void GenerateAndSendSynAck(Ack ack)
+        protected virtual void GenerateAndSendSynAck(Ack ack)
         {
             SynAck synAck = new SynAck()
             {
@@ -81,7 +77,7 @@ namespace Lynx.Core.PeerVerification
             _session.Send(encryptedToken);
         }
 
-        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
+        protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -98,15 +94,11 @@ namespace Lynx.Core.PeerVerification
                 default:
                     throw new InvalidTokenTypeException("The Token type received is invalid");
             }
-
-            //We can return null because the caller of this method is an anonymous method in an EventHandler
-            //and it won't use the returned data
-            return null;
         }
 
-        private async Task ProcessAck(string encryptedToken)
+        protected async Task ProcessAck(string encryptedToken)
         {
-            Ack ack = await base.ProcessEncryptedHandshakeToken<Ack>(encryptedToken);
+            Ack ack = await base.DecryptAndInstantiateHandshakeToken<Ack>(encryptedToken);
 
             VerifyHandshakeTokenIDOwnership(ack);
 
@@ -166,7 +158,20 @@ namespace Lynx.Core.PeerVerification
                 CertificatesAdded = addedCertificate,
             };
 
-            IssuedCertificatesAddedToID.Invoke(this, e);
+            _session.Close();
+            HandshakeComplete.Invoke(this, e);
+        }
+
+        public void ResumeSession(string sessionID)
+        {
+            _session.Open(sessionID);
+        }
+
+        public string SuspendSession()
+        {
+            string sId = _session.SessionID;
+            _session.Close();
+            return sId;
         }
     }
 }
