@@ -23,7 +23,6 @@ namespace Lynx.Core.ViewModels
         public IMvxCommand RegistrationButtonClick => new MvxCommand(NavigateRegistration);
 
         private readonly IMvxNavigationService _navigationService;
-        private IMvxCommand CheckAndLoadId => new MvxCommand(CheckAndLoadID);
 
         private IAccountService _accountService;
 
@@ -32,14 +31,14 @@ namespace Lynx.Core.ViewModels
             _navigationService = navigationService;
         }
 
-        public override void Start()
+        public override async void Start()
         {
             base.Start();
             
             try
             {
                 SetupAccount();
-                CheckAndLoadId.Execute();
+                await CheckAndLoadID();
             }
             catch (NoAccountExistsException e)
             {
@@ -47,7 +46,7 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        private async void CheckAndLoadID()
+        private async Task CheckAndLoadID()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
             if (dataService.IDUID != -1)
