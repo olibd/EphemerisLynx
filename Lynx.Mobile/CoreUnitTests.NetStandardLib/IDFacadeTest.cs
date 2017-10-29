@@ -132,6 +132,16 @@ namespace CoreUnitTests.PCL
         }
 
         [Test]
+        public async Task TestRecoverIDAsync()
+        {
+            await TestDeploy();
+            ID id = await _idFacade.RecoverIDAsync();
+
+            Assert.AreEqual(1, id.Attributes.Count);
+            Assert.AreEqual("I am an attribute hash", id.Attributes["test type"]);
+        }
+
+        [Test]
         public async Task TestGetIDAsync()
         {
             ID id = new ID();

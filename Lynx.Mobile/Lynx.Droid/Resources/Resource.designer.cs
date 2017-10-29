@@ -2283,11 +2283,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08001b
 			public const int add = 2131230747;
 			
-			// aapt resource value: 0x7f0800ae
-			public const int address_edittext = 2131230894;
+			// aapt resource value: 0x7f0800b1
+			public const int address_edittext = 2131230897;
 			
-			// aapt resource value: 0x7f0800ad
-			public const int address_layout = 2131230893;
+			// aapt resource value: 0x7f0800b0
+			public const int address_layout = 2131230896;
 			
 			// aapt resource value: 0x7f08005a
 			public const int alertTitle = 2131230810;
@@ -2316,11 +2316,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080094
 			public const int cancel_action = 2131230868;
 			
-			// aapt resource value: 0x7f0800ac
-			public const int cell_edittext = 2131230892;
+			// aapt resource value: 0x7f0800af
+			public const int cell_edittext = 2131230895;
 			
-			// aapt resource value: 0x7f0800ab
-			public const int cell_layout = 2131230891;
+			// aapt resource value: 0x7f0800ae
+			public const int cell_layout = 2131230894;
 			
 			// aapt resource value: 0x7f080032
 			public const int center = 2131230770;
@@ -2352,8 +2352,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080026
 			public const int collapseActionView = 2131230758;
 			
-			// aapt resource value: 0x7f0800af
-			public const int contentFrame = 2131230895;
+			// aapt resource value: 0x7f0800b2
+			public const int contentFrame = 2131230898;
 			
 			// aapt resource value: 0x7f080050
 			public const int contentPanel = 2131230800;
@@ -2421,11 +2421,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080035
 			public const int fill_vertical = 2131230773;
 			
-			// aapt resource value: 0x7f0800a8
-			public const int firstname_edittext = 2131230888;
+			// aapt resource value: 0x7f0800ab
+			public const int firstname_edittext = 2131230891;
 			
-			// aapt resource value: 0x7f0800a7
-			public const int firstname_layout = 2131230887;
+			// aapt resource value: 0x7f0800aa
+			public const int firstname_layout = 2131230890;
 			
 			// aapt resource value: 0x7f080041
 			public const int @fixed = 2131230785;
@@ -2460,11 +2460,11 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08007b
 			public const int largeLabel = 2131230843;
 			
-			// aapt resource value: 0x7f0800aa
-			public const int lastname_edittext = 2131230890;
+			// aapt resource value: 0x7f0800ad
+			public const int lastname_edittext = 2131230893;
 			
-			// aapt resource value: 0x7f0800a9
-			public const int lastname_layout = 2131230889;
+			// aapt resource value: 0x7f0800ac
+			public const int lastname_layout = 2131230892;
 			
 			// aapt resource value: 0x7f080036
 			public const int left = 2131230774;
@@ -2487,8 +2487,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08008c
 			public const int mainView = 2131230860;
 			
-			// aapt resource value: 0x7f0800b1
-			public const int masked = 2131230897;
+			// aapt resource value: 0x7f0800b4
+			public const int masked = 2131230900;
 			
 			// aapt resource value: 0x7f080096
 			public const int media_actions = 2131230870;
@@ -2498,6 +2498,9 @@ namespace Lynx.Droid
 			
 			// aapt resource value: 0x7f080040
 			public const int mini = 2131230784;
+			
+			// aapt resource value: 0x7f0800a8
+			public const int mnemonicInput = 2131230888;
 			
 			// aapt resource value: 0x7f08008e
 			public const int mnemonicValidationInfoText = 2131230862;
@@ -2549,6 +2552,9 @@ namespace Lynx.Droid
 			
 			// aapt resource value: 0x7f08005f
 			public const int radio = 2131230815;
+			
+			// aapt resource value: 0x7f0800a7
+			public const int recoveryView = 2131230887;
 			
 			// aapt resource value: 0x7f080037
 			public const int right = 2131230775;
@@ -2658,6 +2664,9 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f080060
 			public const int submenuarrow = 2131230816;
 			
+			// aapt resource value: 0x7f0800a9
+			public const int submit = 2131230889;
+			
 			// aapt resource value: 0x7f080071
 			public const int submit_area = 2131230833;
 			
@@ -2721,8 +2730,8 @@ namespace Lynx.Droid
 			// aapt resource value: 0x7f08000e
 			public const int view_offset_helper = 2131230734;
 			
-			// aapt resource value: 0x7f0800b0
-			public const int visible = 2131230896;
+			// aapt resource value: 0x7f0800b3
+			public const int visible = 2131230899;
 			
 			// aapt resource value: 0x7f080029
 			public const int withText = 2131230761;
@@ -2979,31 +2988,34 @@ namespace Lynx.Droid
 			public const int notification_template_part_time = 2130968640;
 			
 			// aapt resource value: 0x7f040041
-			public const int RegistrationView = 2130968641;
+			public const int RecoveryView = 2130968641;
 			
 			// aapt resource value: 0x7f040042
-			public const int select_dialog_item_material = 2130968642;
+			public const int RegistrationView = 2130968642;
 			
 			// aapt resource value: 0x7f040043
-			public const int select_dialog_multichoice_material = 2130968643;
+			public const int select_dialog_item_material = 2130968643;
 			
 			// aapt resource value: 0x7f040044
-			public const int select_dialog_singlechoice_material = 2130968644;
+			public const int select_dialog_multichoice_material = 2130968644;
 			
 			// aapt resource value: 0x7f040045
-			public const int SplashScreen = 2130968645;
+			public const int select_dialog_singlechoice_material = 2130968645;
 			
 			// aapt resource value: 0x7f040046
-			public const int support_simple_spinner_dropdown_item = 2130968646;
+			public const int SplashScreen = 2130968646;
 			
 			// aapt resource value: 0x7f040047
-			public const int VerificationRequestView = 2130968647;
+			public const int support_simple_spinner_dropdown_item = 2130968647;
 			
 			// aapt resource value: 0x7f040048
-			public const int zxingscanneractivitylayout = 2130968648;
+			public const int VerificationRequestView = 2130968648;
 			
 			// aapt resource value: 0x7f040049
-			public const int zxingscannerfragmentlayout = 2130968649;
+			public const int zxingscanneractivitylayout = 2130968649;
+			
+			// aapt resource value: 0x7f04004a
+			public const int zxingscannerfragmentlayout = 2130968650;
 			
 			static Layout()
 			{

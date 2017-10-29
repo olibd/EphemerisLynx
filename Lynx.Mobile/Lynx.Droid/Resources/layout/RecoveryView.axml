@@ -4,15 +4,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mainView">
+    android:id="@+id/recoveryView">
+    <EditText
+        android:inputType="textMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        local:MvxBind="Text MnemonicInput, mode=TwoWay"
+        android:id="@+id/mnemonicInput" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/register"
-        local:MvxBind="Click RegistrationButtonClick" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/recover"
-        local:MvxBind="Click RecoveryButtonClick" />
+        local:MvxBind="Text ButtonText; Click OnSubmitClick"
+        android:id="@+id/submit" />
 </LinearLayout>

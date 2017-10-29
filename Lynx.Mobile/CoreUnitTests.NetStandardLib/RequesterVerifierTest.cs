@@ -233,6 +233,11 @@ namespace CoreUnitTests.PCL
             {
                 throw new NotImplementedException();
             }
+
+            public Task<ID> RecoverIDAsync()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private class DummyAttributeFacade : IAttributeFacade

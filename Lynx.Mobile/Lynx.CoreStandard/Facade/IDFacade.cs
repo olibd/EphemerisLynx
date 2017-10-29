@@ -17,6 +17,7 @@ namespace Lynx.Core.Facade
     public class IDFacade : Facade, IIDFacade
     {
         private string _factoryAddress;
+        private string _registryAddress;
         private IAttributeFacade _attributeFacade;
 
         public IDFacade(string factoryAddress, Web3 web3, IAttributeFacade attributeFacade, IAccountService accountService) : base(web3, accountService)
@@ -25,14 +26,10 @@ namespace Lynx.Core.Facade
             _attributeFacade = attributeFacade;
         }
 
-        public IDFacade(string factoryAddress, IAttributeFacade attributeFacade, IAccountService accountService) : base(new Web3(), accountService)
+        public IDFacade(string factoryAddress, string registryAddress, Web3 web3, IAttributeFacade attributeFacade, IAccountService accountService) : base(web3, accountService)
         {
             _factoryAddress = factoryAddress;
-            _attributeFacade = attributeFacade;
-        }
-
-        public IDFacade(IAttributeFacade attributeFacade, IAccountService accountService) : base(new Web3(), accountService)
-        {
+            _registryAddress = registryAddress;
             _attributeFacade = attributeFacade;
         }
 
@@ -92,6 +89,13 @@ namespace Lynx.Core.Facade
             }
 
             return newID;
+        }
+
+        public async Task<ID> RecoverIDAsync()
+        {
+            RegistryService registry = new RegistryService(Web3, AccountService.PrivateKey, _registryAddress);
+            string idAddress = await registry.IdsAsyncCall(AccountService.GetAccountAddress());
+            return await GetIDAsync(idAddress);
         }
 
         public async Task<Attribute> AddAttributeAsync(ID id, Attribute attribute)

@@ -20,10 +20,13 @@ namespace Lynx.Core.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
-        public IMvxCommand RegistrationButtonClick => new MvxCommand(NavigateRegistration);
+        public IMvxCommand RegistrationButtonClick => new MvxCommand(Register);
+        public IMvxCommand RecoveryButtonClick => new MvxCommand(NavigateRecovery);
 
         private readonly IMvxNavigationService _navigationService;
         private IMvxCommand CheckAndLoadId => new MvxCommand(CheckAndLoadID);
+
+        private bool _mustGenerateKeys = false;
 
         private IAccountService _accountService;
 
@@ -43,7 +46,7 @@ namespace Lynx.Core.ViewModels
             }
             catch (NoAccountExistsException e)
             {
-                StartMnemonicValidation();
+                _mustGenerateKeys = true;
             }
         }
 
@@ -74,15 +77,28 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        private void StartMnemonicValidation()
+        private async void Register()
         {
-            new MvxCommand(async () => await _navigationService.Navigate<MnemonicValidationViewModel>()).Execute();
+            if (_mustGenerateKeys)
+                new MvxCommand(NavigateMnemonicValidation).Execute();
+            else
+                new MvxCommand(NavigateRegistration);
+        }
+
+        private async void NavigateMnemonicValidation()
+        {
+            await _navigationService.Navigate<MnemonicValidationViewModel>();
         }
 
         private async void NavigateRegistration()
         {
             Mvx.RegisterType(() => _accountService);
             await _navigationService.Navigate<RegistrationViewModel>();
+        }
+
+        private async void NavigateRecovery()
+        {
+            await _navigationService.Navigate<RecoveryViewModel>();
         }
     }
 }
