@@ -42,6 +42,12 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IO.Ably, Version=0.8.0.0, Culture=neutral, PublicKeyToken=70c9e5c3d2c68b16, processorArchitecture=MSIL">
+      <HintPath>..\packages\ably.io.0.8.5\lib\monoandroid\IO.Ably.dll</HintPath>
+    </Reference>
+    <Reference Include="MsgPack, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MsgPack.Cli.0.9.1\lib\MonoAndroid10\MsgPack.dll</HintPath>
+    </Reference>
     <Reference Include="MvvmCross.Droid.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmCross.Droid.Shared.4.4.0\lib\MonoAndroid\MvvmCross.Droid.Shared.dll</HintPath>
     </Reference>
@@ -136,6 +142,12 @@
     <Reference Include="crypto">
       <HintPath>..\..\eVi.abi.lib.pcl\packages\Portable.BouncyCastle.1.8.1.1\lib\portable-net4+sl5+wp8+win8+wpa81\crypto.dll</HintPath>
     </Reference>
+    <Reference Include="Nethereum.Portable">
+      <HintPath>..\..\eVi.abi.lib.pcl\packages\Nethereum.Portable.1.0.6\lib\portable45-net45+win8+wpa81\Nethereum.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\eVi.abi.lib.pcl\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.1.3\lib\netstandard2.0\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -175,13 +187,6 @@
     <Reference Include="MvvmCross.Droid.Support.Fragment">
       <HintPath>..\packages\MvvmCross.Droid.Support.Fragment.5.2.0\lib\MonoAndroid70\MvvmCross.Droid.Support.Fragment.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Nethereum.Portable">
-      <HintPath>..\packages\Nethereum.Portable.1.0.6\lib\portable45-net45+win8+wpa81\Nethereum.Portable.dll</HintPath>
-    </Reference>
     <Reference Include="MsgPack">
       <HintPath>..\packages\MsgPack.Cli.0.9.1\lib\MonoAndroid10\MsgPack.dll</HintPath>
     </Reference>
@@ -204,6 +209,7 @@
   <ItemGroup>
     <Compile Include="AndroidSpecificDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\MnemonicValidationView.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\RegistrationView.cs" />
     <Compile Include="SplashScreen.cs" />
@@ -218,6 +224,7 @@
     <Compile Include="DebugTrace.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="Views\FingerprintLoginDialogFragment.cs" />
+    <Compile Include="Views\InfoRequestView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -230,9 +237,13 @@
     </AndroidResource>
     <AndroidResource Include="Resources\layout\CertifyAttributeView.xml" />
     <AndroidResource Include="Resources\layout\CertifyView.xml" />
+    <AndroidResource Include="Resources\layout\MnemonicValidationView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <None Include="ToDo-MvvmCross\_ Droid UI.txt" />
     <AndroidResource Include="Resources\layout\SplashScreen.axml" />
     <AndroidResource Include="Resources\drawable\splash.png" />
+    <AndroidResource Include="Resources\layout\InfoRequestView.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
