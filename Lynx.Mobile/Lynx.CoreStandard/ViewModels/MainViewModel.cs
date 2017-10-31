@@ -53,6 +53,7 @@ namespace Lynx.Core.ViewModels
                 await StartMnemonicValidation();
             }
         }
+
         private async Task CheckAndLoadID()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();

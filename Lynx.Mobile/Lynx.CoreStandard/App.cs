@@ -48,13 +48,13 @@ namespace Lynx.Core
             Mvx.RegisterType<IMapper<ID>>(() => new IDMapper(dbfile, Mvx.Resolve<IMapper<Attribute>>()));
 
             //Configure the the eth node
-            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode("0xcddd77d4b7a28faea9e1ed225e559656527c60b9", "http://jmon.tech:8545");
+            Mvx.GetSingleton<ILynxConfigurationService>().ConfigureEthNode(StaticRessources.FactoryContractAddress, StaticRessources.RpcEndpointUrl);
 
             //Register the dummy ContentService as a singleton, temp solution
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
             RegisterAppStart<ViewModels.MainViewModel>();
 
-            Mvx.RegisterType<IRequester>(() => new Requester(Mvx.Resolve<ITokenCryptoService<IToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>(), Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<ICertificateFacade>()));
+            Mvx.RegisterType<Requester>(() => new Requester(Mvx.Resolve<ITokenCryptoService<IToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>(), Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<ICertificateFacade>()));
             Mvx.RegisterType<IReceiver>(() => new Receiver(Mvx.Resolve<ITokenCryptoService<IToken>>(), Mvx.Resolve<IAccountService>(), Mvx.Resolve<ID>(), Mvx.Resolve<IIDFacade>(), Mvx.Resolve<ICertificateFacade>()));
         }
     }

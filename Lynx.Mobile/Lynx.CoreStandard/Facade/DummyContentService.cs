@@ -10,7 +10,7 @@ namespace Lynx.Core.Facade
         public IContent GetContent(string location, string hash)
         {
             //TODO: Check hash
-            return new StringContent(location.Substring(8));
+            return new StringContent(location);
         }
     }
 }

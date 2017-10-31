@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="register">Register a new ID</string>
+  <string name="beginverify">I have backed up my recovery phrase</string>
   <string name="recover">Recover an existing ID</string>
   <string name="app_name">Lynx</string>
 	<string name="firstname">Firstname</string>
