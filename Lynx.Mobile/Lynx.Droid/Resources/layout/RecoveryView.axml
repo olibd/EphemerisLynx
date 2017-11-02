@@ -9,7 +9,7 @@
         android:inputType="textMultiLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        local:MvxBind="Text MnemonicInput, mode=TwoWay"
+        local:MvxBind="Text MnemonicInput"
         android:id="@+id/mnemonicInput" />
     <Button
         android:layout_width="match_parent"

@@ -79,7 +79,7 @@ namespace Lynx.Core.ViewModels
                 Mnemonic mnemonic = new Mnemonic(MnemonicInput, Wordlist.English);
                 return mnemonic.IsValidChecksum;
             }
-            catch (FormatException e)
+            catch (FormatException)
             {
                 return false;
             }
@@ -93,6 +93,7 @@ namespace Lynx.Core.ViewModels
 
             Mnemonic mnemonic = new Mnemonic(MnemonicInput, Wordlist.English);
             AccountService newAccount = new AccountService(mnemonic);
+            Mvx.RegisterType<IAccountService>(() => newAccount);
             Mvx.Resolve<IPlatformSpecificDataService>().SaveAccount(newAccount);
 
             IIDFacade _idFacade = Mvx.Resolve<IIDFacade>();

@@ -22,7 +22,7 @@ namespace Lynx.Core
         /// </summary>
         /// <param name="factoryContract">The IDFactory smart contract address, used when deploying a new ID</param>
         /// <param name="rpcEndpoint">The URL for the Ethereum node's RPC endpoint</param>
-        public void ConfigureEthNode(string factoryContract, string rpcEndpoint)
+        public void ConfigureEthNode(string factoryContract, string registryContract, string rpcEndpoint)
         {
             Web3 web3 = new Web3(rpcEndpoint);
             Mvx.RegisterSingleton<Web3>(() => web3);
@@ -30,7 +30,7 @@ namespace Lynx.Core
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
             Mvx.RegisterSingleton<ICertificateFacade>(() => new CertificateFacade(web3, Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));
             Mvx.RegisterSingleton<IAttributeFacade>(() => new AttributeFacade(web3, Mvx.Resolve<ICertificateFacade>(), Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));
-            Mvx.RegisterSingleton<IIDFacade>(() => new IDFacade(factoryContract, web3, Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<IAccountService>()));
+            Mvx.RegisterSingleton<IIDFacade>(() => new IDFacade(factoryContract, registryContract, web3, Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<IAccountService>()));
         }
     }
 }
