@@ -20,6 +20,7 @@ namespace Lynx.Core.ViewModels
     {
         public ID ID { get; set; }
         public List<Attribute> Attributes { get; set; }
+        public string Fullname { get; set; }
         private IMvxNavigationService _navigationService;
 
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
@@ -38,7 +39,11 @@ namespace Lynx.Core.ViewModels
         public void Init()
         {
             ID = Mvx.Resolve<ID>();
-            Attributes = Mvx.Resolve<ID>().Attributes.Values.ToList();
+            Attributes = ID.Attributes.Values.ToList();
+            Attributes.Remove(ID.Attributes["firstname"]);
+            Attributes.Remove(ID.Attributes["lastname"]);
+            Fullname = ID.Attributes["firstname"].Content.ToString() + " " + ID.Attributes["lastname"].Content.ToString();
+            Fullname = Fullname.ToUpperInvariant();
             UpdateID.Execute();
         }
 
