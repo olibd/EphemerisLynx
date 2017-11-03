@@ -5,6 +5,7 @@ using MvvmCross.Core.ViewModels;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using MvvmCross.Core.Navigation;
 using Lynx.Core.PeerVerification.Interfaces;
+using System.Threading.Tasks;
 
 namespace Lynx.Core.ViewModels
 {
@@ -64,12 +65,12 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        public IMvxCommand CertifyIDCommand => new MvxCommand(CertifyID);
+        public IMvxCommand CertifyIDCommand => new MvxAsyncCommand(CertifyID);
 
-        private void CertifyID()
+        private async Task CertifyID()
         {
-            _verifier.Certify(_attributesToCertify.ToArray());
-            _verifier.CertificatesSent += (sender, e) => { Close((this)); };
+            await _verifier.Certify(_attributesToCertify.ToArray());
+            Close((this));
         }
 
         public override void Prepare(IReceiver verifier)

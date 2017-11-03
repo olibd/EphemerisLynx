@@ -11,6 +11,7 @@ using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.PeerVerification;
+using Lynx.Core.PeerVerification.Interfaces;
 using Nethereum.Web3;
 using Newtonsoft.Json;
 using NUnit.Framework;

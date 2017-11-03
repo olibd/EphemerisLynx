@@ -9,7 +9,12 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using MvvmCross.Core.ViewModels;
 using MvvmCross.Droid.Views;
+using MvvmCross.Platform.Core;
+using Lynx.Core.ViewModels;
+using MvvmCross.Binding.BindingContext;
+using Lynx.Core.Interactions;
 
 namespace Lynx.Droid.Views
 {
@@ -21,6 +26,5 @@ namespace Lynx.Droid.Views
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.MainView);
         }
-
     }
 }

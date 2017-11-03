@@ -42,6 +42,12 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IO.Ably, Version=0.8.0.0, Culture=neutral, PublicKeyToken=70c9e5c3d2c68b16, processorArchitecture=MSIL">
+      <HintPath>..\packages\ably.io.0.8.5\lib\monoandroid\IO.Ably.dll</HintPath>
+    </Reference>
+    <Reference Include="MsgPack, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MsgPack.Cli.0.9.1\lib\MonoAndroid10\MsgPack.dll</HintPath>
+    </Reference>
     <Reference Include="MvvmCross.Droid.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmCross.Droid.Shared.4.4.0\lib\MonoAndroid\MvvmCross.Droid.Shared.dll</HintPath>
     </Reference>
@@ -191,6 +197,7 @@
   <ItemGroup>
     <Compile Include="AndroidSpecificDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\MnemonicValidationView.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\RegistrationView.cs" />
     <Compile Include="SplashScreen.cs" />
@@ -216,6 +223,9 @@
     </AndroidResource>
     <AndroidResource Include="Resources\layout\CertifyAttributeView.xml" />
     <AndroidResource Include="Resources\layout\CertifyView.xml" />
+    <AndroidResource Include="Resources\layout\MnemonicValidationView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <None Include="ToDo-MvvmCross\_ Droid UI.txt" />
     <AndroidResource Include="Resources\layout\SplashScreen.axml" />
     <AndroidResource Include="Resources\drawable\splash.png" />

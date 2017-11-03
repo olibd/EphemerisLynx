@@ -1,5 +1,6 @@
 ﻿using System;
 using Lynx.Core.Models.Interactions;
+using Lynx.Core.PeerVerification;
 using Lynx.Core.PeerVerification.Interfaces;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
@@ -8,7 +9,7 @@ namespace Lynx.Core.ViewModels
 {
     public class VerificationRequestViewModel : MvxViewModel
     {
-        private IRequester _requester;
+        private Requester _requester;
         public string Syn
         {
             get
@@ -18,7 +19,7 @@ namespace Lynx.Core.ViewModels
         }
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
 
-        public VerificationRequestViewModel(IRequester requester)
+        public VerificationRequestViewModel(Requester requester)
         {
             _requester = requester;
         }
@@ -45,7 +46,7 @@ namespace Lynx.Core.ViewModels
                     Close((this));
                 },
 
-                Query = "Your ID was certified by " + _requester.Ack.Id.Attributes["firstname"].Content.ToString()
+                Query = "Your ID was sucessfully certified!"
             };
 
             ConfirmationInteraction.Raise(confirmationRequest);

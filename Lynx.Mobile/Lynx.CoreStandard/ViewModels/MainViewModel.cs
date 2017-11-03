@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Lynx.Core.Crypto;
@@ -13,76 +14,74 @@ using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Core.Navigation;
 using NBitcoin;
+using Lynx.Core.Interactions;
 
 namespace Lynx.Core.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
-        private IMvxNavigationService _navigationService;
-        private IMvxCommand _checkAndLoadID => new MvxCommand(CheckAndLoadID);
-        public IMvxCommand RegisterClickCommand => new MvxCommand(NavigateRegistration);
+        public IMvxCommand RegistrationButtonClick => new MvxCommand(NavigateRegistration);
 
-        private string _mnemonicPhrase;
+        private readonly IMvxNavigationService _navigationService;
 
-        public string MnemonicPhrase
-        {
-            get => _mnemonicPhrase;
-        }
+        private IAccountService _accountService;
 
         public MainViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
         }
 
-        public override void Start()
+        public override async void Start()
         {
             base.Start();
-            LoadKeys();
-            _checkAndLoadID.Execute();
+
+            try
+            {
+                SetupAccount();
+                await CheckAndLoadID();
+            }
+            catch (NoAccountExistsException e)
+            {
+                await StartMnemonicValidation();
+            }
         }
-        private async void CheckAndLoadID()
+
+        private async Task CheckAndLoadID()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
             if (dataService.IDUID != -1)
             {
                 //TODO: Load from database, and fallback to loading from blockchain in case of exception
-                IIDFacade idFacade = Mvx.Resolve<IIDFacade>();
 
-                //ID id = await idFacade.GetIDAsync(dataService.IDAddress);
                 ID id = await Mvx.Resolve<IMapper<ID>>().GetAsync(dataService.IDUID);
                 Mvx.RegisterSingleton(() => id);
                 await _navigationService.Navigate<IDViewModel>();
             }
         }
 
-        private void LoadKeys()
+        /// <summary>
+        /// Sets up the AccountService, loading it if a key is saved.
+        /// </summary>
+        private void SetupAccount()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
-            IAccountService accountService = dataService.LoadAccount();
+            _accountService = dataService.LoadAccount();
+            Mvx.RegisterType<IAccountService>(() => _accountService);
 
-            if (accountService == null)
+            if (_accountService == null)
             {
-                //We do not have any keys yet
-
-                accountService = new AccountService();
-                dataService.SaveAccount(accountService);
-
-                _mnemonicPhrase = "Mnemonic phrase: " + accountService.MnemonicPhrase;
+                throw new NoAccountExistsException();
             }
-            else
-            {
-                _mnemonicPhrase = "Loading existing keys, no seed phrase generated";
-            }
+        }
 
-            RaisePropertyChanged(() => MnemonicPhrase);
-
-            Mvx.RegisterType(() => accountService);
+        private async Task StartMnemonicValidation()
+        {
+            await _navigationService.Navigate<MnemonicValidationViewModel>();
         }
 
         private async void NavigateRegistration()
         {
-            //TODO: Generate private key and save into file
-            //TODO: Encrypt file, store key in keystore, fingerprint locked
+            Mvx.RegisterType(() => _accountService);
             await _navigationService.Navigate<RegistrationViewModel>();
         }
     }

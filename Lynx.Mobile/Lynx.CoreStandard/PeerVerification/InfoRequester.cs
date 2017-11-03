@@ -15,7 +15,7 @@ namespace Lynx.Core.PeerVerification
     {
         private ID _id;
         private string[] _requestedAttributes;
-        public new event EventHandler<HandshakeCompleteEvent> HandshakeComplete;
+        public new event EventHandler<ReceivedIDEvent> HandshakeComplete;
 
         public InfoRequester(string[] requestedAttributes, ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, id, idFacade, attributeFacade, certificateFacade)
         {
@@ -64,12 +64,12 @@ namespace Lynx.Core.PeerVerification
             InfoRequestResponse infoRequestResponse = await DecryptAndInstantiateHandshakeToken<InfoRequestResponse>(encryptedToken, Ack.Id);
             VerifyHandshakeTokenIDOwnership(infoRequestResponse);
 
-            HandshakeCompleteEvent e;
+            ReceivedIDEvent e;
             if (_tokenCryptoService.VerifySignature(infoRequestResponse))
             {
-                e = new HandshakeCompleteEvent()
+                e = new ReceivedIDEvent()
                 {
-                    Id = infoRequestResponse.Id,
+                    ReceivedID = infoRequestResponse.Id,
                 };
 
                 _session.Close();

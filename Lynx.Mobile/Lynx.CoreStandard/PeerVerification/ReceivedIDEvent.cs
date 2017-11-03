@@ -3,8 +3,8 @@ using Lynx.Core.Models.IDSubsystem;
 
 namespace Lynx.Core.PeerVerification
 {
-    public class HandshakeCompleteEvent : EventArgs
+    public class ReceivedIDEvent : EventArgs
     {
-        public ID Id { get; set; }
+        public ID ReceivedID { get; set; }
     }
 }
