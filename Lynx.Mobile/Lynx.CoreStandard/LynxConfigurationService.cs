@@ -26,7 +26,6 @@ namespace Lynx.Core
         {
             Web3 web3 = new Web3(rpcEndpoint);
             Mvx.RegisterSingleton<Web3>(() => web3);
-            Mvx.RegisterSingleton<IAccountService>(() => new AccountService());
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
             Mvx.RegisterSingleton<ICertificateFacade>(() => new CertificateFacade(web3, Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));
             Mvx.RegisterSingleton<IAttributeFacade>(() => new AttributeFacade(web3, Mvx.Resolve<ICertificateFacade>(), Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));

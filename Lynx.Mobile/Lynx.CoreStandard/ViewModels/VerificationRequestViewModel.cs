@@ -46,7 +46,7 @@ namespace Lynx.Core.ViewModels
                     Close((this));
                 },
 
-                Query = "Your ID was certified by " + _requester.Ack.Id.Attributes["firstname"].Content.ToString()
+                Query = "Your ID was sucessfully certified!"
             };
 
             ConfirmationInteraction.Raise(confirmationRequest);

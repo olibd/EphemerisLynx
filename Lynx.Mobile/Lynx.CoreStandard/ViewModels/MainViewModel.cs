@@ -34,7 +34,7 @@ namespace Lynx.Core.ViewModels
         public override async void Start()
         {
             base.Start();
-            
+
             try
             {
                 SetupAccount();
@@ -62,10 +62,11 @@ namespace Lynx.Core.ViewModels
         /// <summary>
         /// Sets up the AccountService, loading it if a key is saved.
         /// </summary>
-        private void SetupAccount() 
+        private void SetupAccount()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
             _accountService = dataService.LoadAccount();
+            Mvx.RegisterType<IAccountService>(() => _accountService);
 
             if (_accountService == null)
             {
