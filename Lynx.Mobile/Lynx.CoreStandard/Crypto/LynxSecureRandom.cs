@@ -18,6 +18,10 @@ namespace Lynx.Core.Crypto
             _secureRandom = new SecureRandom();
         }
 
+        /// <summary>
+        /// Seeds the array with random bytes.
+        /// </summary>
+        /// <param name="output">Output.</param>
         public void GetBytes(byte[] output)
         {
             _secureRandom.NextBytes(output);

@@ -24,12 +24,14 @@ namespace Lynx.Core.PeerVerification
         private ISession _session;
         private IIDFacade _idFacade;
         private ISynAck _synAck;
+        private InfoRequestSynAck _infoRequestSynAck;
         private ISyn _syn;
         private ICertificateFacade _certificateFacade;
         public ISynAck SynAck { get { return _synAck; } }
+        public InfoRequestSynAck InfoRequestSynAck { get { return _infoRequestSynAck; } }
 
         public event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
-        public event EventHandler<CertificatesSent> CertificatesSent;
+        public event EventHandler<InfoRequestReceivedEvent> InfoRequestReceived;
 
         public Receiver(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
         {
@@ -38,7 +40,7 @@ namespace Lynx.Core.PeerVerification
             _accountService = accountService;
             _idFacade = idFacade;
             _certificateFacade = certificateFacade;
-            _session = new AblySession(new EventHandler<string>(async (sender, e) => await ProcessEncryptedHandshakeToken<SynAck>(e)), id.Address);
+            _session = new AblySession(new EventHandler<string>(async (sender, e) => await RouteEncryptedHandshakeToken<SynAck>(e)), id.Address);
         }
 
         /// <summary>
@@ -46,14 +48,11 @@ namespace Lynx.Core.PeerVerification
         /// </summary>
         private void Acknowledge(ISyn syn)
         {
-            Attribute[] accessibleAttributes = { _id.Attributes["firstname"], _id.Attributes["lastname"] };
-
             Ack ack = new Ack()
             {
                 Id = _id,
                 PublicKey = _accountService.PublicKey,
                 Encrypted = true,
-                AccessibleAttributes = accessibleAttributes
             };
 
             byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(syn.PublicKey);
@@ -83,7 +82,7 @@ namespace Lynx.Core.PeerVerification
                                                         "public Key");
         }
 
-        protected override async Task<T> ProcessEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
+        protected async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
         {
             string[] tokenArr = encryptedHandshakeToken.Split(':');
 
@@ -100,16 +99,11 @@ namespace Lynx.Core.PeerVerification
                 default:
                     throw new InvalidTokenTypeException("The Token type received is invalid");
             }
-
-            //We can return null because the caller of this method is an anonymous method in an EventHandler
-            //and it won't use the returned data
-            return null;
         }
 
         private async Task ProcessSynAck(string encryptedSynAck)
         {
-            SynAck unverifiedSynAck = await base.ProcessEncryptedHandshakeToken<SynAck>(encryptedSynAck);
-
+            SynAck unverifiedSynAck = await base.DecryptAndInstantiateHandshakeToken<SynAck>(encryptedSynAck, _syn.Id);
 
             if (unverifiedSynAck.PublicKey != _syn.PublicKey)
                 throw new TokenPublicKeyMismatch();
@@ -128,18 +122,27 @@ namespace Lynx.Core.PeerVerification
             IdentityProfileReceived.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Processes an InfoRequestSynAck containing requested attributes and fires an event 
+        /// </summary>
         private async Task ProcessInfoRequestSynAck(string encryptedInfoRequestToken)
         {
-
-            string decryptedToken = _tokenCryptoService.Decrypt(encryptedInfoRequestToken, _accountService.GetPrivateKeyAsByteArray());
-            InfoRequestTokenFactory<InfoRequestSynAck> handshakeTokenFactory = new InfoRequestTokenFactory<InfoRequestSynAck>(_idFacade);
-            InfoRequestSynAck infoRequestSynAck = await handshakeTokenFactory.CreateInfoRequestTokenAsync(decryptedToken);
+            InfoRequestSynAck infoRequestSynAck = await base.DecryptAndInstantiateHandshakeToken<InfoRequestSynAck>(encryptedInfoRequestToken, _syn.Id);
 
             if (infoRequestSynAck.PublicKey != _syn.PublicKey)
                 throw new TokenPublicKeyMismatch();
 
             if (_tokenCryptoService.VerifySignature(infoRequestSynAck))
-                GenerateAndSendResponse(infoRequestSynAck);
+            {
+                _infoRequestSynAck = infoRequestSynAck;
+
+                //this event is fired to display an activity showing the requested attributes
+                InfoRequestReceivedEvent e = new InfoRequestReceivedEvent()
+                {
+                    InfoRequestSynAck = _infoRequestSynAck
+                };
+                InfoRequestReceived.Invoke(this, e);
+            }
             else
                 throw new SignatureDoesntMatchException("The signature was not " +
                                                                         "generated by the given " +
@@ -149,13 +152,12 @@ namespace Lynx.Core.PeerVerification
         /// <summary>
         /// JSON-Encodes and sends attributes and attribute contents to the requesting service
         /// </summary>
-        private void GenerateAndSendResponse(InfoRequestSynAck infoRequestSynAck)
+        public void AuthorizeReadRequest(string[] keysOfAttributesToAuthorize)
         {
-            string[] requestedAttributesDescription = infoRequestSynAck.RequestedAttributes;
-            Attribute[] requestedAttributes = new Attribute[requestedAttributesDescription.Length];
-            for (int i = 0; i < requestedAttributesDescription.Length; i++)
+            Attribute[] authorizedAttr = new Attribute[keysOfAttributesToAuthorize.Length];
+            for (int i = 0; i < keysOfAttributesToAuthorize.Length; i++)
             {
-                requestedAttributes[i] = _id.Attributes[requestedAttributesDescription[i]];
+                authorizedAttr[i] = _id.Attributes[keysOfAttributesToAuthorize[i]];
             }
 
             InfoRequestResponse response = new InfoRequestResponse()
@@ -163,10 +165,10 @@ namespace Lynx.Core.PeerVerification
                 Id = _id,
                 PublicKey = _accountService.PublicKey,
                 Encrypted = true,
-                AccessibleAttributes = requestedAttributes
+                AccessibleAttributes = authorizedAttr
             };
 
-            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(infoRequestSynAck.PublicKey);
+            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(_infoRequestSynAck.PublicKey);
             _tokenCryptoService.Sign(response, _accountService.GetPrivateKeyAsByteArray());
             string encryptedToken = _tokenCryptoService.Encrypt(response, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
@@ -180,14 +182,13 @@ namespace Lynx.Core.PeerVerification
             string encryptedToken = CreateEncryptedCertificationConfirmationToken(certificates);
 
             _session.Send(encryptedToken);
-
-            CertificatesSent.Invoke(this, new CertificatesSent());
         }
 
         private string CreateEncryptedCertificationConfirmationToken(Certificate[] certificates)
         {
             CertificationConfirmationToken certConfToken = new CertificationConfirmationToken()
             {
+
                 PublicKey = _accountService.PublicKey,
                 Encrypted = true,
                 IssuedCertificates = certificates

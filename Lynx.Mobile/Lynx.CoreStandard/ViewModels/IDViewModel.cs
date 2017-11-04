@@ -57,26 +57,33 @@ namespace Lynx.Core.ViewModels
 
             //TODO: Setup the verifier callback
             await _verifier.ProcessSyn(content);
+
             _verifier.IdentityProfileReceived += async (sender, e) =>
             {
                 _scanned = false;
                 await _navigationService.Navigate<CertifyViewModel, IReceiver>((IReceiver)sender);
             };
+
+            _verifier.InfoRequestReceived += async (sender, e) =>
+            {
+                _scanned = false;
+                await _navigationService.Navigate<InfoRequestViewModel, IReceiver>((IReceiver)sender);
+            };
         }
 
         private async void FetchID()
         {
-            ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
+            //ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
 
-            //BUG: Crash when saving with the mappers - requires a bit of time to make this work properly, and non-critical
+            //TODO: Fix crash when saving with the mappers - requires a bit of time to make this work properly, and non-critical
             //This will need to be fixed by the time we have certificate revocation
 
             //int UID = await Mvx.Resolve<IMapper<ID>>().SaveAsync(ID);
             //Mvx.Resolve<IPlatformSpecificDataService>().IDUID = UID;
 
-            Attributes = ID.Attributes.Values.ToList();
-            RaisePropertyChanged(() => Attributes);
-             //TODO: Tell the user when this is done
+            //Attributes = ID.Attributes.Values.ToList();
+            //RaisePropertyChanged(() => Attributes);
+            //TODO: Tell the user when this is done
         }
 
         private async void RequestVerification()

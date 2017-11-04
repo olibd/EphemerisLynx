@@ -83,10 +83,8 @@ namespace Lynx.Core.Facade
                 attributes = await GetAttributesAsync(newID, accessibleAttributes);
             else
                 attributes = await GetAttributesAsync(newID);
-            foreach (string key in attributes.Keys)
-            {
-                newID.AddAttribute(attributes[key]);
-            }
+
+            newID.Attributes = attributes;
 
             return newID;
         }

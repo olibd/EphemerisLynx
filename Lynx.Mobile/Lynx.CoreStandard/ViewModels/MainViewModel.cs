@@ -24,7 +24,6 @@ namespace Lynx.Core.ViewModels
         public IMvxCommand RecoveryButtonClick => new MvxCommand(NavigateRecovery);
 
         private readonly IMvxNavigationService _navigationService;
-        private IMvxCommand CheckAndLoadId => new MvxCommand(CheckAndLoadID);
 
         private bool _mustGenerateKeys = false;
 
@@ -35,14 +34,14 @@ namespace Lynx.Core.ViewModels
             _navigationService = navigationService;
         }
 
-        public override void Start()
+        public override async void Start()
         {
             base.Start();
-            
+
             try
             {
                 SetupAccount();
-                CheckAndLoadId.Execute();
+                await CheckAndLoadID();
             }
             catch (NoAccountExistsException e)
             {
@@ -50,7 +49,7 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        private async void CheckAndLoadID()
+        private async Task CheckAndLoadID()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
             if (dataService.IDUID != -1)
@@ -66,10 +65,11 @@ namespace Lynx.Core.ViewModels
         /// <summary>
         /// Sets up the AccountService, loading it if a key is saved.
         /// </summary>
-        private void SetupAccount() 
+        private void SetupAccount()
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
             _accountService = dataService.LoadAccount();
+            Mvx.RegisterType<IAccountService>(() => _accountService);
 
             if (_accountService == null)
             {
@@ -85,7 +85,7 @@ namespace Lynx.Core.ViewModels
                 new MvxCommand(NavigateRegistration);
         }
 
-        private async void NavigateMnemonicValidation()
+        private async Task StartMnemonicValidation()
         {
             await _navigationService.Navigate<MnemonicValidationViewModel>();
         }

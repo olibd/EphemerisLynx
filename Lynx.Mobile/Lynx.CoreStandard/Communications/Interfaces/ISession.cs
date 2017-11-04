@@ -5,6 +5,12 @@ namespace Lynx.Core.Communications.Interfaces
     public interface ISession
     {
         /// <summary>
+        /// Gets the session identifier.
+        /// </summary>
+        /// <value>The session identifier.</value>
+        string SessionID { get; }
+
+        /// <summary>
         /// Opens a session using the specified address
         /// </summary>
         /// <param name="networkAddress">The session address</param>

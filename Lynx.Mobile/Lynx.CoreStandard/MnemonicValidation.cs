@@ -8,38 +8,56 @@ using NBitcoin;
 
 namespace Lynx.Core
 {
+    /// <summary>
+    /// This class contains the logic necessary to perform key generation while verifying that the user does have a backup.
+    /// </summary>
     class MnemonicValidation : IMnemonicValidation
     {
+        /// <summary>
+        /// This event fires whenever the info text needs to be updated, when prompting the user for another word.
+        /// </summary>
         public event EventHandler<string> InfoTextUpdate;
+
+        /// <summary>
+        /// This event fires when the user successfully verified that they have backed up their mnemonic.
+        /// </summary>
         public event EventHandler OnValidationSuccess;  
+
+        /// <summary>
+        /// This event fires when the words presented to the user change.
+        /// </summary>
         public event EventHandler<MnemonicValidationInteraction> ValidationWordsChanged;  
 
         private string[] _mnemonic;
-        private Stack<string> _mnemonicBackupWords;
-        private Stack<int> _wordsToVerify;
-        private List<string> _buttons;
+        private Stack<string> _promptsNotInMnemonic; //Random words not in the mnemonic string
+        private Stack<int> _promptsInMnemonic; //Indices of the words in the mnemonic string
+        private List<string> _buttons; 
 
         public MnemonicValidation(string mnemonic)
         {
             _mnemonic = mnemonic.Split(' ');
 
-            _mnemonicBackupWords = new Stack<string>();
-            _wordsToVerify = new Stack<int>();
+            _promptsNotInMnemonic = new Stack<string>();
+            _promptsInMnemonic = new Stack<int>();
         }
 
+        /// <summary>
+        /// Start the validation process, prompting the user for input
+        /// </summary>
         public void StartMnemonicValidation()
         {
-            //Used to add words that are not part of the mnemonic
-            _mnemonicBackupWords = new Stack<string>(new Mnemonic(Wordlist.English, WordCount.Twelve).Words);
-            _wordsToVerify = new Stack<int>(GenerateRandomValues(4, WordCount.Twelve));
+            _promptsNotInMnemonic = new Stack<string>(new Mnemonic(Wordlist.English, WordCount.TwentyFour).Words);
+            _promptsInMnemonic = new Stack<int>(GenerateRandomValues(4, WordCount.Twelve));
+
+            // Add the 4 words that we will want to verify, and 4 other random words, to the mnemonic
 
             _buttons = new List<string>();
-            foreach(int i in _wordsToVerify)
+            foreach(int i in _promptsInMnemonic)
                 _buttons.Add(_mnemonic[i]);
 
-            for(int i = 0; i < _wordsToVerify.Count; i++)
+            for(int i = 0; i < _promptsInMnemonic.Count; i++)
             {
-                _buttons.Add(_mnemonicBackupWords.Pop());
+                _buttons.Add(_promptsNotInMnemonic.Pop());
             }
 
             VerifyNext();
@@ -49,10 +67,10 @@ namespace Lynx.Core
         private void VerifyButtonInput(string text)
         {
             string[] mnemonicWords = _mnemonic;
-            if (text == mnemonicWords[_wordsToVerify.Peek()])
+            if (text == mnemonicWords[_promptsInMnemonic.Peek()])
             {
-                _wordsToVerify.Pop();
-                if (_wordsToVerify.Count == 0)
+                _promptsInMnemonic.Pop();
+                if (_promptsInMnemonic.Count == 0)
                     OnValidationSuccess(this, new EventArgs());
                 else
                 {
@@ -61,6 +79,7 @@ namespace Lynx.Core
             }
             else
             {
+                // If the user gets a word wrong, they restart the validation
                 StartMnemonicValidation();
             }
         }
@@ -68,8 +87,9 @@ namespace Lynx.Core
         private void VerifyNext()
         {
             InfoTextUpdate(this, "Please enter the word from your seed phrase in position " +
-                                     (_wordsToVerify.Peek() + 1) + " (" + _wordsToVerify.Count + " left)");
+                                     (_promptsInMnemonic.Peek() + 1) + " (" + _promptsInMnemonic.Count + " left)");
 
+            // RNG is only used to shuffle the buttons
             Random rng = new Random();
 
             MnemonicValidationInteraction interaction = new MnemonicValidationInteraction()

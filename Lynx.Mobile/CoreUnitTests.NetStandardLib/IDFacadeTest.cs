@@ -38,6 +38,7 @@ namespace CoreUnitTests.PCL
             {
                 Location = "I am an atribute location",
                 Hash = "I am an attribute hash",
+                Content = new StringContent("Ephemeris"),
                 Description = "test type"
             };
             ID id = new ID();
@@ -45,6 +46,7 @@ namespace CoreUnitTests.PCL
             id = await _idFacade.DeployAsync(id);
             Assert.NotNull(id.Address);
             Assert.NotNull(attribute.Address);
+            Assert.NotNull(attribute.Owner);
         }
 
         [Test]
@@ -55,6 +57,7 @@ namespace CoreUnitTests.PCL
             {
                 Location = "I am an atribute location",
                 Hash = "I am an attribute hash",
+                Content = new StringContent("Ephemeris"),
                 Description = "key"
             };
 
