@@ -23,13 +23,6 @@ namespace Lynx.Core.Facade
         private ICertificateFacade _certificateFacade;
         private IContentService _contentService;
 
-
-        public AttributeFacade(ICertificateFacade certificateFacade, IContentService contentService, IAccountService accountService) : base(new Web3(), accountService)
-        {
-            _certificateFacade = certificateFacade;
-            _contentService = contentService;
-        }
-
         public AttributeFacade(Web3 web3, ICertificateFacade certificateFacade, IContentService contentService, IAccountService accountService) : base(web3, accountService)
         {
             _certificateFacade = certificateFacade;

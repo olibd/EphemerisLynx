@@ -80,17 +80,17 @@ namespace Lynx.Core.ViewModels
         private async void Register()
         {
             if (_mustGenerateKeys)
-                new MvxCommand(NavigateMnemonicValidation).Execute();
+                await NavigateMnemonicValidation();
             else
-                new MvxCommand(NavigateRegistration);
+                await NavigateRegistration();
         }
 
-        private async Task StartMnemonicValidation()
+        private async Task NavigateMnemonicValidation()
         {
             await _navigationService.Navigate<MnemonicValidationViewModel>();
         }
 
-        private async void NavigateRegistration()
+        private async Task NavigateRegistration()
         {
             Mvx.RegisterType(() => _accountService);
             await _navigationService.Navigate<RegistrationViewModel>();

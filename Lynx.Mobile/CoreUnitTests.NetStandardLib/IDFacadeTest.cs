@@ -10,6 +10,7 @@ using Nethereum.ABI.Encoders;
 using NUnit.Framework;
 using Lynx.Core.Models.IDSubsystem;
 using System.Text;
+using Lynx.Core;
 
 
 namespace CoreUnitTests.PCL
@@ -28,7 +29,7 @@ namespace CoreUnitTests.PCL
 
             _certFacade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
             _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
-            _idFacade = new IDFacade(_factoryService.GetAddress(), _web3, _attributeFacade, _accountService);
+            _idFacade = new IDFacade(_factoryService.GetAddress(), StaticRessources.RegistryContractAddress, _web3, _attributeFacade, _accountService);
         }
 
         [Test]
@@ -141,7 +142,7 @@ namespace CoreUnitTests.PCL
             ID id = await _idFacade.RecoverIDAsync();
 
             Assert.AreEqual(1, id.Attributes.Count);
-            Assert.AreEqual("I am an attribute hash", id.Attributes["test type"]);
+            Assert.AreEqual("I am an attribute hash", id.Attributes["test type"].Hash);
         }
 
         [Test]

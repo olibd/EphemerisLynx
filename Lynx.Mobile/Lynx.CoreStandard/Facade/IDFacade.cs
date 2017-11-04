@@ -20,12 +20,6 @@ namespace Lynx.Core.Facade
         private string _registryAddress;
         private IAttributeFacade _attributeFacade;
 
-        public IDFacade(string factoryAddress, Web3 web3, IAttributeFacade attributeFacade, IAccountService accountService) : base(web3, accountService)
-        {
-            _factoryAddress = factoryAddress;
-            _attributeFacade = attributeFacade;
-        }
-
         public IDFacade(string factoryAddress, string registryAddress, Web3 web3, IAttributeFacade attributeFacade, IAccountService accountService) : base(web3, accountService)
         {
             _factoryAddress = factoryAddress;
@@ -122,8 +116,7 @@ namespace Lynx.Core.Facade
                 byte[] attributeKey = await idcService.GetAttributeKeyAsyncCall(i);
                 //Get the attribute and add it to the dict
                 Attribute newAttribute = await GetAttributeByKey(idcService, attributeKey);
-                string keyStr = Encoding.UTF8.GetString(attributeKey, 0, attributeKey.Length);
-                dict.Add(keyStr, newAttribute);
+                dict.Add(newAttribute.Description, newAttribute);
             }
 
             return dict;

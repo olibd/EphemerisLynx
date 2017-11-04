@@ -66,9 +66,14 @@ namespace Lynx.Core.ViewModels
         {
             _navigationService = navigationService;
             _onSubmitClick = new MvxCommand(DoRecovery, () => CanSubmit);
+            ButtonText = "Please enter your 12-word phrase";
             PropertyChanged += (sender, args) =>
             {
-                CanSubmit = CheckMnemonicValidity();
+                if (args.PropertyName == "MnemonicInput")
+                {
+                    CanSubmit = CheckMnemonicValidity();
+                    ButtonText = CanSubmit ? "Submit" : "Please enter your 12-word phrase";
+                }
             };
         }
 
@@ -91,22 +96,24 @@ namespace Lynx.Core.ViewModels
             _onSubmitClick = new MvxCommand(() => { }, () => false);
             RaisePropertyChanged(() => OnSubmitClick);
 
+            ButtonText = "Please wait...";
+
             Mnemonic mnemonic = new Mnemonic(MnemonicInput, Wordlist.English);
-            AccountService newAccount = new AccountService(mnemonic);
-            Mvx.RegisterType<IAccountService>(() => newAccount);
-            Mvx.Resolve<IPlatformSpecificDataService>().SaveAccount(newAccount);
+            IAccountService newAccount = new AccountService(mnemonic);
+            Mvx.RegisterType(() => newAccount);
+            IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
 
-            IIDFacade _idFacade = Mvx.Resolve<IIDFacade>();
-            ID id = await _idFacade.RecoverIDAsync();
-
-            await Mvx.Resolve<IMapper<ID>>().SaveAsync(id);
+            IIDFacade idFacade = Mvx.Resolve<IIDFacade>();
+            ID id = await idFacade.RecoverIDAsync();
             Mvx.RegisterType(() => id);
 
-            await _navigationService.Navigate<IDViewModel>();
-        }
+            dataService.SaveAccount(newAccount);
+            await Mvx.Resolve<IMapper<ID>>().SaveAsync(id);
+            dataService.IDAddress = id.Address;
+            dataService.IDUID = id.UID;
 
-        public override void Start()
-        {
+
+            await _navigationService.Navigate<IDViewModel>();
         }
     }
 }

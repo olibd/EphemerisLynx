@@ -10,7 +10,7 @@ namespace Lynx.Core.Facade
         public IContent GetContent(string location, string hash)
         {
             //TODO: Check hash
-            return new StringContent(location);
+            return new StringContent(location.Remove(0, 8)); //Remove the "location" prefix
         }
     }
 }
