@@ -14,6 +14,7 @@ using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Core.Navigation;
 using Plugin.Fingerprint;
+using Plugin.Fingerprint.Abstractions;
 using NBitcoin;
 using Lynx.Core.Interactions;
 
@@ -98,8 +99,15 @@ namespace Lynx.Core.ViewModels
             if (result)
             {
                 var auth = await CrossFingerprint.Current.AuthenticateAsync("Scan fingerprint to access your ID.");
-                if (auth.Authenticated)
+                if (auth.Status == FingerprintAuthenticationResultStatus.TooManyAttempts)
                 {
+                    _fingerprintAuthenticationMessage = "Too many attempts. Try again later.";
+                    RaisePropertyChanged(() => FingerprintAuthenticationMessage);
+                }
+                else if (auth.Authenticated)
+                {
+                    _fingerprintAuthenticationMessage = "Fingerprint Authentication Successful!";
+                    RaisePropertyChanged(() => FingerprintAuthenticationMessage);
                     await _navigationService.Navigate<IDViewModel>();
                 }
                 else
