@@ -31,9 +31,7 @@ namespace Lynx.Core.PeerVerification
         public InfoRequestSynAck InfoRequestSynAck { get { return _infoRequestSynAck; } }
 
         public event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
-        public event EventHandler<CertificatesSent> CertificatesSent;
         public event EventHandler<InfoRequestReceivedEvent> InfoRequestReceived;
-        public event EventHandler<InfoRequestAuthorizedEvent> InfoRequestAuthorized;
 
         public Receiver(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
         {
@@ -50,14 +48,11 @@ namespace Lynx.Core.PeerVerification
         /// </summary>
         private void Acknowledge(ISyn syn)
         {
-            Attribute[] accessibleAttributes = { _id.Attributes["firstname"], _id.Attributes["lastname"] };
-
             Ack ack = new Ack()
             {
                 Id = _id,
                 PublicKey = _accountService.PublicKey,
                 Encrypted = true,
-                AccessibleAttributes = accessibleAttributes
             };
 
             byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(syn.PublicKey);
@@ -177,9 +172,6 @@ namespace Lynx.Core.PeerVerification
             _tokenCryptoService.Sign(response, _accountService.GetPrivateKeyAsByteArray());
             string encryptedToken = _tokenCryptoService.Encrypt(response, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             _session.Send(encryptedToken);
-
-            InfoRequestAuthorizedEvent e = new InfoRequestAuthorizedEvent();
-            InfoRequestAuthorized.Invoke(this, e);
         }
 
 
@@ -190,14 +182,13 @@ namespace Lynx.Core.PeerVerification
             string encryptedToken = CreateEncryptedCertificationConfirmationToken(certificates);
 
             _session.Send(encryptedToken);
-
-            CertificatesSent.Invoke(this, new CertificatesSent());
         }
 
         private string CreateEncryptedCertificationConfirmationToken(Certificate[] certificates)
         {
             CertificationConfirmationToken certConfToken = new CertificationConfirmationToken()
             {
+
                 PublicKey = _accountService.PublicKey,
                 Encrypted = true,
                 IssuedCertificates = certificates

@@ -75,6 +75,7 @@ namespace Lynx.Core.ViewModels
         {
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
             _accountService = dataService.LoadAccount();
+            Mvx.RegisterType<IAccountService>(() => _accountService);
 
             if (_accountService == null)
             {
