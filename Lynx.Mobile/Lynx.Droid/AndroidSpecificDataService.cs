@@ -10,10 +10,12 @@ namespace Lynx.Droid
     internal class AndroidSpecificDataService : IPlatformSpecificDataService
     {
         private Context applicationContext;
+        KeyStoreCryptoService keyStoreCryptoService;
 
         public AndroidSpecificDataService(Context applicationContext)
         {
             this.applicationContext = applicationContext;
+            keyStoreCryptoService = new KeyStoreCryptoService();
         }
 
         public string IDAddress
@@ -63,7 +65,16 @@ namespace Lynx.Droid
         //TODO: Android keystore logic to safely store the private key
         public IAccountService LoadAccount()
         {
-            string path = GetFileInDataDir("keys");
+            try
+            {
+                return new AccountService(keyStoreCryptoService.DecryptAndGetKey());
+            }
+            catch (IOException e)
+            {
+                return null;
+            }
+            /**
+            string path = GetFileInDataDir("keys");//read from keystore
 
             try
             {
@@ -74,15 +85,16 @@ namespace Lynx.Droid
             {
                 return null;
             }
-
+            **/
         }
 
         //TODO: Android keystore logic to safely store the private key
         public void SaveAccount(IAccountService accountService)
         {
             string key = accountService.PrivateKey;
-            string path = GetFileInDataDir("keys");
-            File.WriteAllText(path, key);
+            //string path = GetFileInDataDir("keys");
+            //File.WriteAllText(path, key);
+            keyStoreCryptoService.EncryptAndSaveKey(key);
         }
     }
 }
