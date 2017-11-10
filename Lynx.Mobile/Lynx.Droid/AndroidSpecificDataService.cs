@@ -62,39 +62,28 @@ namespace Lynx.Droid
            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/" + file;
         }
 
-        //TODO: Android keystore logic to safely store the private key
         public IAccountService LoadAccount()
         {
+            keyStoreCryptoService.TestEncryptAndDecryptKey();
+            string path = GetFileInDataDir("keys");
             try
             {
-                return new AccountService(keyStoreCryptoService.DecryptAndGetKey());
+                string encryptedKey = File.ReadAllText(path);
+                return new AccountService(keyStoreCryptoService.DecryptKey(encryptedKey));
             }
             catch (IOException e)
             {
                 return null;
             }
-            /**
-            string path = GetFileInDataDir("keys");//read from keystore
-
-            try
-            {
-                string pkey = File.ReadAllText(path);
-                return new AccountService(pkey);
-            }
-            catch (IOException e)
-            {
-                return null;
-            }
-            **/
         }
 
-        //TODO: Android keystore logic to safely store the private key
         public void SaveAccount(IAccountService accountService)
         {
             string key = accountService.PrivateKey;
-            //string path = GetFileInDataDir("keys");
-            //File.WriteAllText(path, key);
-            keyStoreCryptoService.EncryptAndSaveKey(key);
+            string encryptedKey = keyStoreCryptoService.EncryptKey(key);
+
+            string path = GetFileInDataDir("keys");
+            File.WriteAllText(path, encryptedKey);
         }
     }
 }

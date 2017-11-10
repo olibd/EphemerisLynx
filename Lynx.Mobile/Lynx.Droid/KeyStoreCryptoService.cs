@@ -15,22 +15,14 @@ namespace Lynx.Droid
     {
         readonly KeyStore _keyStore;
         private readonly string _alias = "lynx";
-        private String encryptedText;
         private Locale local = Locale.Canada;
-        private byte[] vals;
-        //private List<Object> aliaslist;
+        //private byte[] encryptedBytes;
 
         public KeyStoreCryptoService()
         {
             _keyStore = KeyStore.GetInstance("AndroidKeyStore");
             _keyStore.Load(null);
-            //aliaslist = new List<Object>();
-            //var alias = _keyStore.Aliases();
             CreateNewKey();
-            //while (alias.HasMoreElements)
-            //{
-            //    aliaslist.Add(alias.NextElement());
-            //}
         }
 
         private void CreateNewKey()
@@ -39,7 +31,8 @@ namespace Lynx.Droid
             {
                 Calendar start = Calendar.GetInstance(local);
                 Calendar end = Calendar.GetInstance(local);
-                end.Add(CalendarField.Year, 1);
+                end.Add(CalendarField.Year, 30);
+
                 KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(new Android.App.Application())
                             .SetAlias(_alias)
                             .SetSubject(new X500Principal("CN=lynx, O=Android Authority"))
@@ -50,11 +43,11 @@ namespace Lynx.Droid
                 KeyPairGenerator generator = KeyPairGenerator.GetInstance("RSA", "AndroidKeyStore");
                 generator.Initialize(spec);
 
-                //KeyPair keyPair = generator.GenerateKeyPair();
+                KeyPair keyPair = generator.GenerateKeyPair();
             }
         }
 
-        public void EncryptAndSaveKey(string privKey)
+        public string EncryptKey(string privKey)
         {
             KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) _keyStore.GetEntry(_alias, null);
             var publicKey = privateKeyEntry.Certificate.PublicKey;//AES/CBC/PKCS7PADDING
@@ -68,19 +61,25 @@ namespace Lynx.Droid
             cipherOutputStream.Write(Encoding.UTF8.GetBytes(privKey));
             cipherOutputStream.Close();
 
-            vals = outputStream.ToArray();
+            byte[] encryptedBytes = outputStream.ToArray();
+            return Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.ToHexCompact(encryptedBytes);
         }
 
-        public string DecryptAndGetKey()
+        public string DecryptKey(string encryptedKey)
         {
             KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)_keyStore.GetEntry(_alias, null);
-            var privateKey = privateKeyEntry.PrivateKey;//RSA/ECB/PKCS1Padding
 
-            Cipher cipher = Cipher.GetInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
+            if (privateKeyEntry == null)
+                return null;
+            
+            var privateKey = privateKeyEntry.PrivateKey;
+            Cipher cipher = Cipher.GetInstance("RSA/ECB/PKCS1Padding");
             cipher.Init(CipherMode.DecryptMode, privateKey);
 
+            byte[] encryptedBytes = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(encryptedKey);
+
             CipherInputStream cipherInputStream = new CipherInputStream(
-                new MemoryStream(vals), cipher);
+                new MemoryStream(encryptedBytes), cipher);
 
             List<byte> values = new List<byte>();
 
@@ -96,6 +95,15 @@ namespace Lynx.Droid
         public void RemoveKey()
         {
             _keyStore.DeleteEntry(_alias);
+        }
+
+        public void TestEncryptAndDecryptKey()
+        {
+            string key = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
+            string encryptedKey = EncryptKey(key);
+            string decryptedKey = DecryptKey(encryptedKey);
+            if (key != decryptedKey)
+                throw new Exception("KeyStore key decryption failed");
         }
     }
 }
