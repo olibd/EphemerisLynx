@@ -29,7 +29,7 @@ namespace Lynx.Core
             Mvx.RegisterSingleton<IContentService>(() => new DummyContentService());
             Mvx.RegisterSingleton<ICertificateFacade>(() => new CertificateFacade(web3, Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));
             Mvx.RegisterSingleton<IAttributeFacade>(() => new AttributeFacade(web3, Mvx.Resolve<ICertificateFacade>(), Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));
-            Mvx.RegisterSingleton<IIDFacade>(() => new IDFacade(factoryContract, registryContract, web3, Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<IAccountService>()));
+            Mvx.RegisterSingleton<IIDFacade>(() => new IDFacade(factoryContract, web3, Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<IAccountService>()));
         }
     }
 }

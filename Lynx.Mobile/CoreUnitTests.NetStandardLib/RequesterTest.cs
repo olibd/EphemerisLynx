@@ -101,7 +101,7 @@ namespace CoreUnitTests.PCL
             initWeb3().Wait();
             _certFacade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
             _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
-            _idFacade = new IDFacade("0x0", "0x0", _web3, _attributeFacade, _accountService);
+            _idFacade = new IDFacade("0x0", _web3, _attributeFacade, _accountService);
 
             _tokenCryptoService = new TokenCryptoService<IToken>(new SECP256K1CryptoService());
             _requester = new Requester(_tokenCryptoService, _accountService, _id, _idFacade, _attributeFacade, _certFacade);

@@ -29,7 +29,7 @@ namespace CoreUnitTests.PCL
 
             _certFacade = new CertificateFacade(_web3, new DummyContentService(), _accountService);
             _attributeFacade = new AttributeFacade(_web3, _certFacade, new DummyContentService(), _accountService);
-            _idFacade = new IDFacade(_factoryService.GetAddress(), StaticRessources.RegistryContractAddress, _web3, _attributeFacade, _accountService);
+            _idFacade = new IDFacade(_factoryService.GetAddress(), _web3, _attributeFacade, _accountService);
         }
 
         [Test]

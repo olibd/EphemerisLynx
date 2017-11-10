@@ -17,13 +17,11 @@ namespace Lynx.Core.Facade
     public class IDFacade : Facade, IIDFacade
     {
         private string _factoryAddress;
-        private string _registryAddress;
         private IAttributeFacade _attributeFacade;
 
-        public IDFacade(string factoryAddress, string registryAddress, Web3 web3, IAttributeFacade attributeFacade, IAccountService accountService) : base(web3, accountService)
+        public IDFacade(string factoryAddress, Web3 web3, IAttributeFacade attributeFacade, IAccountService accountService) : base(web3, accountService)
         {
             _factoryAddress = factoryAddress;
-            _registryAddress = registryAddress;
             _attributeFacade = attributeFacade;
         }
 
@@ -85,7 +83,8 @@ namespace Lynx.Core.Facade
 
         public async Task<ID> RecoverIDAsync()
         {
-            RegistryService registry = new RegistryService(Web3, AccountService.PrivateKey, _registryAddress);
+            FactoryService factory = new FactoryService(Web3, AccountService.PrivateKey, _factoryAddress);
+            RegistryService registry = new RegistryService(Web3, AccountService.PrivateKey, await factory.RegistryAsyncCall());
             string idAddress = await registry.IdsAsyncCall(AccountService.GetAccountAddress());
             return await GetIDAsync(idAddress);
         }
