@@ -16,7 +16,6 @@ namespace Lynx.Droid
         readonly KeyStore _keyStore;
         private readonly string _alias = "lynx";
         private Locale local = Locale.Canada;
-        //private byte[] encryptedBytes;
 
         public KeyStoreCryptoService()
         {
@@ -43,14 +42,14 @@ namespace Lynx.Droid
                 KeyPairGenerator generator = KeyPairGenerator.GetInstance("RSA", "AndroidKeyStore");
                 generator.Initialize(spec);
 
-                KeyPair keyPair = generator.GenerateKeyPair();
+                generator.GenerateKeyPair();
             }
         }
 
         public string EncryptKey(string privKey)
         {
             KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) _keyStore.GetEntry(_alias, null);
-            var publicKey = privateKeyEntry.Certificate.PublicKey;//AES/CBC/PKCS7PADDING
+            var publicKey = privateKeyEntry.Certificate.PublicKey;
 
             Cipher cipher = Cipher.GetInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
             cipher.Init(CipherMode.EncryptMode, publicKey);//
