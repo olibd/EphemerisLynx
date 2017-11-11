@@ -13,7 +13,7 @@ using Android.App;
 [assembly: AssemblyCopyright("Copyright Ephemeris All Rights Reserved")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: Application(Theme = "@style/Theme.AppCompat.Light")]
+//[assembly: Application(Theme = "@style/Theme.AppCompat.Light")]
 
 // The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
 // The form "{Major}.{Minor}.*" will automatically update the build and revision,
