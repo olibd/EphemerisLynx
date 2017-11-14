@@ -13,9 +13,9 @@ namespace Lynx.Droid
 {
     public class KeyStoreCryptoService
     {
-        readonly KeyStore _keyStore;
+        private readonly KeyStore _keyStore;
         private readonly string _alias = "lynx";
-        private Locale local = Locale.Canada;
+        private readonly Locale local = Locale.Canada;
 
         public KeyStoreCryptoService()
         {
@@ -96,6 +96,7 @@ namespace Lynx.Droid
             _keyStore.DeleteEntry(_alias);
         }
 
+        //TODO: move this code into a unit test
         public void TestEncryptAndDecryptKey()
         {
             string key = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
