@@ -262,6 +262,8 @@
     <AndroidResource Include="Resources\layout\SplashScreen.axml" />
     <AndroidResource Include="Resources\drawable\splash.png" />
     <AndroidResource Include="Resources\layout\InfoRequestView.xml" />
+    <AndroidResource Include="Resources\drawable\RoundedCorner.xml" />
+    <AndroidResource Include="Resources\drawable\Circle.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />

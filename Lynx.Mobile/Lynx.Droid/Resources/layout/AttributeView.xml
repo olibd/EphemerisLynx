@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:local="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
     <TextView
-        android:id="@+id/AttrDescription"
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:textColor="#EF4571"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        local:MvxBind="Text Description, Converter=FirstCharUpperCase"
+        android:maxLines="3" />
+    <include
+        android:id="@+id/textView2"
+        layout="@layout/externalelement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        local:MvxBind="Text Description" />
-    <include
-        layout="@layout/externalelement" />
-</LinearLayout>
+        android:layout_toRightOf="@id/textView1"
+        android:layout_alignTop="@id/textView1"
+        android:maxLines="3" />
+</RelativeLayout>
