@@ -10,16 +10,18 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
     {
         private SQLiteConnection _db;
         protected readonly string _dbFilePath;
+        private readonly string _encryptionKey;
         private readonly IIdentityMap<int, T> _idMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Lynx.Core.Mappers.IDSubsystem.Mapper`1"/> class.
         /// </summary>
         /// <param name="DBFilePath">DB File path.</param>
-        public Mapper(string DBFilePath)
+        public Mapper(string DBFilePath, string encryptionKey)
         {
             _dbFilePath = DBFilePath;
             _idMap = new IdentityMap<int, T>();
+            _encryptionKey = encryptionKey;
         }
 
         /// <summary>
@@ -97,13 +99,17 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// Connects to table G.
         /// </summary>
         /// <typeparam name="G">The 1st type parameter.</typeparam>
-        private async Task ConnectToTableAsync<G>()
+        protected async Task<G> ConnectToTableAsync<G>()//caller does assignment to _db
         {
             await Task.Run(() =>
             {
-                _db = new SQLiteConnection(_dbFilePath);
+                SQLiteConnection SQLiteConn = new SQLiteConnection(_dbFilePath);
+                SQLiteConn.Query<int>("PRAGMA key=" + _encryptionKey);
+
                 //Create table if not exist
-                _db.CreateTable<G>();
+                SQLiteConn.CreateTable<G>();
+
+                return SQLiteConn;
             });
         }
     }
