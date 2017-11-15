@@ -95,15 +95,5 @@ namespace Lynx.Droid
         {
             _keyStore.DeleteEntry(_alias);
         }
-
-        //TODO: move this code into a unit test
-        public void TestEncryptAndDecryptKey()
-        {
-            string key = "9e6a6bf412ce4e3a91a33c7c0f6d94b3127b8d4f5ed336210a672fe595bf1769";
-            string encryptedKey = EncryptKey(key);
-            string decryptedKey = DecryptKey(encryptedKey);
-            if (key != decryptedKey)
-                throw new Exception("KeyStore key decryption failed");
-        }
     }
 }

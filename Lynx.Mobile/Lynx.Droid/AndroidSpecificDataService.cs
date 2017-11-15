@@ -64,7 +64,6 @@ namespace Lynx.Droid
 
         public IAccountService LoadAccount()
         {
-            keyStoreCryptoService.TestEncryptAndDecryptKey();
             string path = GetFileInDataDir("keys");
             try
             {
