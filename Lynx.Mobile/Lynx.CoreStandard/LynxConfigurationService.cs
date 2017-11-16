@@ -22,7 +22,7 @@ namespace Lynx.Core
         /// </summary>
         /// <param name="factoryContract">The IDFactory smart contract address, used when deploying a new ID</param>
         /// <param name="rpcEndpoint">The URL for the Ethereum node's RPC endpoint</param>
-        public void ConfigureEthNode(string factoryContract, string registryContract, string rpcEndpoint)
+        public void ConfigureEthNode(string factoryContract, string rpcEndpoint)
         {
             Web3 web3 = new Web3(rpcEndpoint);
             Mvx.RegisterSingleton<Web3>(() => web3);
