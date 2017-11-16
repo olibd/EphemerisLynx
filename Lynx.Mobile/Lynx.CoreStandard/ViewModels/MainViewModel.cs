@@ -23,7 +23,6 @@ namespace Lynx.Core.ViewModels
     public class MainViewModel : MvxViewModel
     {
         public IMvxCommand FingerprintLoginCommand => new MvxCommand(FingerprintLoginAsync);
-        public IMvxCommand RegistrationButtonClick => new MvxCommand(NavigateRegistration);
         public IMvxCommand RegistrationButtonClick => new MvxCommand(Register);
         public IMvxCommand RecoveryButtonClick => new MvxCommand(NavigateRecovery);
 
@@ -86,6 +85,11 @@ namespace Lynx.Core.ViewModels
             {
                 throw new NoAccountExistsException();
             }
+        }
+
+        private async void NavigateRecovery()
+        {
+            await _navigationService.Navigate<RecoveryViewModel>();
         }
 
         private async void Register()
