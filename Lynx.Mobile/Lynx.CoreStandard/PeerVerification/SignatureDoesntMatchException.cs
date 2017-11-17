@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.Crypto
 {
-    internal class SignatureDoesntMatchException : Exception
+    internal class SignatureDoesntMatchException : UserFacingException
     {
         public SignatureDoesntMatchException()
         {

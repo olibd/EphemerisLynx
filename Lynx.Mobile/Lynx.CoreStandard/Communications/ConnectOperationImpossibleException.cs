@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.Communications
 {
-    class ConnectOperationImpossibleException : Exception
+    class ConnectOperationImpossibleException : UserFacingException
     {
         public ConnectOperationImpossibleException()
         {

@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.PeerVerification
 {
-    internal class TokenSenderIsNotIDOwnerException : Exception
+    internal class TokenSenderIsNotIDOwnerException : UserFacingException
     {
         public TokenSenderIsNotIDOwnerException()
         {

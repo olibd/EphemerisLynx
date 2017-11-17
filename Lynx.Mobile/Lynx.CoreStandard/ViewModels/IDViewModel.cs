@@ -24,9 +24,8 @@ namespace Lynx.Core.ViewModels
 
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
-        public IMvxCommand UpdateID => new MvxCommand(FetchID);
 
-        private IReceiver _verifier;
+        private IReceiver _receiver;
         private bool _scanned = false;
 
         public IDViewModel(IMvxNavigationService navigationService)
@@ -35,11 +34,11 @@ namespace Lynx.Core.ViewModels
         }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
-        public void Init()
+        public async void Init()
         {
             ID = Mvx.Resolve<ID>();
             Attributes = Mvx.Resolve<ID>().Attributes.Values.ToList();
-            UpdateID.Execute();
+            await FetchID();
         }
 
         public override void Start()
@@ -53,25 +52,41 @@ namespace Lynx.Core.ViewModels
                 return;
 
             _scanned = true;
-            _verifier = Mvx.Resolve<IReceiver>();
+            _receiver = Mvx.Resolve<IReceiver>();
+
+            //Error callback - necessary to handle exceptions occuring in code that is called by the Session
+            _receiver.OnReceptionError += (sender, e) => DisplayError(e.Exception);
 
             //TODO: Setup the verifier callback
-            await _verifier.ProcessSyn(content);
-
-            _verifier.IdentityProfileReceived += async (sender, e) =>
+            _receiver.IdentityProfileReceived += async (sender, e) =>
             {
                 _scanned = false;
                 await _navigationService.Navigate<CertifyViewModel, IReceiver>((IReceiver)sender);
             };
 
-            _verifier.InfoRequestReceived += async (sender, e) =>
+            _receiver.InfoRequestReceived += async (sender, e) =>
             {
                 _scanned = false;
                 await _navigationService.Navigate<InfoRequestViewModel, IReceiver>((IReceiver)sender);
             };
+
+            try
+            {
+                await _receiver.ProcessSyn(content);
+            }
+            catch (UserFacingException e)
+            {
+                DisplayError(e);
+            }
+
         }
 
-        private async void FetchID()
+        private void DisplayError(UserFacingException exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task FetchID()
         {
             //ID = await Mvx.Resolve<IIDFacade>().GetIDAsync(ID.Address);
 

@@ -36,7 +36,7 @@ namespace Lynx.Core.PeerVerification
             string tokenPublicAddress = AccountService.GeneratePublicAddressFromPublicKey(handshakeToken.PublicKey);
 
             if (tokenPublicAddress != handshakeToken.Id.Owner)
-                throw new TokenSenderIsNotIDOwnerException();
+                throw new TokenSenderIsNotIDOwnerException("The person requesting verification is not the owner of their ID!");
         }
 
         /// <summary>

@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
      <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="MvvmCross.StarterPack" Version="5.2.0" />
     <PackageReference Include="Nethereum.Portable" Version="1.0.6" />
@@ -21,12 +20,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Communications\" />
-    <Folder Include="Crypto\" />
     <Folder Include="Facade\" />
     <Folder Include="Mappers\" />
     <Folder Include="Models\" />
-    <Folder Include="PeerVerification\" />
     <Folder Include="ValueConverters\" />
   </ItemGroup>
   <ItemGroup>

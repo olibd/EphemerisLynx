@@ -45,17 +45,24 @@ namespace Lynx.Core.Communications
 
         public void Open(string networkAddress)
         {
-            _channel = _ably.Channels.Get(networkAddress);
-            _channel.Subscribe((Message msg) =>
+            try
             {
-                if (_publicAddress != msg.Name)
+                _channel = _ably.Channels.Get(networkAddress);
+                _channel.Subscribe((Message msg) =>
                 {
-                    foreach (EventHandler<string> handler in _handlers)
+                    if (_publicAddress != msg.Name)
                     {
-                        handler.Invoke(this, msg.Data.ToString());
+                        foreach (EventHandler<string> handler in _handlers)
+                        {
+                            handler.Invoke(this, msg.Data.ToString());
+                        }
                     }
-                }
-            });
+                });
+            }
+            catch (AblyException)
+            {
+                throw new ConnectOperationImpossibleException("Unable to open the connection to the other peer");
+            }
         }
 
         public string Open()
@@ -66,7 +73,14 @@ namespace Lynx.Core.Communications
 
         public void Send(string message)
         {
-            _channel.Publish(_publicAddress, message);
+            try
+            {
+                _channel.Publish(_publicAddress, message);
+            }
+            catch (AblyException)
+            {
+                throw new MessageSendException("Unable to communicate with the other peer");
+            }
         }
 
         private string GenerateChannelName()

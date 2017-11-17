@@ -2,7 +2,7 @@
 
 namespace Lynx.Core.PeerVerification
 {
-    internal class InvalidTokenTypeException : Exception
+    internal class InvalidTokenTypeException : UserFacingException
     {
         public InvalidTokenTypeException()
         {

@@ -5,6 +5,7 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.Widget;
 using Android.Widget;
 using Lynx.Core.Models.Interactions;
+using Lynx.Core.Interactions;
 using Lynx.Core.ViewModels;
 using Lynx.Droid.Views.Callbacks;
 using MvvmCross.Binding.BindingContext;
@@ -23,10 +24,25 @@ namespace Lynx.Droid.Views
     public class IDView : MvxFragmentActivity
     {
         private LinearLayout _bottomSheet;
+        private IMvxInteraction<UserFacingErrorInteraction> _displayError;
 
         private ZXingScannerFragment _scanner;
 
         public IMvxCommand QrCodeScanCommand { get; set; }
+
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayError
+        {
+            get => _displayError;
+            set
+            {
+                if (_displayError != null)
+                    _displayError.Requested -= ShowErrorDialog;
+
+                _displayError = value;
+                _displayError.Requested += ShowErrorDialog;
+            }
+        }
+
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -59,19 +75,24 @@ namespace Lynx.Droid.Views
 
                 RunOnUiThread(() =>
                 {
-                    try
-                    {
-                        Toast.MakeText(this, "Request Scanned. Please wait.", ToastLength.Long).Show();
-                    }
-                    catch (Exception e)
-                    {
-                        var f = e;
-                    }
+                    Toast.MakeText(this, "Request Scanned. Please wait.", ToastLength.Long).Show();
                 });
 
                 QrCodeScanCommand.Execute(result.Text);
             },
             MobileBarcodeScanningOptions.Default);
+        }
+
+        private void ShowErrorDialog(object sender, MvxValueEventArgs<UserFacingErrorInteraction> e)
+        {
+            RunOnUiThread(() =>
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.SetTitle("Error")
+                    .SetMessage(e.Value.Exception.Message)
+                    .SetPositiveButton("OK", (o, args) => { })
+                    .Show();
+            });
         }
 
         private void BindCommands()
