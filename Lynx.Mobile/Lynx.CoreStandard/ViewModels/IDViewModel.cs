@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using Lynx.Core.Models.IDSubsystem;
@@ -6,12 +5,6 @@ using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using MvvmCross.Core.Navigation;
-using System.Threading.Tasks;
-using Lynx.Core.PeerVerification;
-using Lynx.Core.Communications.Packets;
-using Lynx.Core.Facade.Interfaces;
-using Lynx.Core.Interfaces;
-using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.PeerVerification.Interfaces;
 
 namespace Lynx.Core.ViewModels
