@@ -23,7 +23,7 @@
             layout="@layout/imageidaddressview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/include" />
+            android:id="@+id/profilepic" />
         <TextView
             android:id="@+id/Fullname"
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:gravity="center"
             android:layout_height="400dp"
-            local:MvxBind="ItemsSource Attributes"
+            local:MvxBind="ItemsSource AttributesDTO; ItemClick AttributeSelectedCommand"
             local:MvxItemTemplate="@layout/attributeview"
             android:divider="@null"
             android:dividerHeight="0dp"
