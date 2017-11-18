@@ -1,4 +1,6 @@
 ﻿using System;
+using Lynx.Core.Mappers.IDSubsystem.Strategies;
+using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.Models.Interactions;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.PeerVerification.Interfaces;
@@ -10,6 +12,8 @@ namespace Lynx.Core.ViewModels
     public class VerificationRequestViewModel : MvxViewModel
     {
         private Requester _requester;
+        private IMapper<ID> _idMapper;
+        private ID _id;
         public string Syn
         {
             get
@@ -19,17 +23,20 @@ namespace Lynx.Core.ViewModels
         }
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
 
-        public VerificationRequestViewModel(Requester requester)
+        public VerificationRequestViewModel(Requester requester, IMapper<ID> idMapper, ID id)
         {
             _requester = requester;
+            _idMapper = idMapper;
+            _id = id;
         }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
         public void Init()
         {
             ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
-            _requester.HandshakeComplete += (sender, e) =>
+            _requester.HandshakeComplete += async (sender, e) =>
             {
+                await _idMapper.SaveAsync(_id);
                 DeployConfirm();
             };
         }
