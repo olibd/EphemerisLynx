@@ -26,6 +26,7 @@ namespace Lynx.Core.ViewModels
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
         public IMvxCommand UpdateID => new MvxCommand(FetchID);
+        public IMvxCommand AttributeSelectedCommand => new MvxCommand<Attribute>(ViewCertificates);
 
         private IReceiver _verifier;
         private bool _scanned = false;
@@ -42,6 +43,7 @@ namespace Lynx.Core.ViewModels
             Attributes = ID.Attributes.Values.ToList();
             Attributes.Remove(ID.Attributes["firstname"]);
             Attributes.Remove(ID.Attributes["lastname"]);
+
             Fullname = ID.Attributes["firstname"].Content.ToString() + " " + ID.Attributes["lastname"].Content.ToString();
             Fullname = Fullname.ToUpperInvariant();
             UpdateID.Execute();
@@ -89,6 +91,11 @@ namespace Lynx.Core.ViewModels
             //Attributes = ID.Attributes.Values.ToList();
             //RaisePropertyChanged(() => Attributes);
             //TODO: Tell the user when this is done
+        }
+
+        public async void ViewCertificates(Attribute attrDTO)
+        {
+            await _navigationService.Navigate<CertificatesViewModel, Attribute>(ID.Attributes[attrDTO.Description]);
         }
 
         private async void RequestVerification()

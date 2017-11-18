@@ -16,7 +16,7 @@
         android:textColor="#EF4571"
         android:textSize="18dp"
         android:textStyle="bold"
-        local:MvxBind="Text Attribute.Description, Converter=FirstCharUpperCase"
+        local:MvxBind="Text Description, Converter=FirstCharUpperCase"
         android:maxLines="3" />
     <include
         android:id="@+id/textView2"
@@ -29,6 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        local:MvxBind="Text CertificatesCount"
+        local:MvxBind="Text Certificates.Count"
         android:textColor="#ff37e7ec" />
 </LinearLayout>
