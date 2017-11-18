@@ -48,17 +48,23 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             {
                 await _certMapper.SaveAsync(entry.Value);
 
-                //Create the one to many mapping between an attributes and its
-                //certificates
-                AttributeCertificateMapping attrCert = new AttributeCertificateMapping()
+                //Try to get the one to many mapping between an attributes and its
+                //certificates, if it already exists
+                AttributeCertificateMapping attrCert;
+                if ((attrCert = await GetAttributeCertificateMappingAsync(obj.UID, entry.Value.UID)) == null)
                 {
-                    AttrUID = obj.UID,
-                    CertUID = entry.Value.UID
-                };
+                    //Create the one to many mapping between an attributes and its
+                    //certificates
+                    attrCert = new AttributeCertificateMapping()
+                    {
+                        AttrUID = obj.UID,
+                        CertUID = entry.Value.UID
+                    };
 
-                //save the mapping
-                IMapper<AttributeCertificateMapping> attrCertMapper = new Mapper<AttributeCertificateMapping>(_dbFilePath);
-                await attrCertMapper.SaveAsync(attrCert);
+                    //save the mapping
+                    IMapper<AttributeCertificateMapping> attrCertMapper = new Mapper<AttributeCertificateMapping>(_dbFilePath);
+                    await attrCertMapper.SaveAsync(attrCert);
+                }
             }
         }
 
@@ -77,21 +83,36 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             if (attr.Certificates.Count > 0)
                 return attr;
 
-            return await Task.Run(async () =>
+            SQLiteConnection conn = await ConnectToTableAsync<AttributeCertificateMapping>();
+
+            TableQuery<AttributeCertificateMapping> query = null;
+            await Task.Run(() =>
             {
-                SQLiteConnection conn = new SQLiteConnection(_dbFilePath);
-                TableQuery<AttributeCertificateMapping> query = conn
+                query = conn
+                   .Table<AttributeCertificateMapping>()
+                   .Where(mapping => mapping.AttrUID == UID);
+            });
+
+            foreach (AttributeCertificateMapping mapping in query)
+            {
+                Certificate cert = await _certMapper.GetAsync(mapping.CertUID);
+                cert.OwningAttribute = attr;
+                attr.AddCertificate(cert);
+            }
+            conn.Close();
+            return attr;
+        }
+
+        private async Task<AttributeCertificateMapping> GetAttributeCertificateMappingAsync(int attrUID, int certUID)
+        {
+            SQLiteConnection conn = await ConnectToTableAsync<AttributeCertificateMapping>();
+            return await Task.Run(() =>
+            {
+                AttributeCertificateMapping acMapping = conn
                     .Table<AttributeCertificateMapping>()
-                    .Where(mapping => mapping.AttrUID == UID);
-
-                foreach (AttributeCertificateMapping mapping in query)
-                {
-                    Certificate cert = await _certMapper.GetAsync(mapping.CertUID);
-                    cert.OwningAttribute = attr;
-                    attr.AddCertificate(cert);
-                }
-
-                return attr;
+                        .Where(mapping => mapping.AttrUID == attrUID && mapping.CertUID == certUID).FirstOrDefault();
+                conn.Close();
+                return acMapping;
             });
         }
 
@@ -105,36 +126,18 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             private int _attrUID;
             private int _certUID;
 
-            [Indexed]
+            [Indexed(Name = "RelationshipID", Order = 1, Unique = true)]
             public int AttrUID
             {
-                get { return _attrUID; }
-                set
-                {
-                    UID = ComputeRelationshipID(value, CertUID);
-                    _attrUID = value;
-                }
+                get;
+                set;
             }
 
+            [Indexed(Name = "RelationshipID", Order = 2, Unique = true)]
             public int CertUID
             {
-                get { return _certUID; }
-                set
-                {
-                    UID = ComputeRelationshipID(AttrUID, value);
-                    _certUID = value;
-                }
-            }
-
-            /// <summary>
-            /// Computes the relationship identifier.
-            /// </summary>
-            /// <returns>The relationship identifier.</returns>
-            /// <param name="attrID">Attr identifier.</param>
-            /// <param name="certID">Cert identifier.</param>
-            private int ComputeRelationshipID(int attrID, int certID)
-            {
-                return int.Parse(attrID + "" + certID);
+                get;
+                set;
             }
         }
     }

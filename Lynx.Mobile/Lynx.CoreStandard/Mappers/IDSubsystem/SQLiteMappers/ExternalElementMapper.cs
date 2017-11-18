@@ -40,15 +40,24 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             //Serialize the content
             string content = obj.Content.ToString();
 
-            //Define the one to one mapping between the object and its content
-            ExternalElementContentMapping contentMapping = new ExternalElementContentMapping()
+            ExternalElementContentMapping contentMapping;
+
+            if ((contentMapping = await GetExternalElementContentMappinggAsync(obj.UID, obj.GetType().ToString())) == null)
             {
-                ExtUID = obj.UID,
-                //save the serialized data directly in the mapping
-                SerilizedContent = content,
-                ExtType = obj.GetType().ToString(),
-                ContentType = obj.Content.GetType().ToString()
-            };
+                contentMapping = new ExternalElementContentMapping()
+                {
+                    ExtUID = obj.UID,
+                    //save the serialized data directly in the mapping
+                    SerilizedContent = content,
+                    ExtType = obj.GetType().ToString(),
+                    ContentType = obj.Content.GetType().ToString()
+                };
+            }
+            else
+            {
+                contentMapping.SerilizedContent = content;
+                contentMapping.ContentType = obj.Content.GetType().ToString();
+            }
 
             //save the mapping to the database
             Mapper<ExternalElementContentMapping> contentMapper = new Mapper<ExternalElementContentMapping>(_dbFilePath);
@@ -65,10 +74,10 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             //get the base ExternalElement
             T obj = await base.GetAsync(UID);
 
+            SQLiteConnection conn = await ConnectToTableAsync<ExternalElementContentMapping>();
             return await Task.Run(() =>
             {
                 string typeOfT = typeof(T).ToString();
-                SQLiteConnection conn = new SQLiteConnection(_dbFilePath);
                 TableQuery<ExternalElementContentMapping> query = conn
                     .Table<ExternalElementContentMapping>()
                     .Where(mapping => mapping.ExtUID == obj.UID
@@ -79,11 +88,23 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                     throw new NoSingleMappingFound();
 
                 ExternalElementContentMapping contentMapping = query.First();
-
                 conn.Close();
                 obj.Content = Activator.CreateInstance(Type.GetType(contentMapping.ContentType), new object[] { contentMapping.SerilizedContent }) as IContent;
 
                 return obj;
+            });
+        }
+
+        private async Task<ExternalElementContentMapping> GetExternalElementContentMappinggAsync(int extUID, string extType)
+        {
+            SQLiteConnection conn = await ConnectToTableAsync<ExternalElementContentMapping>();
+            return await Task.Run(() =>
+            {
+                ExternalElementContentMapping eeMapping = conn
+                    .Table<ExternalElementContentMapping>()
+                    .Where(mapping => mapping.ExtUID == extUID && mapping.ExtType == extType).FirstOrDefault();
+                conn.Close();
+                return eeMapping;
             });
         }
 
