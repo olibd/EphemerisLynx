@@ -13,10 +13,10 @@ namespace Lynx.Core.PeerVerification.Interfaces
     public interface IReceiver
     {
         event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
-        event EventHandler<ErrorEvent> OnReceptionError;
         event EventHandler<CertificatesSent> CertificatesSent;
         event EventHandler<InfoRequestReceivedEvent> InfoRequestReceived;
         event EventHandler<InfoRequestAuthorizedEvent> InfoRequestAuthorized;
+        event EventHandler<ErrorEvent> OnError;
         ISynAck SynAck { get; }
         InfoRequestSynAck InfoRequestSynAck { get; }
         /// <summary>

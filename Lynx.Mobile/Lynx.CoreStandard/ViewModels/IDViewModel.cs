@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Facade.Interfaces;
+using Lynx.Core.Interactions;
 using Lynx.Core.Interfaces;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.PeerVerification.Interfaces;
@@ -20,13 +21,16 @@ namespace Lynx.Core.ViewModels
     {
         public ID ID { get; set; }
         public List<Attribute> Attributes { get; set; }
-        private IMvxNavigationService _navigationService;
 
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
 
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction => _displayErrorInteraction;
+
         private IReceiver _receiver;
         private bool _scanned = false;
+        private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
+        private IMvxNavigationService _navigationService;
 
         public IDViewModel(IMvxNavigationService navigationService)
         {
@@ -55,7 +59,10 @@ namespace Lynx.Core.ViewModels
             _receiver = Mvx.Resolve<IReceiver>();
 
             //Error callback - necessary to handle exceptions occuring in code that is called by the Session
-            _receiver.OnReceptionError += (sender, e) => DisplayError(e.Exception);
+            _receiver.OnError += (sender, e) =>
+            {
+                _displayErrorInteraction.Raise(new UserFacingErrorInteraction() {Exception = e.Exception});
+            };
 
             //TODO: Setup the verifier callback
             _receiver.IdentityProfileReceived += async (sender, e) =>
@@ -76,14 +83,9 @@ namespace Lynx.Core.ViewModels
             }
             catch (UserFacingException e)
             {
-                DisplayError(e);
+                _displayErrorInteraction.Raise(new UserFacingErrorInteraction(){Exception = e});
             }
 
-        }
-
-        private void DisplayError(UserFacingException exception)
-        {
-            throw new NotImplementedException();
         }
 
         private async Task FetchID()

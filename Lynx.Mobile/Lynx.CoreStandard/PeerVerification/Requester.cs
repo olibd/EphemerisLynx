@@ -27,6 +27,7 @@ namespace Lynx.Core.PeerVerification
         private ICertificateFacade _certificateFacade;
         protected Attribute[] _accessibleAttributes;
         private IAttributeFacade _attributeFacade;
+
         public event EventHandler<IssuedCertificatesAddedToIDEvent> HandshakeComplete;
 
         public Requester(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
@@ -79,20 +80,27 @@ namespace Lynx.Core.PeerVerification
 
         protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
         {
-            string[] tokenArr = encryptedHandshakeToken.Split(':');
-
-            switch (tokenArr[0])
+            try
             {
-                case "ack":
-                    await ProcessAck(encryptedHandshakeToken);
-                    break;
+                string[] tokenArr = encryptedHandshakeToken.Split(':');
 
-                case "cert":
-                    await ProcessCertificationConfirmationToken(encryptedHandshakeToken);
-                    break;
+                switch (tokenArr[0])
+                {
+                    case "ack":
+                        await ProcessAck(encryptedHandshakeToken);
+                        break;
 
-                default:
-                    throw new InvalidTokenTypeException("The other peer sent invalid data");
+                    case "cert":
+                        await ProcessCertificationConfirmationToken(encryptedHandshakeToken);
+                        break;
+
+                    default:
+                        throw new InvalidTokenTypeException("The other peer sent invalid data");
+                }
+            }
+            catch (UserFacingException e)
+            {
+                RaiseError(e);
             }
         }
 

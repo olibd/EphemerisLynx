@@ -31,7 +31,6 @@ namespace Lynx.Core.PeerVerification
         public InfoRequestSynAck InfoRequestSynAck { get { return _infoRequestSynAck; } }
 
         public event EventHandler<IdentityProfileReceivedEvent> IdentityProfileReceived;
-        public event EventHandler<ErrorEvent> OnReceptionError;
         public event EventHandler<CertificatesSent> CertificatesSent;
         public event EventHandler<InfoRequestReceivedEvent> InfoRequestReceived;
         public event EventHandler<InfoRequestAuthorizedEvent> InfoRequestAuthorized;
@@ -108,7 +107,7 @@ namespace Lynx.Core.PeerVerification
             }
             catch (UserFacingException e)
             {
-                OnReceptionError.Invoke(this, new ErrorEvent() { Exception = e });
+                RaiseError(e);
             }
         }
 

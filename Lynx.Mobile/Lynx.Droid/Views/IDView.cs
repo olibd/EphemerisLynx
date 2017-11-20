@@ -24,22 +24,22 @@ namespace Lynx.Droid.Views
     public class IDView : MvxFragmentActivity
     {
         private LinearLayout _bottomSheet;
-        private IMvxInteraction<UserFacingErrorInteraction> _displayError;
+        private IMvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction;
 
         private ZXingScannerFragment _scanner;
 
         public IMvxCommand QrCodeScanCommand { get; set; }
 
-        public IMvxInteraction<UserFacingErrorInteraction> DisplayError
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction
         {
-            get => _displayError;
+            get => _displayErrorInteraction;
             set
             {
-                if (_displayError != null)
-                    _displayError.Requested -= ShowErrorDialog;
+                if (_displayErrorInteraction != null)
+                    _displayErrorInteraction.Requested -= ShowErrorDialog;
 
-                _displayError = value;
-                _displayError.Requested += ShowErrorDialog;
+                _displayErrorInteraction = value;
+                _displayErrorInteraction.Requested += ShowErrorDialog;
             }
         }
 
@@ -101,8 +101,12 @@ namespace Lynx.Droid.Views
             set.Bind(this)
                 .For(view => view.QrCodeScanCommand)
                 .To(viewModel => viewModel.QrCodeScanCommand)
-                .OneWay()
-                .Apply();
+                .OneWay();
+            set.Bind(this)
+                .For(view => view.DisplayErrorInteraction)
+                .To(viewModel => viewModel.DisplayErrorInteraction)
+                .OneWay();
+            set.Apply();
         }
 
     }

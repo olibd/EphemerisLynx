@@ -23,5 +23,7 @@ namespace Lynx.Core.PeerVerification.Interfaces
         void ResumeSession(string sessionID);
         string SuspendSession();
         IAck Ack { get; set; }
+
+        event EventHandler<ErrorEvent> OnError;
     }
 }

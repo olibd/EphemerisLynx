@@ -1,4 +1,5 @@
 ﻿using System;
+using Lynx.Core.Interactions;
 using Lynx.Core.Models.Interactions;
 using Lynx.Core.PeerVerification;
 using Lynx.Core.PeerVerification.Interfaces;
@@ -9,7 +10,6 @@ namespace Lynx.Core.ViewModels
 {
     public class VerificationRequestViewModel : MvxViewModel
     {
-        private Requester _requester;
         public string Syn
         {
             get
@@ -17,7 +17,12 @@ namespace Lynx.Core.ViewModels
                 return _requester.CreateEncodedSyn();
             }
         }
+
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction => _displayErrorInteraction;
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
+
+        private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
+        private Requester _requester;
 
         public VerificationRequestViewModel(Requester requester)
         {
@@ -28,9 +33,15 @@ namespace Lynx.Core.ViewModels
         public void Init()
         {
             ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
+
             _requester.HandshakeComplete += (sender, e) =>
             {
                 DeployConfirm();
+            };
+
+            _requester.OnError += (sender, e) =>
+            {
+                _displayErrorInteraction.Raise(new UserFacingErrorInteraction(){Exception = e.Exception});
             };
         }
 

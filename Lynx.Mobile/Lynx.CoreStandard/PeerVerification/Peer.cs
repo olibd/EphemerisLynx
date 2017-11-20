@@ -15,6 +15,8 @@ namespace Lynx.Core.PeerVerification
         private IAccountService _accountService;
         private IIDFacade _idFacade;
 
+        public event EventHandler<ErrorEvent> OnError;
+
         public Peer(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, IIDFacade idFacade)
         {
             _accountService = accountService;
@@ -52,6 +54,11 @@ namespace Lynx.Core.PeerVerification
             T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
 
             return handshakeToken;
+        }
+
+        protected void RaiseError(UserFacingException e)
+        {
+            OnError?.Invoke(this, new ErrorEvent(){Exception = e});
         }
     }
 }

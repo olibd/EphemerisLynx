@@ -2,6 +2,7 @@
 using Android.App;
 using Android.OS;
 using Lynx.Core.Models.Interactions;
+using Lynx.Core.Interactions;
 using Lynx.Core.ViewModels;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Core.ViewModels;
@@ -17,10 +18,12 @@ namespace Lynx.Droid.Views
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.VerificationRequestView);
-            BindConfirmationInteraction();
+            BindInteractions();
         }
 
+        private IMvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction;
         private IMvxInteraction<BooleanInteraction> _interaction;
+
         public IMvxInteraction<BooleanInteraction> Interaction
         {
             get => _interaction;
@@ -31,6 +34,18 @@ namespace Lynx.Droid.Views
 
                 _interaction = value;
                 _interaction.Requested += OnInteractionRequested;
+            }
+        }
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction
+        {
+            get => _displayErrorInteraction;
+            set
+            {
+                if (_displayErrorInteraction != null)
+                    _displayErrorInteraction.Requested -= ShowErrorDialog;
+
+                _displayErrorInteraction = value;
+                _displayErrorInteraction.Requested += ShowErrorDialog;
             }
         }
 
@@ -50,11 +65,25 @@ namespace Lynx.Droid.Views
             });
         }
 
-        private void BindConfirmationInteraction()
+        private void BindInteractions()
         {
             var set = this.CreateBindingSet<VerificationRequestView, VerificationRequestViewModel>();
             set.Bind(this).For(view => view.Interaction).To(viewModel => viewModel.ConfirmationInteraction).OneWay();
+            set.Bind(this).For(view => view.DisplayErrorInteraction).To(viewModel => viewModel.DisplayErrorInteraction).OneWay();
             set.Apply();
         }
+
+        private void ShowErrorDialog(object sender, MvxValueEventArgs<UserFacingErrorInteraction> e)
+        {
+            RunOnUiThread(() =>
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.SetTitle("Error")
+                    .SetMessage(e.Value.Exception.Message)
+                    .SetPositiveButton("OK", (o, args) => { })
+                    .Show();
+            });
+        }
+
     }
 }
