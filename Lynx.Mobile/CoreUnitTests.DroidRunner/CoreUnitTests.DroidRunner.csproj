@@ -169,6 +169,15 @@
     <Reference Include="IO.Ably">
       <HintPath>..\packages\ably.io.0.8.5\lib\monoandroid\IO.Ably.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.Fingerprint.Abstractions">
+      <HintPath>..\packages\Plugin.Fingerprint.1.4.5\lib\MonoAndroid\Plugin.Fingerprint.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.Fingerprint.Android.Samsung">
+      <HintPath>..\packages\Plugin.Fingerprint.1.4.5\lib\MonoAndroid\Plugin.Fingerprint.Android.Samsung.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.Fingerprint">
+      <HintPath>..\packages\Plugin.Fingerprint.1.4.5\lib\MonoAndroid\Plugin.Fingerprint.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
