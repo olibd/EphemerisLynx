@@ -22,7 +22,7 @@
         android:id="@+id/textView2"
         android:gravity="top|left"
         layout="@layout/externalelement"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp" />
     <TextView
