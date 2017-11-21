@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Java.Security;
 using Android.Security;
+using Android.Security.Keystore;
 using System.Collections.Generic;
 using Java.Util;
 using Java.Math;
@@ -15,35 +16,26 @@ namespace Lynx.Droid
     {
         private readonly KeyStore _keyStore;
         private readonly string _alias = "lynx";
-        private readonly Locale local = Locale.Canada;
 
         public KeyStoreCryptoService()
         {
             _keyStore = KeyStore.GetInstance("AndroidKeyStore");
             _keyStore.Load(null);
-            CreateNewKey();
+            if (!_keyStore.ContainsAlias(_alias))
+                CreateNewKey(_alias);
         }
 
-        private void CreateNewKey()
+        private void CreateNewKey(string alias)
         {
-            if (!_keyStore.ContainsAlias(_alias))
-            {
-                Calendar start = Calendar.GetInstance(local);
-                Calendar end = Calendar.GetInstance(local);
-                end.Add(CalendarField.Year, 30);
+            KeyGenParameterSpec spec = new KeyGenParameterSpec.Builder(alias, KeyStorePurpose.Decrypt | KeyStorePurpose.Encrypt)
+                                                              .SetBlockModes(KeyProperties.BlockModeCbc)
+                                                              .SetEncryptionPaddings(KeyProperties.EncryptionPaddingRsaPkcs1)
+                                                              .Build();
 
-                KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(new Android.App.Application())
-                            .SetAlias(_alias)
-                            .SetSubject(new X500Principal("CN=lynx, O=Android Authority"))
-                            .SetSerialNumber(BigInteger.One)
-                            .SetStartDate(start.Time)
-                            .SetEndDate(end.Time)
-                            .Build();
-                KeyPairGenerator generator = KeyPairGenerator.GetInstance("RSA", "AndroidKeyStore");
-                generator.Initialize(spec);
+            KeyPairGenerator generator = KeyPairGenerator.GetInstance("RSA", "AndroidKeyStore");
+            generator.Initialize(spec);
 
-                generator.GenerateKeyPair();
-            }
+            generator.GenerateKeyPair();
         }
 
         public string EncryptKey(string privKey)
