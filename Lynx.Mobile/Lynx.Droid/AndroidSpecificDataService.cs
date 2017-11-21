@@ -10,6 +10,7 @@ namespace Lynx.Droid
     internal class AndroidSpecificDataService : IPlatformSpecificDataService
     {
         private Context applicationContext;
+        private const string fileName = "keys";
         KeyStoreCryptoService keyStoreCryptoService;
 
         public AndroidSpecificDataService(Context applicationContext)
@@ -64,7 +65,7 @@ namespace Lynx.Droid
 
         public IAccountService LoadAccount()
         {
-            string path = GetFileInDataDir("keys");
+            string path = GetFileInDataDir(fileName);
             try
             {
                 string encryptedKey = File.ReadAllText(path);
@@ -81,7 +82,7 @@ namespace Lynx.Droid
             string key = accountService.PrivateKey;
             string encryptedKey = keyStoreCryptoService.EncryptKey(key);
 
-            string path = GetFileInDataDir("keys");
+            string path = GetFileInDataDir(fileName);
             File.WriteAllText(path, encryptedKey);
         }
     }
