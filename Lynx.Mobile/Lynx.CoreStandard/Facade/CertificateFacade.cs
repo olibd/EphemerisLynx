@@ -21,11 +21,6 @@ namespace Lynx.Core.Facade
             _contentService = contentService;
         }
 
-        public CertificateFacade(IContentService contentService, IAccountService accountService) : base(new Web3(), accountService)
-        {
-            _contentService = contentService;
-        }
-
         public async Task<Certificate> GetCertificateAsync(string address)
         {
             CertificateService ethCertificate = new CertificateService(Web3, AccountService.PrivateKey, address);

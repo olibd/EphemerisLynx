@@ -5,12 +5,12 @@ namespace Lynx.Core
     {
         public static string FactoryContractAddress
         {
-            get { return "0x873c2963646660ca80f767e845e4466167b95553"; }
+            get => "0x002155d5323cb425a89ecD3ab87AE5Ffdf4DB5F7";
         }
 
         public static string RpcEndpointUrl
         {
-            get { return "http://jmon.tech:"; }
+            get => "http://4bb264ae.ngrok.io"; 
         }
     }
 }

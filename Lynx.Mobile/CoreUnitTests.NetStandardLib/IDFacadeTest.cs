@@ -10,6 +10,7 @@ using Nethereum.ABI.Encoders;
 using NUnit.Framework;
 using Lynx.Core.Models.IDSubsystem;
 using System.Text;
+using Lynx.Core;
 
 
 namespace CoreUnitTests.PCL
@@ -132,6 +133,16 @@ namespace CoreUnitTests.PCL
             ID newId = await _idFacade.GetIDAsync(id.Address);
             Dictionary<string, Attribute> attributeDict = await _idFacade.GetAttributesAsync(newId);
             Assert.AreEqual(2, attributeDict.Count());
+        }
+
+        [Test]
+        public async Task TestRecoverIDAsync()
+        {
+            await TestDeploy();
+            ID id = await _idFacade.RecoverIDAsync();
+
+            Assert.AreEqual(1, id.Attributes.Count);
+            Assert.AreEqual("I am an attribute hash", id.Attributes["test type"].Hash);
         }
 
         [Test]

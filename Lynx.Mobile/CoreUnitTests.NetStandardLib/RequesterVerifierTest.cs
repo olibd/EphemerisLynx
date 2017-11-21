@@ -254,6 +254,11 @@ namespace CoreUnitTests.PCL
 
                 return id.Attributes;
             }
+
+            public Task<ID> RecoverIDAsync()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private class DummyAttributeFacade : IAttributeFacade
