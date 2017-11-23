@@ -21,6 +21,8 @@ namespace Lynx.Core.ViewModels
     public class MnemonicValidationViewModel : MvxViewModel
     {
         public IMvxCommand MainButtonClick => _mainButtonClick;
+
+        //The IMvxInteraction and the MvxInteraction must be separate because the Raise() method is not part if the IMvxInteraction interface.
         public IMvxInteraction<MnemonicValidationInteraction> CreateButtons => _createButtons;
 
         public string DisplayText => _displayText;

@@ -18,7 +18,9 @@ namespace Lynx.Core.ViewModels
             }
         }
 
+        //The IMvxInteraction and the MvxInteraction must be separate because the Raise() method is not part if the IMvxInteraction interface.
         public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction => _displayErrorInteraction;
+
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
 
         private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();

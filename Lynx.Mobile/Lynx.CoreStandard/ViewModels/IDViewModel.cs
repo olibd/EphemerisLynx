@@ -27,6 +27,7 @@ namespace Lynx.Core.ViewModels
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
 
+        //The IMvxInteraction and the MvxInteraction must be separate because the Raise() method is not part if the IMvxInteraction interface.
         public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction => _displayErrorInteraction;
 
         private IReceiver _receiver;

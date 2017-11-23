@@ -24,6 +24,7 @@ namespace Lynx.Droid.Views
     public class IDView : MvxFragmentActivity
     {
         private LinearLayout _bottomSheet;
+
         private IMvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction;
 
         private ZXingScannerFragment _scanner;
