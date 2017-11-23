@@ -16,9 +16,9 @@ namespace CoreUnitTests.PCL
 
         protected async Task SetupAsync()
         {
-            _web3 = new Web3("http://jmon.tech:8545");
+            _web3 = new Web3(StaticRessources.RpcEndpointUrl);
             _accountService = new AccountService();
-            _factoryService = new FactoryService(_web3, _accountService.PrivateKey, "0xcddd77d4b7a28faea9e1ed225e559656527c60b9");
+            _factoryService = new FactoryService(_web3, _accountService.PrivateKey, StaticRessources.FactoryContractAddress);
         }
 
     }

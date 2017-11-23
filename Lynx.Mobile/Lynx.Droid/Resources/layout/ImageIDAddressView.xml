@@ -3,16 +3,24 @@
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#4C2DA5"
+    android:layout_height="100dp"
     android:clipChildren="false"
     android:clipToPadding="false">
-    <ImageView
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/AddressQRCode"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        local:MvxBind="Bitmap ID.Address, Converter = StringToBitmapQrCode; Click RequestVerificationCommand" />
+    <RelativeLayout
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:background="@drawable/RoundedCorner"
+        android:layout_marginTop="50dp"
+        android:paddingBottom="20dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <ImageView
+            android:elevation="2dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/AddressQRCode"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="-50dp"
+            local:MvxBind="Bitmap ID.Address, Converter = StringToBitmapQrCode; Click RequestVerificationCommand" />
+    </RelativeLayout>
 </LinearLayout>

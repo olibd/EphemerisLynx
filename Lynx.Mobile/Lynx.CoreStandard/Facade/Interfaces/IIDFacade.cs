@@ -23,6 +23,11 @@ namespace Lynx.Core.Facade.Interfaces
         Task<ID> GetIDAsync(string address, string[] accessibleAttributes = null);
 
         /// <summary>
+        /// Recovers an ID from the ID registry
+        /// </summary>
+        /// <returns>The ID associated with the current AccountService's address</returns>
+        Task<ID> RecoverIDAsync();
+            /// <summary>
         /// Fetches the dictionary of attributes attached to an ID
         /// </summary>
         /// <param name="ID">The ID to be queried</param>

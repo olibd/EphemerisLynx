@@ -21,6 +21,8 @@ namespace Lynx.Core.ViewModels
     {
         public ID ID { get; set; }
         public List<Attribute> Attributes { get; set; }
+        public string Fullname { get; set; }
+        private IMvxNavigationService _navigationService;
 
         public IMvxCommand RequestVerificationCommand => new MvxCommand(RequestVerification);
         public IMvxCommand QrCodeScanCommand => new MvxCommand<string>(QrCodeScan);
@@ -30,7 +32,6 @@ namespace Lynx.Core.ViewModels
         private IReceiver _receiver;
         private bool _scanned = false;
         private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
-        private IMvxNavigationService _navigationService;
 
         public IDViewModel(IMvxNavigationService navigationService)
         {
@@ -41,8 +42,11 @@ namespace Lynx.Core.ViewModels
         public async void Init()
         {
             ID = Mvx.Resolve<ID>();
-            Attributes = Mvx.Resolve<ID>().Attributes.Values.ToList();
-            await FetchID();
+            Attributes = ID.Attributes.Values.ToList();
+            Attributes.Remove(ID.Attributes["firstname"]);
+            Attributes.Remove(ID.Attributes["lastname"]);
+            Fullname = ID.Attributes["firstname"].Content.ToString() + " " + ID.Attributes["lastname"].Content.ToString();
+            Fullname = Fullname.ToUpperInvariant();
         }
 
         public override void Start()

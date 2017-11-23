@@ -43,7 +43,7 @@ namespace Lynx.Core.ViewModels
         public override void Start()
         {
             base.Start();
-            
+
             GenerateAccount();
         }
 
@@ -60,7 +60,7 @@ namespace Lynx.Core.ViewModels
         private void ResetValidation()
         {
             // Passing an empty list of buttons simply deletes all existing buttons
-            _createButtons.Raise(new MnemonicValidationInteraction(){buttons = {}, onButtonClick = {}});
+            _createButtons.Raise(new MnemonicValidationInteraction() { buttons = { }, onButtonClick = { } });
             GenerateAccount();
         }
 
@@ -110,6 +110,7 @@ namespace Lynx.Core.ViewModels
         {
             //TODO: Encrypt file, store key in keystore, fingerprint locked
             Mvx.Resolve<IPlatformSpecificDataService>().SaveAccount(_accountService);
+            Mvx.RegisterType<IAccountService>(() => _accountService);
 
             _displayText = "Seed phrase verified, new keys registered";
             RaisePropertyChanged(() => DisplayText);

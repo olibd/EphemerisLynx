@@ -32,7 +32,7 @@ namespace CoreUnitTests.PCL
         private IIDFacade _idFacade2;
         private Requester _requester;
         private InfoRequester _infoRequester;
-        private Receiver _verifier;
+        private Receiver _receiver;
         private ID _id1;
         private ID _id2;
         private ISynAck _synAck;
@@ -67,13 +67,13 @@ namespace CoreUnitTests.PCL
             //Uses ID facade 2 because it wants to be able to load ID 2
             _infoRequester = new InfoRequester(_requestedAttributes, _tkCrypto, _accountService1, _id1, _idFacade2, _attributeFacade, _certificateFacade);
             //Uses ID facade 1 because it wants to be able to load ID 1
-            _verifier = new Receiver(_tkCrypto, _accountService2, _id2, _idFacade1, _certificateFacade);
+            _receiver = new Receiver(_tkCrypto, _accountService2, _id2, _idFacade1, _certificateFacade);
         }
 
         public async Task SetupIDsAsync()
         {
-            _id1 = await _idFacade1.GetIDAsync(idAddr1, new string[] { "firstname", "lastname", "cell", "address", "extra" });
-            _id2 = await _idFacade2.GetIDAsync(idAddr2, new string[] { "firstname", "lastname", "cell", "address", "extra2" });
+            _id1 = await _idFacade1.GetIDAsync(idAddr1, _allAttributes);
+            _id2 = await _idFacade2.GetIDAsync(idAddr2, _allAttributes);
         }
 
         [Test]
@@ -83,19 +83,24 @@ namespace CoreUnitTests.PCL
 
             //Wait handle will wait the test until the handshake is complete
             //and the requested attributes are received 
-            ManualResetEvent waitHandle = new ManualResetEvent(false);
+            ManualResetEvent requesterWaitHandle = new ManualResetEvent(false);
 
             ID id = null;
 
             _infoRequester.HandshakeComplete += (sender, e) =>
             {
                 id = e.ReceivedID;
-                waitHandle.Set();
+                requesterWaitHandle.Set();
             };
 
-            _verifier.ProcessSyn(encodedSyn).Wait();
+            _receiver.InfoRequestReceived += (sender, e) =>
+            {
+                _receiver.AuthorizeReadRequest(_requestedAttributes);
+            };
 
-            if (waitHandle.WaitOne(100000))
+            _receiver.ProcessSyn(encodedSyn).Wait();
+
+            if (requesterWaitHandle.WaitOne(100000))
             {
                 //Check that the number of recieved attributes is the same as
                 //the number of requested attributes
@@ -121,35 +126,21 @@ namespace CoreUnitTests.PCL
             ManualResetEvent waitHandle = new ManualResetEvent(false);
 
             //Setup callback for when the handshake is complete
-            _verifier.IdentityProfileReceived += (sender, e) =>
+            _receiver.IdentityProfileReceived += (sender, e) =>
             {
                 _synAck = e.SynAck;
                 waitHandle.Set();
             };
 
-            _verifier.ProcessSyn(encodedSyn).Wait();
+            _receiver.ProcessSyn(encodedSyn).Wait();
 
             if (waitHandle.WaitOne(100000))
             {
                 //Check that all accessible attributes are present in the SynAck
-                foreach (string attrKey in _accessibleAttributes)
+                foreach (string attrKey in _allAttributes)
                 {
                     Assert.IsNotNull(_synAck.Id.GetAttribute(attrKey));
                 }
-
-                //Check if the extra attribute is present. It should not be
-                //because it is not part of the accessible attributes arrray
-
-                bool failed = false;
-                try
-                {
-                    _synAck.Id.GetAttribute(_allAttributes[4]);
-                }
-                catch (Exception e)
-                {
-                    failed = true;
-                }
-                Assert.True(failed);
             }
             else
                 Assert.Fail();
@@ -165,27 +156,16 @@ namespace CoreUnitTests.PCL
 
             List<Certificate> issuedCertificate = null;
 
-            Boolean certsSent = false;
-
-            _verifier.CertificatesSent += (sender, e) =>
-            {
-                certsSent = true;
-            };
-
             _requester.HandshakeComplete += (sender, e) =>
             {
                 issuedCertificate = e.CertificatesAdded;
                 waitHandle.Set();
             };
 
-            _verifier.Certify(_accessibleAttributes).Wait();
+            _receiver.Certify(_accessibleAttributes).Wait();
 
             if (waitHandle.WaitOne(100000))
             {
-                //make sure that from the point of view of the verifier, the
-                //certificates were sent
-                Assert.True(certsSent);
-
                 //assume we issued a certificate for each accessible attributes
                 Assert.AreEqual(_accessibleAttributes.Length, issuedCertificate.Count);
 
@@ -273,6 +253,11 @@ namespace CoreUnitTests.PCL
                 }
 
                 return id.Attributes;
+            }
+
+            public Task<ID> RecoverIDAsync()
+            {
+                throw new NotImplementedException();
             }
         }
 

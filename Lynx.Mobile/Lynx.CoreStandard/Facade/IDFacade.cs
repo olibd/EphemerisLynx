@@ -25,17 +25,6 @@ namespace Lynx.Core.Facade
             _attributeFacade = attributeFacade;
         }
 
-        public IDFacade(string factoryAddress, IAttributeFacade attributeFacade, IAccountService accountService) : base(new Web3(), accountService)
-        {
-            _factoryAddress = factoryAddress;
-            _attributeFacade = attributeFacade;
-        }
-
-        public IDFacade(IAttributeFacade attributeFacade, IAccountService accountService) : base(new Web3(), accountService)
-        {
-            _attributeFacade = attributeFacade;
-        }
-
         public async Task<ID> DeployAsync(ID id)
         {
             FactoryService factory = new FactoryService(Web3, AccountService.PrivateKey, _factoryAddress);
@@ -92,6 +81,14 @@ namespace Lynx.Core.Facade
             return newID;
         }
 
+        public async Task<ID> RecoverIDAsync()
+        {
+            FactoryService factory = new FactoryService(Web3, AccountService.PrivateKey, _factoryAddress);
+            RegistryService registry = new RegistryService(Web3, AccountService.PrivateKey, await factory.RegistryAsyncCall());
+            string idAddress = await registry.IdsAsyncCall(AccountService.GetAccountAddress());
+            return await GetIDAsync(idAddress);
+        }
+
         public async Task<Attribute> AddAttributeAsync(ID id, Attribute attribute)
         {
             IDControllerService idcService = new IDControllerService(Web3, AccountService.PrivateKey, id.ControllerAddress);
@@ -118,8 +115,7 @@ namespace Lynx.Core.Facade
                 byte[] attributeKey = await idcService.GetAttributeKeyAsyncCall(i);
                 //Get the attribute and add it to the dict
                 Attribute newAttribute = await GetAttributeByKey(idcService, attributeKey);
-                string keyStr = Encoding.UTF8.GetString(attributeKey, 0, attributeKey.Length);
-                dict.Add(keyStr, newAttribute);
+                dict.Add(newAttribute.Description, newAttribute);
             }
 
             return dict;

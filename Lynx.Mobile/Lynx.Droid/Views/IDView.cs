@@ -59,6 +59,8 @@ namespace Lynx.Droid.Views
                 .Commit();
 
             BindCommands();
+            var v = this.FindViewById(Resource.Id.IDViewLayout);
+            v.ClipToOutline = true;
         }
 
         protected override void OnResume()
