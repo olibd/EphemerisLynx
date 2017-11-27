@@ -23,9 +23,13 @@ namespace Lynx.Core.ViewModels
     public class MainViewModel : MvxViewModel
     {
         public IMvxCommand FingerprintLoginCommand => new MvxCommand(FingerprintLoginAsync);
-        public IMvxCommand RegistrationButtonClick => new MvxCommand(NavigateRegistration);
+        public IMvxCommand RegistrationButtonClick => new MvxCommand(Register);
+        public IMvxCommand RecoveryButtonClick => new MvxCommand(NavigateRecovery);
 
         private readonly IMvxNavigationService _navigationService;
+
+        private bool _mustGenerateKeys = false;
+
         private IAccountService _accountService;
 
         private string _fingerprintAuthenticationMessage;
@@ -51,7 +55,7 @@ namespace Lynx.Core.ViewModels
             }
             catch(NoAccountExistsException e)
             {
-                await StartMnemonicValidation();
+                _mustGenerateKeys = true;
             }
         }
 
@@ -83,12 +87,25 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        private async Task StartMnemonicValidation()
+        private async void NavigateRecovery()
+        {
+            await _navigationService.Navigate<RecoveryViewModel>();
+        }
+
+        private async void Register()
+        {
+            if (_mustGenerateKeys)
+                await NavigateMnemonicValidation();
+            else
+                await NavigateRegistration();
+        }
+
+        private async Task NavigateMnemonicValidation()
         {
             await _navigationService.Navigate<MnemonicValidationViewModel>();
         }
 
-        private async void NavigateRegistration()
+        private async Task NavigateRegistration()
         {
             Mvx.RegisterType(() => _accountService);
             await _navigationService.Navigate<RegistrationViewModel>();
