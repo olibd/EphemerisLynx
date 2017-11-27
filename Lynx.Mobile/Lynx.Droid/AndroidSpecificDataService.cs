@@ -66,11 +66,14 @@ namespace Lynx.Droid
         public IAccountService LoadAccount()
         {
             string path = GetFileInDataDir(fileName);
+
+            //Load the account from the file if it existed
             try
             {
                 string encryptedKey = File.ReadAllText(path);
                 return new AccountService(keyStoreCryptoService.DecryptKey(encryptedKey));
-            }
+            } 
+            //If the file doesn’t exist or corrupted, return null and the caller creates a new account
             catch (IOException e)
             {
                 return null;
