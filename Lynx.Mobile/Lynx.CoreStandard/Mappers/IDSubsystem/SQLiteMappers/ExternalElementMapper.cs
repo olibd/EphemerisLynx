@@ -42,7 +42,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 
             ExternalElementContentMapping contentMapping;
 
-            if ((contentMapping = await GetExternalElementContentMappinggAsync(obj.UID, obj.GetType().ToString())) == null)
+            if ((contentMapping = await GetExternalElementContentMappingAsync(obj.UID, obj.GetType().ToString())) == null)
             {
                 contentMapping = new ExternalElementContentMapping()
                 {
@@ -95,7 +95,7 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             });
         }
 
-        private async Task<ExternalElementContentMapping> GetExternalElementContentMappinggAsync(int extUID, string extType)
+        private async Task<ExternalElementContentMapping> GetExternalElementContentMappingAsync(int extUID, string extType)
         {
             SQLiteConnection conn = await ConnectToTableAsync<ExternalElementContentMapping>();
             return await Task.Run(() =>
