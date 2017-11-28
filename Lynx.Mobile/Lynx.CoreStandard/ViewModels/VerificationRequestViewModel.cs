@@ -15,6 +15,10 @@ namespace Lynx.Core.ViewModels
         private Requester _requester;
         private IMapper<ID> _idMapper;
         private ID _id;
+
+        private IMvxNavigationService _navigationService;
+        private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
+
         public string Syn
         {
             get
@@ -28,15 +32,13 @@ namespace Lynx.Core.ViewModels
 
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
 
-        private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
-        private Requester _requester;
-        private IMvxNavigationService _navigationService;
 
-        public VerificationRequestViewModel(Requester requester, IMvxNavigationService navigationService)
-        public VerificationRequestViewModel(Requester requester, IMapper<ID> idMapper, ID id)
+        public VerificationRequestViewModel(Requester requester, IMapper<ID> idMapper, ID id, IMvxNavigationService navigationService)
         {
             _requester = requester;
             _navigationService = navigationService;
+            _idMapper = idMapper;
+            _id = id;
         }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
