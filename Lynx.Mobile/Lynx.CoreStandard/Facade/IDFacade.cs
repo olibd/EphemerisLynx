@@ -11,6 +11,7 @@ using System.Numerics;
 using Lynx.Core.Interfaces;
 using Nethereum.ABI.Encoders;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using System;
 
 namespace Lynx.Core.Facade
 {
@@ -31,12 +32,30 @@ namespace Lynx.Core.Facade
 
             //Use the provided Factory address to create an ID + IDController
             Event idCreationEvent = factory.GetEventReturnIDController();
-            HexBigInteger filterAddressFrom =
-                await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
-            await factory.CreateIDAsync();
+            HexBigInteger filterAddressFrom = null;
 
-            List<EventLog<ReturnIDControllerEventDTO>> log =
-                await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
+            try
+            {
+                filterAddressFrom =
+                    await idCreationEvent.CreateFilterAsync(AccountService.GetAccountAddress());
+                await factory.CreateIDAsync();
+            }
+            catch (Exception e)
+            {
+                //TODO: log original exception
+                throw new TransactionFailed("The deployment of the ID failed.");
+            }
+
+            List<EventLog<ReturnIDControllerEventDTO>> log = null;
+            try
+            {
+                log = await idCreationEvent.GetFilterChanges<ReturnIDControllerEventDTO>(filterAddressFrom);
+            }
+            catch (Exception e)
+            {
+                //TODO: log original exception
+                throw new FailedToReadBlockchainData("Unable to recover the deployed ID from the blockchain.");
+            }
 
             string controllerAddress = log[0].Event._controllerAddress;
             IDControllerService idcService =
@@ -97,8 +116,14 @@ namespace Lynx.Core.Facade
             if (attribute.Address == null)
                 attribute = await _attributeFacade.DeployAsync(attribute, id.Address);
 
-
-            await idcService.AddAttributeAsync(attribute.Address);
+            try
+            {
+                await idcService.AddAttributeAsync(attribute.Address);
+            }
+            catch (Exception e)
+            {
+                throw new TransactionFailed(string.Format("Failed to add the attribute {0} to the ID.", attribute.Description), e);
+            }
 
             return attribute;
         }

@@ -32,8 +32,28 @@ namespace Lynx.Core.Facade
         public async Task<Attribute> DeployAsync(Attribute attribute, string owner)
         {
             Bytes32TypeEncoder encoder = new Bytes32TypeEncoder();
-            string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, encoder.Encode(attribute.Description), attribute.Hash, owner);
-            TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+
+            string transactionHash = null;
+            try
+            {
+                transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, encoder.Encode(attribute.Description), attribute.Hash, owner);
+            }
+            catch (Exception e)
+            {
+                //TODO: log original exception
+                throw new TransactionFailed("Failed to deploy the " + attribute.Description + " attribute.");
+            }
+
+            TransactionReceipt receipt = null;
+            try
+            {
+                receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            }
+            catch (Exception e)
+            {
+                //TODO: log original exception
+                throw new FailedToReadBlockchainData("Unable to recover the " + attribute.Description + " attribute from the blockchain.");
+            }
 
             //Populating the attribute model with the new address
             attribute.Address = receipt.ContractAddress;
@@ -114,7 +134,15 @@ namespace Lynx.Core.Facade
 
             //Add the certificate to the attribute
             AttributeService ethAttribute = new AttributeService(Web3, AccountService.PrivateKey, attribute.Address);
-            await ethAttribute.AddCertificateAsync(cert.Address);
+
+            try
+            {
+                await ethAttribute.AddCertificateAsync(cert.Address);
+            }
+            catch (Exception e)
+            {
+                throw new TransactionFailed(string.Format("Failed to add the certificate to the attribute \"{0}\".", attribute.Description), e);
+            }
 
             return cert;
         }
