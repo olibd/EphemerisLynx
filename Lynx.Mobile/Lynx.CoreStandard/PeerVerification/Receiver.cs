@@ -13,6 +13,7 @@ using Lynx.Core.Facade;
 using System.Threading.Tasks;
 using Lynx.Core.Communications;
 using Lynx.Core.Facade.Interfaces;
+using System.Collections.Generic;
 
 namespace Lynx.Core.PeerVerification
 {
@@ -179,11 +180,26 @@ namespace Lynx.Core.PeerVerification
 
         public async Task Certify(string[] keysOfAttributesToCertifify)
         {
-            Certificate[] certificates = await IssueCertificates(keysOfAttributesToCertifify);
+            Certificate[] certificates = null;
+            PartialCertificateDeploymentException exception = null;
 
+            try
+            {
+                certificates = await IssueCertificates(keysOfAttributesToCertifify);
+            }
+            catch (PartialCertificateDeploymentException e)
+            {
+                exception = e;
+                certificates = e.SuccessfulTransactions;
+            }
+
+            //send the certs that we were able to deploy
             string encryptedToken = CreateEncryptedCertificationConfirmationToken(certificates);
-
             _session.Send(encryptedToken);
+
+            //rethrow the exception to let the caller know of the partial failure of the deployment
+            if (exception != null)
+                throw exception;
         }
 
         private string CreateEncryptedCertificationConfirmationToken(Certificate[] certificates)
@@ -203,7 +219,8 @@ namespace Lynx.Core.PeerVerification
 
         private async Task<Certificate[]> IssueCertificates(string[] attributeKeys)
         {
-            Certificate[] certificates = new Certificate[attributeKeys.Length];
+            List<Certificate> deployedCerts = new List<Certificate>();
+            List<Certificate> undeployedCerts = new List<Certificate>();
 
             int i = 0;
             foreach (string key in attributeKeys)
@@ -217,13 +234,30 @@ namespace Lynx.Core.PeerVerification
                     Hash = "HashFor" + attr.Description
                 };
 
-                await _certificateFacade.DeployAsync(cert);
+                try
+                {
+                    await _certificateFacade.DeployAsync(cert);
+                }
+                catch (TransactionFailed e)
+                {
+                    undeployedCerts.Add(cert);
+                    continue;
+                }
 
-                certificates[i] = cert;
-                i++;
+                deployedCerts.Add(cert);
             }
 
-            return certificates;
+            if (undeployedCerts.Count > 0)
+            {
+                PartialCertificateDeploymentException exception = new PartialCertificateDeploymentException(undeployedCerts.ToArray())
+                {
+                    SuccessfulTransactions = deployedCerts.ToArray()
+                };
+
+                throw exception;
+            }
+
+            return deployedCerts.ToArray();
         }
     }
 }

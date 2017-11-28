@@ -136,7 +136,11 @@ namespace Lynx.Core.PeerVerification
 
         private async Task AddCertificatesToTheAccessibleAttributes(Certificate[] certificates)
         {
+            _session.Close();
+
             List<Certificate> addedCertificate = new List<Certificate>();
+            List<Certificate> unaddedCertificate = new List<Certificate>();
+
             foreach (Attribute attr in _accessibleAttributes)
             {
                 foreach (Certificate cert in certificates)
@@ -152,18 +156,36 @@ namespace Lynx.Core.PeerVerification
 
                     attr.AddCertificate(cert);
 
-                    await _attributeFacade.AddCertificateAsync(attr, cert);
+                    try
+                    {
+                        await _attributeFacade.AddCertificateAsync(attr, cert);
+                    }
+                    catch (UserFacingException ex)
+                    {
+                        unaddedCertificate.Add(cert);
+                        continue;
+                    }
+
                     addedCertificate.Add(cert);
                 }
             }
 
-            IssuedCertificatesAddedToIDEvent e = new IssuedCertificatesAddedToIDEvent()
+            IssuedCertificatesAddedToIDEvent ev = new IssuedCertificatesAddedToIDEvent()
             {
                 CertificatesAdded = addedCertificate
             };
 
-            _session.Close();
-            HandshakeComplete.Invoke(this, e);
+            if (unaddedCertificate.Count > 0)
+            {
+                PartialAdditionOfCertificatesException exception = new PartialAdditionOfCertificatesException(unaddedCertificate.ToArray())
+                {
+                    SuccessfulTransactions = addedCertificate.ToArray()
+                };
+
+                RaiseError(exception);
+            }
+            else
+                HandshakeComplete.Invoke(this, ev);
         }
 
         public void ResumeSession(string sessionID)

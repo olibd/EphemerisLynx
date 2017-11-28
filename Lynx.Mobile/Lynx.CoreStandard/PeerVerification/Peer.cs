@@ -58,7 +58,7 @@ namespace Lynx.Core.PeerVerification
 
         protected void RaiseError(UserFacingException e)
         {
-            OnError?.Invoke(this, new ErrorEvent(){Exception = e});
+            OnError?.Invoke(this, new ErrorEvent() { Exception = e });
         }
     }
 }
