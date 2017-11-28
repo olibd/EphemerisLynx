@@ -70,7 +70,7 @@ namespace Lynx.Droid
                 string pkey = File.ReadAllText(path);
                 return new AccountService(pkey);
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 return null;
             }

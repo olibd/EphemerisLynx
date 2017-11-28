@@ -7,5 +7,6 @@ namespace Lynx.Core.Interactions
     public class UserFacingErrorInteraction
     {
         public UserFacingException Exception { get; set; }
+        public Action Callback { get; set; }
     }
 }

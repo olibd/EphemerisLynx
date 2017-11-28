@@ -24,7 +24,6 @@ namespace Lynx.Core.Communications
             _publicAddress = publicAddress;
         }
 
-
         public string SessionID { get { return _channel.Name; } }
 
         public void AddMessageReceptionHandler(EventHandler<string> handler)
@@ -59,9 +58,9 @@ namespace Lynx.Core.Communications
                     }
                 });
             }
-            catch (AblyException)
+            catch (Exception e)
             {
-                throw new ConnectOperationImpossibleException("Unable to open the connection to the other peer");
+                throw new ConnectOperationImpossibleException("Unable to open the connection to the other peer", e);
             }
         }
 
@@ -77,9 +76,9 @@ namespace Lynx.Core.Communications
             {
                 _channel.Publish(_publicAddress, message);
             }
-            catch (AblyException)
+            catch (Exception e)
             {
-                throw new MessageSendException("Unable to communicate with the other peer");
+                throw new MessageSendException("Unable to communicate", e);
             }
         }
 

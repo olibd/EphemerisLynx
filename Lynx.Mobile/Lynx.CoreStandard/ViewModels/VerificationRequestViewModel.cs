@@ -25,10 +25,12 @@ namespace Lynx.Core.ViewModels
 
         private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
         private Requester _requester;
+        private IMvxNavigationService _navigationService;
 
-        public VerificationRequestViewModel(Requester requester)
+        public VerificationRequestViewModel(Requester requester, IMvxNavigationService navigationService)
         {
             _requester = requester;
+            _navigationService = navigationService;
         }
 
         //TODO: For more information see: https://www.mvvmcross.com/documentation/fundamentals/navigation
@@ -41,9 +43,13 @@ namespace Lynx.Core.ViewModels
                 DeployConfirm();
             };
 
-            _requester.OnError += (sender, e) =>
+            _requester.OnError += async (sender, e) =>
             {
-                _displayErrorInteraction.Raise(new UserFacingErrorInteraction(){Exception = e.Exception});
+                _displayErrorInteraction.Raise(new UserFacingErrorInteraction()
+                {
+                    Exception = e.Exception,
+                    Callback = async() => await _navigationService.Close(this)
+                });
             };
         }
 

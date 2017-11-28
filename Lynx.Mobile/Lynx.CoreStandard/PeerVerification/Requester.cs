@@ -72,10 +72,19 @@ namespace Lynx.Core.PeerVerification
                 AccessibleAttributes = _accessibleAttributes
             };
 
-            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(ack.PublicKey);
-            _tokenCryptoService.Sign(synAck, _accountService.GetPrivateKeyAsByteArray());
-            string encryptedToken = _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
-            _session.Send(encryptedToken);
+            try
+            {
+                byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions
+                    .HexToByteArray(ack.PublicKey);
+                _tokenCryptoService.Sign(synAck, _accountService.GetPrivateKeyAsByteArray());
+                string encryptedToken =
+                    _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
+                _session.Send(encryptedToken);
+            }
+            catch (Exception e)
+            {
+                throw new SynAckFailedException("Unable to respond to the other peer", e);
+            }
         }
 
         protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
@@ -106,17 +115,28 @@ namespace Lynx.Core.PeerVerification
 
         protected async Task ProcessAck(string encryptedToken)
         {
-            Ack ack = await base.DecryptAndInstantiateHandshakeToken<Ack>(encryptedToken);
-
-            VerifyHandshakeTokenIDOwnership(ack);
-
-            if (_tokenCryptoService.VerifySignature(ack))
+            try
             {
-                Ack = ack;
-                GenerateAndSendSynAck(ack);
+                Ack ack = await base.DecryptAndInstantiateHandshakeToken<Ack>(encryptedToken);
+
+                VerifyHandshakeTokenIDOwnership(ack);
+
+                if (_tokenCryptoService.VerifySignature(ack))
+                {
+                    Ack = ack;
+                    GenerateAndSendSynAck(ack);
+                }
+                else
+                    throw new SignatureMismatchException("Unable to validate the other peer's signature");
             }
-            else
-                throw new SignatureDoesntMatchException("Unable to validate the other peer's signature");
+            catch (UserFacingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new UnableToProcessTokenException("The other user sent invalid data", e);
+            }
         }
 
         private async Task ProcessCertificationConfirmationToken(string encryptedToken)
@@ -126,12 +146,12 @@ namespace Lynx.Core.PeerVerification
             CertificationConfirmationToken token = await tokenFactory.CreateTokenAsync(decryptedToken);
 
             if (token.PublicKey != Ack.PublicKey)
-                throw new TokenPublicKeyMismatch();
+                throw new TokenPublicKeyMismatchException();
 
             if (_tokenCryptoService.VerifySignature(token))
                 await AddCertificatesToTheAccessibleAttributes(token.IssuedCertificates);
             else
-                throw new SignatureDoesntMatchException("Unable to validate the other peer's signature");
+                throw new SignatureMismatchException("Unable to validate the other peer's signature");
         }
 
         private async Task AddCertificatesToTheAccessibleAttributes(Certificate[] certificates)

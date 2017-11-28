@@ -53,7 +53,7 @@ namespace Lynx.Core.ViewModels
                 SetupAccount();
                 await CheckAndLoadID();
             }
-            catch(NoAccountExistsException e)
+            catch(NoAccountExistsException)
             {
                 _mustGenerateKeys = true;
             }

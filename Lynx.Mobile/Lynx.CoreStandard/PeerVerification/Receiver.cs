@@ -55,21 +55,39 @@ namespace Lynx.Core.PeerVerification
                 Encrypted = true,
             };
 
-            byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(syn.PublicKey);
-            _tokenCryptoService.Sign(ack, _accountService.GetPrivateKeyAsByteArray());
-            string encryptedToken = _tokenCryptoService.Encrypt(ack, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
-            _session.Open(syn.NetworkAddress);
-            _session.Send(encryptedToken);
+            try
+            {
+                byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions
+                    .HexToByteArray(syn.PublicKey);
+                _tokenCryptoService.Sign(ack, _accountService.GetPrivateKeyAsByteArray());
+                string encryptedToken =
+                    _tokenCryptoService.Encrypt(ack, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
+                _session.Open(syn.NetworkAddress);
+                _session.Send(encryptedToken);
+            }
+            catch (Exception e)
+            {
+                throw new AckFailedException("Unable to communicate with the requester", e);
+            }
         }
 
         public async Task ProcessSyn(string synString)
         {
-            HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_idFacade);
-            Syn syn = await synFactory.CreateHandshakeTokenAsync(synString);
+            Syn syn;
 
-            byte[] pubK = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(syn.PublicKey);
+            try
+            {
+                HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_idFacade);
+                syn = await synFactory.CreateHandshakeTokenAsync(synString);
 
-            VerifyHandshakeTokenIDOwnership(syn);
+                VerifyHandshakeTokenIDOwnership(syn);
+            }
+            catch (TokenSenderIsNotIDOwnerException){throw;}
+            catch (Exception e)
+            {
+                throw new InstantiateSynFailedException("Unable to process the scanned request", e);
+            }
+
 
             if (_tokenCryptoService.VerifySignature(syn))
             {
@@ -77,7 +95,7 @@ namespace Lynx.Core.PeerVerification
                 Acknowledge(_syn);
             }
             else
-                throw new SignatureDoesntMatchException("Unable to validate the other peer's signature");
+                throw new SignatureMismatchException("Unable to validate the other peer's signature");
         }
 
         protected async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
@@ -111,10 +129,10 @@ namespace Lynx.Core.PeerVerification
             SynAck unverifiedSynAck = await base.DecryptAndInstantiateHandshakeToken<SynAck>(encryptedSynAck, _syn.Id);
 
             if (unverifiedSynAck.PublicKey != _syn.PublicKey)
-                throw new TokenPublicKeyMismatch();
+                throw new TokenPublicKeyMismatchException("The other peer's identity is inconsistent!");
 
             if (!_tokenCryptoService.VerifySignature(unverifiedSynAck))
-                throw new SignatureDoesntMatchException("Unable to validate the other peer's signature");
+                throw new SignatureMismatchException("Unable to validate the other peer's signature");
 
             _synAck = unverifiedSynAck;
 
@@ -122,6 +140,7 @@ namespace Lynx.Core.PeerVerification
             {
                 SynAck = _synAck
             };
+
             IdentityProfileReceived.Invoke(this, e);
         }
 
@@ -130,11 +149,10 @@ namespace Lynx.Core.PeerVerification
         /// </summary>
         private async Task ProcessInfoRequestSynAck(string encryptedInfoRequestToken)
         {
-            InfoRequestSynAck infoRequestSynAck =
-                await base.DecryptAndInstantiateHandshakeToken<InfoRequestSynAck>(encryptedInfoRequestToken, _syn.Id);
+            InfoRequestSynAck infoRequestSynAck = await base.DecryptAndInstantiateHandshakeToken<InfoRequestSynAck>(encryptedInfoRequestToken, _syn.Id);
 
             if (infoRequestSynAck.PublicKey != _syn.PublicKey)
-                throw new TokenPublicKeyMismatch();
+                throw new TokenPublicKeyMismatchException();
 
             if (_tokenCryptoService.VerifySignature(infoRequestSynAck))
             {
@@ -148,7 +166,7 @@ namespace Lynx.Core.PeerVerification
                 InfoRequestReceived.Invoke(this, e);
             }
             else
-                throw new SignatureDoesntMatchException("Unable to validate the other peer's signature");
+                throw new SignatureMismatchException("Unable to validate the other peer's signature");
         }
 
         /// <summary>

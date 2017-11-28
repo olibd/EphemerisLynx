@@ -49,11 +49,19 @@ namespace Lynx.Core.PeerVerification
         /// <returns>The HandshakeToken object</returns>
         protected async Task<T> DecryptAndInstantiateHandshakeToken<T>(string encryptedHandshakeToken, ID id = null) where T : HandshakeToken, new()
         {
-            string decryptedToken = _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
-            HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade, id);
-            T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
+            try
+            {
+                string decryptedToken =
+                    _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
+                HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade, id);
+                T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
 
-            return handshakeToken;
+                return handshakeToken;
+            }
+            catch (Exception e)
+            {
+                throw new UnableToProcessTokenException("Unable to decrypt the other peer's messages", e);
+            }
         }
 
         protected void RaiseError(UserFacingException e)

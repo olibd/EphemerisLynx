@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Android.App;
+using Android.Content;
+using Android.Graphics;
+using Android.Hardware.Camera2;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V7.Widget;
@@ -8,6 +12,7 @@ using Lynx.Core.Models.Interactions;
 using Lynx.Core.Interactions;
 using Lynx.Core.ViewModels;
 using Lynx.Droid.Views.Callbacks;
+using Microsoft.Azure.Mobile.Analytics;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Droid.Views;
@@ -24,6 +29,7 @@ namespace Lynx.Droid.Views
     public class IDView : MvxFragmentActivity
     {
         private LinearLayout _bottomSheet;
+        private CameraManager _cManager;
 
         private IMvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction;
 
@@ -48,18 +54,24 @@ namespace Lynx.Droid.Views
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            _cManager = (CameraManager)GetSystemService(CameraService);
+
             SetContentView(Resource.Layout.IDView);
             _bottomSheet = FindViewById<LinearLayout>(Resource.Id.bottom_sheet);
 
-            _scanner = new ZXingScannerFragment
+            if (_cManager.GetCameraIdList().Length > 0) //If a camera is available
             {
-                ScanningOptions = MobileBarcodeScanningOptions.Default
-            };
-            SupportFragmentManager.BeginTransaction()
-                .Add(Resource.Id.ZXingScannerLayout, _scanner, "ZXINGSCANNER")
-                .Commit();
-
+                _scanner = new ZXingScannerFragment
+                {
+                    ScanningOptions = MobileBarcodeScanningOptions.Default
+                };
+                SupportFragmentManager.BeginTransaction()
+                    .Add(Resource.Id.ZXingScannerLayout, _scanner, "ZXINGSCANNER")
+                    .Commit();
+            }
             BindCommands();
+
             var v = this.FindViewById(Resource.Id.IDViewLayout);
             v.ClipToOutline = true;
         }
@@ -71,19 +83,22 @@ namespace Lynx.Droid.Views
             {
                 PermissionsHandler.RequestPermissionsAsync(this);
             }
-            _scanner.StartScanning(result =>
+            if (_cManager.GetCameraIdList().Length > 0) //If a camera is available
             {
-                if (!result.Text.Contains(":"))
-                    return;
+                _scanner.StartScanning(result =>
+                    {
+                        if (!result.Text.Contains(":"))
+                            return;
 
-                RunOnUiThread(() =>
-                {
-                    Toast.MakeText(this, "Request Scanned. Please wait.", ToastLength.Long).Show();
-                });
+                        RunOnUiThread(() =>
+                        {
+                            Toast.MakeText(this, "Request Scanned. Please wait.", ToastLength.Long).Show();
+                        });
 
-                QrCodeScanCommand.Execute(result.Text);
-            },
-            MobileBarcodeScanningOptions.Default);
+                        QrCodeScanCommand.Execute(result.Text);
+                    },
+                    MobileBarcodeScanningOptions.Default);
+            }
         }
 
         private void ShowErrorDialog(object sender, MvxValueEventArgs<UserFacingErrorInteraction> e)

@@ -28,31 +28,21 @@ namespace Lynx.Core.Crypto
             //dissamble the encrypted token to decrypt the payload
             string[] splittedEncryptedToken = encryptedToken.Split(':');
 
-            if (splittedEncryptedToken.Length > 3 || splittedEncryptedToken.Length < 2)
-                throw new InvalidTokenFormatException("The token is in an invalid format");
-
             string typePrefix = splittedEncryptedToken[0];
             splittedEncryptedToken = splittedEncryptedToken[1].Split('.');
 
             //get the public key
-            try
-            {
-                string jsonDecodedHeader = Base64Decode(splittedEncryptedToken[0]);
-                Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
-                byte[] pubkey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(header["pubkey"]);
+            string jsonDecodedHeader = Base64Decode(splittedEncryptedToken[0]);
+            Dictionary<string, string> header = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedHeader);
+            byte[] pubkey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(header["pubkey"]);
 
-                //decrypt the payload
-                byte[] encryptedPayloadBytes = Convert.FromBase64String(splittedEncryptedToken[1]);
-                byte[] decryptedPayloadBytes = _ieccCryptoService.Decrypt(encryptedPayloadBytes, pubkey, privkey);
-                string decryptedPayload = Convert.ToBase64String(decryptedPayloadBytes);
+            //decrypt the payload
+            byte[] encryptedPayloadBytes = Convert.FromBase64String(splittedEncryptedToken[1]);
+            byte[] decryptedPayloadBytes = _ieccCryptoService.Decrypt(encryptedPayloadBytes, pubkey, privkey);
+            string decryptedPayload = Convert.ToBase64String(decryptedPayloadBytes);
 
-                //reassemble the decrypted token, add the signature if there is one
-                return typePrefix + ":" + splittedEncryptedToken[0] + "." + decryptedPayload + "." + splittedEncryptedToken[2];
-            }
-            catch (FormatException)
-            {
-                throw new InvalidTokenFormatException("The token is in an invalid format");
-            }
+            //reassemble the decrypted token, add the signature if there is one
+            return typePrefix + ":" + splittedEncryptedToken[0] + "." + decryptedPayload + "." + splittedEncryptedToken[2];
 
         }
 
