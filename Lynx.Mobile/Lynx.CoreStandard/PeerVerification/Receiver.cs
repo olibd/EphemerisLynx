@@ -73,29 +73,30 @@ namespace Lynx.Core.PeerVerification
 
         public async Task ProcessSyn(string synString)
         {
-            Syn syn;
-
             try
             {
                 HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_idFacade);
-                syn = await synFactory.CreateHandshakeTokenAsync(synString);
+                Syn syn = await synFactory.CreateHandshakeTokenAsync(synString);
 
                 VerifyHandshakeTokenIDOwnership(syn);
+
+                // This needs to be done within the try-catch because VerifySignature could throw an exception
+                if (_tokenCryptoService.VerifySignature(syn))
+                {
+                    _syn = syn;
+                    Acknowledge(_syn);
+                }
+                else
+                    throw new SignatureMismatchException("Unable to validate the other peer's signature");
+
             }
-            catch (TokenSenderIsNotIDOwnerException){throw;}
+            catch (UserFacingException){throw;}
             catch (Exception e)
             {
                 throw new InstantiateSynFailedException("Unable to process the scanned request", e);
             }
 
 
-            if (_tokenCryptoService.VerifySignature(syn))
-            {
-                _syn = syn;
-                Acknowledge(_syn);
-            }
-            else
-                throw new SignatureMismatchException("Unable to validate the other peer's signature");
         }
 
         protected async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken, ID id = null)
