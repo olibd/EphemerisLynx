@@ -11,6 +11,7 @@ using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Facade;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Interfaces;
+using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.PeerVerification.Interfaces;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
@@ -176,13 +177,11 @@ namespace Lynx.Core.PeerVerification
                     addedCertificate.Add(cert);
                 }
             }
-
+            _session.Close();
             IssuedCertificatesAddedToIDEvent e = new IssuedCertificatesAddedToIDEvent()
             {
                 CertificatesAdded = addedCertificate
             };
-
-            _session.Close();
             HandshakeComplete.Invoke(this, e);
         }
 

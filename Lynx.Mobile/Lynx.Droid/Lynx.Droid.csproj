@@ -244,6 +244,7 @@
     <Compile Include="MainApplication.cs" />
     <Compile Include="Views\FingerprintLoginDialogFragment.cs" />
     <Compile Include="Views\InfoRequestView.cs" />
+    <Compile Include="Views\CertificatesView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -268,6 +269,8 @@
     <AndroidResource Include="Resources\layout\InfoRequestView.xml" />
     <AndroidResource Include="Resources\drawable\RoundedCorner.xml" />
     <AndroidResource Include="Resources\drawable\Circle.xml" />
+    <AndroidResource Include="Resources\layout\CertificatesView.xml" />
+    <AndroidResource Include="Resources\layout\CertificateView.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />

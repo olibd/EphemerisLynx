@@ -30,14 +30,19 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             {
                 await _attrMapper.SaveAsync(entry.Value);
 
-                IDAttribute idAttr = new IDAttribute()
+                //Save the relationship between the ID and the attribute if it does not already exists
+                IDAttribute idAttr;
+                if ((idAttr = await GetIDAttributeMapping(obj.UID, entry.Value.UID)) == null)
                 {
-                    IDUID = obj.UID,
-                    AttrUID = entry.Value.UID
-                };
+                    idAttr = new IDAttribute()
+                    {
+                        IDUID = obj.UID,
+                        AttrUID = entry.Value.UID
+                    };
 
-                IMapper<IDAttribute> idAttrMapper = new Mapper<IDAttribute>(_dbFilePath);
-                await idAttrMapper.SaveAsync(idAttr);
+                    IMapper<IDAttribute> idAttrMapper = new Mapper<IDAttribute>(_dbFilePath);
+                    await idAttrMapper.SaveAsync(idAttr);
+                }
             }
 
             return baseReturn;
@@ -58,20 +63,35 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             if (id.Attributes.Count > 0)
                 return id;
 
-            return await Task.Run(async () =>
+            SQLiteConnection conn = await ConnectToTableAsync<IDAttribute>();
+            TableQuery<IDAttribute> query = null;
+            await Task.Run(() =>
             {
-                SQLiteConnection conn = new SQLiteConnection(_dbFilePath);
-                TableQuery<IDAttribute> query = conn
+                query = conn
                     .Table<IDAttribute>()
                     .Where(mapping => mapping.IDUID == UID);
+            });
 
-                foreach (IDAttribute mapping in query)
-                {
-                    Attribute attr = await _attrMapper.GetAsync(mapping.AttrUID);
-                    id.AddAttribute(attr);
-                }
+            foreach (IDAttribute mapping in query)
+            {
+                Attribute attr = await _attrMapper.GetAsync(mapping.AttrUID);
+                id.AddAttribute(attr);
+            }
+            conn.Close();
+            return id;
+        }
 
-                return id;
+        private async Task<IDAttribute> GetIDAttributeMapping(int IDUID, int attrUID)
+        {
+            SQLiteConnection conn = await ConnectToTableAsync<IDAttribute>();
+            return await Task.Run(() =>
+            {
+                IDAttribute idAttrMapping = conn
+                    .Table<IDAttribute>()
+                    .Where(mapping => mapping.IDUID == IDUID && mapping.AttrUID == attrUID).FirstOrDefault();
+
+                conn.Close();
+                return idAttrMapping;
             });
         }
 
@@ -86,36 +106,18 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             private int _iDUID;
             private int _attrUID;
 
-            [Indexed]
+            [Indexed(Name = "RelationshipID", Order = 1, Unique = true)]
             public int IDUID
             {
-                get { return _iDUID; }
-                set
-                {
-                    UID = ComputeRelationshipID(value, AttrUID);
-                    _iDUID = value;
-                }
+                get;
+                set;
             }
 
+            [Indexed(Name = "RelationshipID", Order = 2, Unique = true)]
             public int AttrUID
             {
-                get { return _attrUID; }
-                set
-                {
-                    UID = ComputeRelationshipID(IDUID, value);
-                    _attrUID = value;
-                }
-            }
-
-            /// <summary>
-            /// Computes the relationship identifier (primary key).
-            /// </summary>
-            /// <returns>The relationship identifier.</returns>
-            /// <param name="idUID">Identifier uid.</param>
-            /// <param name="attrUID">Attr uid.</param>
-            private int ComputeRelationshipID(int idUID, int attrUID)
-            {
-                return int.Parse(idUID + "" + attrUID);
+                get;
+                set;
             }
         }
     }

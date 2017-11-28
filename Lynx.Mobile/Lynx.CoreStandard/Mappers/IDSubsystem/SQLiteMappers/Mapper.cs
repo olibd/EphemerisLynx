@@ -8,7 +8,6 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
 {
     public class Mapper<T> : IMapper<T> where T : IDBSerializable, new()
     {
-        private SQLiteConnection _db;
         protected readonly string _dbFilePath;
         private readonly IIdentityMap<int, T> _idMap;
 
@@ -36,14 +35,14 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
                 return obj;
             }
 
-            await ConnectToTableAsync<T>();
+            SQLiteConnection db = await ConnectToTableAsync<T>();
 
             return await Task.Run(() =>
             {
 
-                obj = _db.Get<T>(UID);
+                obj = db.Get<T>(UID);
                 _idMap.Add(obj.UID, obj);
-                _db.Close();
+                db.Close();
 
                 return obj;
             });
@@ -61,7 +60,6 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
             return await Task.Run(async () =>
             {
                 int retUID = await SaveToDBAsync(obj);
-                _db.Close();
                 _idMap.Add(obj.UID, obj);
                 return retUID;
             });
@@ -74,37 +72,45 @@ namespace Lynx.Core.Mappers.IDSubsystem.SQLiteMappers
         /// <param name="obj">Object.</param>
         private async Task<int> SaveToDBAsync(T obj)
         {
+            SQLiteConnection db = await ConnectToTableAsync<T>();
+
             return await Task.Run(() =>
             {
-                if (_db.Find<T>(obj.UID) != null)
-                    return _db.Update(obj);
+                int i;
+
+                if (db.Find<T>(obj.UID) != null)
+                    i = db.Update(obj);
                 else
-                    return _db.Insert(obj);
+                    i = db.Insert(obj);
 
-
+                db.Close();
+                return i;
             });
         }
 
         /// <summary>
         /// Creates a table if it does not exist
         /// </summary>
-        protected async Task CreateTableAsync<G>()
+        protected async Task<SQLiteConnection> CreateTableAsync<G>()
         {
-            await ConnectToTableAsync<G>();
+            return await ConnectToTableAsync<G>();
         }
 
         /// <summary>
         /// Connects to table G.
         /// </summary>
         /// <typeparam name="G">The 1st type parameter.</typeparam>
-        private async Task ConnectToTableAsync<G>()
+        protected async Task<SQLiteConnection> ConnectToTableAsync<G>()
         {
+            SQLiteConnection conn = null;
             await Task.Run(() =>
             {
-                _db = new SQLiteConnection(_dbFilePath);
+                conn = new SQLiteConnection(_dbFilePath);
                 //Create table if not exist
-                _db.CreateTable<G>();
+                conn.CreateTable<G>();
             });
+
+            return conn;
         }
     }
 }
