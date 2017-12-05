@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using eVi.abi.lib.pcl;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Communications.Packets.Interfaces;
 using Lynx.Core.Crypto.Interfaces;
@@ -50,7 +51,16 @@ namespace Lynx.Core.PeerVerification
         protected async Task<T> DecryptAndInstantiateHandshakeToken<T>(string encryptedHandshakeToken, ID id = null) where T : HandshakeToken, new()
         {
             string decryptedToken = _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
-            HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade, id);
+            HandshakeTokenFactory<T> handshakeTokenFactory = null;
+            try
+            {
+                handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade, id);
+            }
+            catch (CallFailed e)
+            {
+                throw new FailedBlockchainDataAcess("Unable to read peer data from the blockchain.", e);
+            }
+
             T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
 
             return handshakeToken;

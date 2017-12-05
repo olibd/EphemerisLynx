@@ -14,7 +14,7 @@ using Lynx.Core.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
 using Lynx.Core.PeerVerification.Interfaces;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
-
+using eVi.abi.lib.pcl;
 namespace Lynx.Core.PeerVerification
 {
 
@@ -123,7 +123,16 @@ namespace Lynx.Core.PeerVerification
         {
             string decryptedToken = _tokenCryptoService.Decrypt(encryptedToken, _accountService.GetPrivateKeyAsByteArray());
             CertificationConfirmationTokenFactory tokenFactory = new CertificationConfirmationTokenFactory(_certificateFacade);
-            CertificationConfirmationToken token = await tokenFactory.CreateTokenAsync(decryptedToken);
+
+            CertificationConfirmationToken token = null;
+            try
+            {
+                token = await tokenFactory.CreateTokenAsync(decryptedToken);
+            }
+            catch (CallFailed e)
+            {
+                throw new FailedBlockchainDataAcess("Unable to recover the certificate(s) data.", e);
+            }
 
             if (token.PublicKey != Ack.PublicKey)
                 throw new TokenPublicKeyMismatch();
@@ -160,7 +169,7 @@ namespace Lynx.Core.PeerVerification
                     {
                         await _attributeFacade.AddCertificateAsync(attr, cert);
                     }
-                    catch (UserFacingException ex)
+                    catch (TransactionFailed ex)
                     {
                         unaddedCertificate.Add(cert);
                         continue;
