@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Lynx.Core.Facade.Interfaces;
+using Lynx.Core.Interactions;
 using Lynx.Core.Interfaces;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
@@ -30,6 +31,11 @@ namespace Lynx.Core.ViewModels
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
         private readonly IMvxNavigationService _navigationService;
 
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction => _displayErrorInteraction;
+        //We specify the instance separately because IMvxInteraction does not
+        //offer the Raise() method, only MvxInteraction does
+        private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
+
         public RegistrationViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
@@ -39,9 +45,6 @@ namespace Lynx.Core.ViewModels
         public void Init()
         {
             ConfirmationInteraction = new MvxInteraction<BooleanInteraction>();
-
-            ID = new ID();
-            Mvx.RegisterSingleton(() => ID);
         }
 
         public override void Start()
@@ -62,11 +65,17 @@ namespace Lynx.Core.ViewModels
                 {
                     if (ok)
                     {
-                        await Deploy();
-                        await _navigationService.Navigate<IDViewModel>();
+                        try
+                        {
+                            await Deploy();
+                            await _navigationService.Navigate<IDViewModel>();
+                        }
+                        catch (UserFacingException e)
+                        {
+                            _displayErrorInteraction.Raise(new UserFacingErrorInteraction(e));
+                        }
                     }
                 },
-
                 Query = "Do you confirm that the information supplied is accurate?"
             };
 
@@ -79,7 +88,6 @@ namespace Lynx.Core.ViewModels
 
             await DeployToBlockchain();
             await SaveIDToDB();
-
         }
 
         private async Task SaveIDToDB()
@@ -93,14 +101,17 @@ namespace Lynx.Core.ViewModels
         private async Task DeployToBlockchain()
         {
             _idFacade = Mvx.Resolve<IIDFacade>();
+
             await _idFacade.DeployAsync(ID);
 
             Mvx.Resolve<IPlatformSpecificDataService>().IDAddress = ID.Address;
-
         }
 
         private void BuildID()
         {
+            ID = new ID();
+            Mvx.RegisterSingleton(() => ID);
+
             //create some dummy attributes
             Attribute firstname = new Attribute()
             {
