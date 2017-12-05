@@ -17,6 +17,21 @@ namespace Lynx.Core.ViewModels
         private IMvxNavigationService _navigationService;
         private IReceiver _verifier;
 
+        public IMvxCommand CertifyIDCommand => new MvxAsyncCommand(CertifyID, () => CertifyReady);
+
+        private bool _certifyReady = true;
+        private bool CertifyReady
+        {
+            get => _certifyReady;
+            set
+            {
+                _certifyReady = value;
+
+                CertifyIDCommand.CanExecute();
+                RaisePropertyChanged(() => CertifyIDCommand);
+            }
+        }
+
         public class CheckedAttribute
         {
             private CertifyViewModel _certifyViewModel;
@@ -65,12 +80,12 @@ namespace Lynx.Core.ViewModels
             }
         }
 
-        public IMvxCommand CertifyIDCommand => new MvxAsyncCommand(CertifyID);
 
         private async Task CertifyID()
         {
+            CertifyReady = false;
             await _verifier.Certify(_attributesToCertify.ToArray());
-            Close((this));
+            Close(this);
         }
 
         public override void Prepare(IReceiver verifier)

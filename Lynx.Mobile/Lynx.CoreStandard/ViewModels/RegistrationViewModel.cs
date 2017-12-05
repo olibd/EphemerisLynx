@@ -30,6 +30,22 @@ namespace Lynx.Core.ViewModels
         public MvxInteraction<BooleanInteraction> ConfirmationInteraction { get; set; }
         private readonly IMvxNavigationService _navigationService;
 
+        public IMvxCommand DeployIDCommand => new MvxCommand(DeployConfirm, () => SubmitReady);
+
+        private bool _submitReady = true;
+        private bool SubmitReady
+        {
+            get => _submitReady;
+            set
+            {
+                _submitReady = value;
+
+                DeployIDCommand.CanExecute();
+                RaisePropertyChanged(() => DeployIDCommand);
+            }
+        }
+
+
         public RegistrationViewModel(IMvxNavigationService navigationService)
         {
             _navigationService = navigationService;
@@ -49,8 +65,6 @@ namespace Lynx.Core.ViewModels
             //TODO: Add starting logic here
         }
 
-        public IMvxCommand DeployIDCommand => new MvxCommand(DeployConfirm);
-
         /// <summary>
         /// Ask for user confirmation of deployment then deploys.
         /// </summary>
@@ -62,6 +76,7 @@ namespace Lynx.Core.ViewModels
                 {
                     if (ok)
                     {
+                        SubmitReady = false;
                         await Deploy();
                         await _navigationService.Navigate<IDViewModel>();
                     }
