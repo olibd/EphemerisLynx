@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using eVi.abi.lib.pcl;
 using Lynx.Core.Facade.Interfaces;
+using Lynx.Core.Interactions;
 using Lynx.Core.Interfaces;
 using Lynx.Core.Mappers.IDSubsystem.Strategies;
 using Lynx.Core.Models;
@@ -17,6 +19,10 @@ namespace Lynx.Core.ViewModels
     public class RecoveryViewModel : MvxViewModel
     {
         private IMvxNavigationService _navigationService;
+
+        //The IMvxInteraction and the MvxInteraction must be separate because the Raise() method is not part if the IMvxInteraction interface.
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction => _displayErrorInteraction;
+        private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
 
         private string _buttonText;
         private string _mnemonicInput;
@@ -104,7 +110,16 @@ namespace Lynx.Core.ViewModels
             IPlatformSpecificDataService dataService = Mvx.Resolve<IPlatformSpecificDataService>();
 
             IIDFacade idFacade = Mvx.Resolve<IIDFacade>();
-            ID id = await idFacade.RecoverIDAsync();
+            ID id = null;
+            try
+            {
+                id = await idFacade.RecoverIDAsync();
+            }
+            catch (CallFailed e)
+            {
+                _displayErrorInteraction.Raise(new UserFacingErrorInteraction("Unable to recover the ID."));
+            }
+
             Mvx.RegisterType(() => id);
 
             dataService.SaveAccount(newAccount);

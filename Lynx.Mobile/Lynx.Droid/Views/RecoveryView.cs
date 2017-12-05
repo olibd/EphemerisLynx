@@ -21,10 +21,47 @@ namespace Lynx.Droid.Views
     [Activity(Label = "View for RecoveryViewModel")]
     class RecoveryView : MvxActivity
     {
+        private IMvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction;
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction
+        {
+            get => _displayErrorInteraction;
+            set
+            {
+                if (_displayErrorInteraction != null)
+                    _displayErrorInteraction.Requested -= ShowErrorDialog;
+
+                _displayErrorInteraction = value;
+                _displayErrorInteraction.Requested += ShowErrorDialog;
+            }
+        }
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+            BindInteraction();
             SetContentView(Resource.Layout.RecoveryView);
+        }
+
+        private void ShowErrorDialog(object sender, MvxValueEventArgs<UserFacingErrorInteraction> e)
+        {
+            RunOnUiThread(() =>
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.SetTitle("Error")
+                     .SetMessage(e.Value.ErrorMessage)
+                    .SetPositiveButton("OK", (o, args) => { })
+                    .Show();
+            });
+        }
+
+        private void BindInteraction()
+        {
+            var set = this.CreateBindingSet<RecoveryView, RecoveryViewModel>();
+            set.Bind(this)
+               .For(view => view.DisplayErrorInteraction)
+               .To(viewModel => viewModel.DisplayErrorInteraction)
+               .OneWay();
+            set.Apply();
         }
     }
 }
