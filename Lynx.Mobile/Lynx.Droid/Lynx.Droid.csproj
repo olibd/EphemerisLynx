@@ -245,6 +245,7 @@
     <Compile Include="Views\FingerprintLoginDialogFragment.cs" />
     <Compile Include="Views\InfoRequestView.cs" />
     <Compile Include="Views\CertificatesView.cs" />
+    <Compile Include="KeyStoreCryptoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
