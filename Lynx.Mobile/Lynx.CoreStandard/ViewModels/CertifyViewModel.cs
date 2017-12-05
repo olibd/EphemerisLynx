@@ -5,6 +5,7 @@ using MvvmCross.Core.ViewModels;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using MvvmCross.Core.Navigation;
 using Lynx.Core.PeerVerification.Interfaces;
+using Lynx.Core.Interactions;
 using System.Threading.Tasks;
 
 namespace Lynx.Core.ViewModels
@@ -16,6 +17,11 @@ namespace Lynx.Core.ViewModels
         private List<string> _attributesToCertify;
         private IMvxNavigationService _navigationService;
         private IReceiver _verifier;
+
+        public IMvxInteraction<UserFacingErrorInteraction> DisplayErrorInteraction => _displayErrorInteraction;
+        //We specify the instance separately because IMvxInteraction does not
+        //offer the Raise() method, only MvxInteraction does
+        private readonly MvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction = new MvxInteraction<UserFacingErrorInteraction>();
 
         public class CheckedAttribute
         {
@@ -69,8 +75,16 @@ namespace Lynx.Core.ViewModels
 
         private async Task CertifyID()
         {
-            await _verifier.Certify(_attributesToCertify.ToArray());
-            Close((this));
+            try
+            {
+                await _verifier.Certify(_attributesToCertify.ToArray());
+                Close((this));
+            }
+            catch (UserFacingException e)
+            {
+                _displayErrorInteraction.Raise(new UserFacingErrorInteraction(e));
+
+            }
         }
 
         public override void Prepare(IReceiver verifier)
