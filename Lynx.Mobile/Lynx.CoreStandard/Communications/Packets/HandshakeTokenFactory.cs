@@ -42,7 +42,7 @@ namespace Lynx.Core.Communications.Packets
             return t;
         }
 
-        public T ApplySignature(T t, string[] splittedEncodedToken)
+        private T ApplySignature(T t, string[] splittedEncodedToken)
         {
             string signature = null;
             if (splittedEncodedToken.Length == 3)
@@ -59,7 +59,7 @@ namespace Lynx.Core.Communications.Packets
         /// </summary>
         /// <returns>The identifier.</returns>
         /// <param name="payload">Payload.</param>
-        public async Task<ID> RetrieveID(Dictionary<string, string> payload)
+        private async Task<ID> RetrieveID(Dictionary<string, string> payload)
         {
             //get the accessible attributes
             if (payload.ContainsKey("accAttr"))

@@ -36,7 +36,7 @@ namespace Lynx.Core.Communications.Packets
             return t;
         }
 
-        public string Base64Decode(string encodedText)
+        protected string Base64Decode(string encodedText)
         {
             byte[] plainTextBytes = Convert.FromBase64String(encodedText);
             return System.Text.Encoding.UTF8.GetString(plainTextBytes, 0, plainTextBytes.Length);
