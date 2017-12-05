@@ -6,6 +6,17 @@ namespace Lynx.Core.Interactions
 {
     public class UserFacingErrorInteraction
     {
-        public UserFacingException Exception { get; set; }
+        private string _errorMessage;
+        public string ErrorMessage { get => _errorMessage; }
+
+        public UserFacingErrorInteraction(string errorMessage)
+        {
+            _errorMessage = errorMessage;
+        }
+
+        public UserFacingErrorInteraction(UserFacingException e)
+        {
+            _errorMessage = e.Message;
+        }
     }
 }

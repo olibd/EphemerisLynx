@@ -79,7 +79,7 @@ namespace Lynx.Droid.Views
             {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.SetTitle("Error")
-                    .SetMessage(e.Value.Exception.Message)
+                    .SetMessage(e.Value.ErrorMessage)
                     .SetPositiveButton("OK", (o, args) => { })
                     .Show();
             });

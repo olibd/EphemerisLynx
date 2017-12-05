@@ -43,7 +43,7 @@ namespace Lynx.Core.ViewModels
 
             _requester.OnError += (sender, e) =>
             {
-                _displayErrorInteraction.Raise(new UserFacingErrorInteraction(){Exception = e.Exception});
+                _displayErrorInteraction.Raise(new UserFacingErrorInteraction(e.Exception));
             };
         }
 
