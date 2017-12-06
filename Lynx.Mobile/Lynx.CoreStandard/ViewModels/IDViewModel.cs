@@ -66,6 +66,7 @@ namespace Lynx.Core.ViewModels
             //Error callback - necessary to handle exceptions occuring in code that is called by the Session
             _receiver.OnError += (sender, e) =>
             {
+                _scanned = false;
                 _displayErrorInteraction.Raise(new UserFacingErrorInteraction(e.Exception));
             };
 
@@ -88,6 +89,7 @@ namespace Lynx.Core.ViewModels
             }
             catch (UserFacingException e)
             {
+                _scanned = false;
                 _displayErrorInteraction.Raise(new UserFacingErrorInteraction(e));
             }
 
