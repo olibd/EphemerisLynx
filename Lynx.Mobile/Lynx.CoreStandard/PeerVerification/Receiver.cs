@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Lynx.Core.Communications;
 using Lynx.Core.Facade.Interfaces;
 using System.Collections.Generic;
+using eVi.abi.lib.pcl;
 
 namespace Lynx.Core.PeerVerification
 {
@@ -238,8 +239,15 @@ namespace Lynx.Core.PeerVerification
                 {
                     await _certificateFacade.DeployAsync(cert);
                 }
-                catch (TransactionFailed e)
+                catch (TransactionFailed)
                 {
+                    undeployedCerts.Add(cert);
+                    continue;
+                }
+                catch (FailedBlockchainDataAcess)
+                {
+                    //TODO: Handle partially deployed certificates. 
+                    //Current code below is temporary.
                     undeployedCerts.Add(cert);
                     continue;
                 }
