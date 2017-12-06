@@ -124,15 +124,7 @@ namespace Lynx.Core.PeerVerification
             string decryptedToken = _tokenCryptoService.Decrypt(encryptedToken, _accountService.GetPrivateKeyAsByteArray());
             CertificationConfirmationTokenFactory tokenFactory = new CertificationConfirmationTokenFactory(_certificateFacade);
 
-            CertificationConfirmationToken token = null;
-            try
-            {
-                token = await tokenFactory.CreateTokenAsync(decryptedToken);
-            }
-            catch (CallFailed e)
-            {
-                throw new FailedBlockchainDataAcess("Unable to recover the certificate(s) data.", e);
-            }
+            CertificationConfirmationToken token = await tokenFactory.CreateTokenAsync(decryptedToken);
 
             if (token.PublicKey != Ack.PublicKey)
                 throw new TokenPublicKeyMismatch();

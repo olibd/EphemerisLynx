@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using eVi.abi.lib.pcl;
 using Lynx.Core.Facade;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
+using Lynx.Core.PeerVerification;
 using Newtonsoft.Json;
 
 namespace Lynx.Core.Communications.Packets
@@ -34,7 +36,14 @@ namespace Lynx.Core.Communications.Packets
             string jsonDecodedPayload = Base64Decode(splittedEncodedToken[1]);
             Dictionary<string, string> payload = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDecodedPayload);
 
-            t.Id = await RetrieveID(payload);
+            try
+            {
+                t.Id = await RetrieveID(payload);
+            }
+            catch (CallFailed e)
+            {
+                throw new FailedBlockchainDataAcess("Unable to read peer data from the blockchain.", e);
+            }
 
             //If there was a signature in the encoded token, we sign it
             ApplySignature(t, splittedEncodedToken);

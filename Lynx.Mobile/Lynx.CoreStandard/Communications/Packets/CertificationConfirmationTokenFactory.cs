@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using eVi.abi.lib.pcl;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Models.IDSubsystem;
+using Lynx.Core.PeerVerification;
 using Newtonsoft.Json;
 
 namespace Lynx.Core.Communications.Packets
@@ -46,10 +48,17 @@ namespace Lynx.Core.Communications.Packets
 
             //load them from the blockchain
             int i = 0;
-            foreach (string address in issuedCertAddresses)
+            try
             {
-                issuedCerts[i] = await _certFacade.GetCertificateAsync(address);
-                i++;
+                foreach (string address in issuedCertAddresses)
+                {
+                    issuedCerts[i] = await _certFacade.GetCertificateAsync(address);
+                    i++;
+                }
+            }
+            catch (CallFailed e)
+            {
+                throw new FailedBlockchainDataAcess("Unable to recover the certificate(s) data.", e);
             }
 
             t.IssuedCertificates = issuedCerts;
