@@ -9,6 +9,7 @@ using Lynx.Core.Interfaces;
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
+using Lynx.Core.PeerVerification;
 
 namespace Lynx.Core.Facade
 {
@@ -48,8 +49,15 @@ namespace Lynx.Core.Facade
         {
             //Standard Ethereum contract deploy and get address
             string transactionHash = await CertificateService.DeployContractAsync(Web3, AccountService.PrivateKey, cert.Location, cert.Hash, cert.OwningAttribute.Address);
-
-            TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            TransactionReceipt receipt = null;
+            try
+            {
+                receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            }
+            catch (Exception e)
+            {
+                throw new FailedBlockchainDataAcess("Unable to recover the deployed certificate.", e);
+            }
 
             cert.Address = receipt.ContractAddress;
             cert.Owner = AccountService.GetAccountAddress();

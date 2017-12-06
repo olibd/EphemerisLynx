@@ -15,6 +15,7 @@ using Nethereum.RPC.Eth.DTOs;
 using Org.BouncyCastle.Crypto.Engines;
 using Attribute = Lynx.Core.Models.IDSubsystem.Attribute;
 using Nethereum.ABI.Encoders;
+using Lynx.Core.PeerVerification;
 
 namespace Lynx.Core.Facade
 {
@@ -35,8 +36,15 @@ namespace Lynx.Core.Facade
 
             string transactionHash = await AttributeService.DeployContractAsync(Web3, AccountService.PrivateKey, attribute.Location, encoder.Encode(attribute.Description), attribute.Hash, owner);
 
-            TransactionReceipt receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
-
+            TransactionReceipt receipt = null;
+            try
+            {
+                receipt = await Web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            }
+            catch (Exception e)
+            {
+                throw new FailedBlockchainDataAcess("Unable to recover the deployed attribute.", e);
+            }
 
             //Populating the attribute model with the new address
             attribute.Address = receipt.ContractAddress;
