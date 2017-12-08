@@ -37,9 +37,6 @@ namespace Lynx.Core.ViewModels
             set
             {
                 _actionReady = value;
-
-                RegistrationButtonClick.CanExecute();
-                RecoveryButtonClick.CanExecute();
                 RaiseAllPropertiesChanged();
             }
         }

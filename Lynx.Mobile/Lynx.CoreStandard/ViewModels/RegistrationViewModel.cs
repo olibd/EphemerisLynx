@@ -39,8 +39,6 @@ namespace Lynx.Core.ViewModels
             set
             {
                 _submitReady = value;
-
-                DeployIDCommand.CanExecute();
                 RaisePropertyChanged(() => DeployIDCommand);
             }
         }

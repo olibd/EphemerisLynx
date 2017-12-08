@@ -26,8 +26,6 @@ namespace Lynx.Core.ViewModels
             set
             {
                 _certifyReady = value;
-
-                CertifyIDCommand.CanExecute();
                 RaisePropertyChanged(() => CertifyIDCommand);
             }
         }
