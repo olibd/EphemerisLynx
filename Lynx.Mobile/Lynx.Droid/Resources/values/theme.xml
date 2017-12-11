@@ -6,4 +6,10 @@
 		<item name="android:colorBackground">@color/theme_devicedefault_background</item>
 		<item name="android:colorPrimary">#ff00e5ff</item>
 	</style>
+	<style name="LynxTheme.Button.Blue" parent="Base.Widget.AppCompat.Button">
+		<item name="android:colorButtonNormal">#5EC6C9</item>
+		<item name="android:colorControlHighlight">#64d2d6</item>
+		<item name="android:textColor">@android:color/white</item>
+		<item name="android:background">@drawable/ButtonRoundedCorner</item>
+	</style>
 </resources>

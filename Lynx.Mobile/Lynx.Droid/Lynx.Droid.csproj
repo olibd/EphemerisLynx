@@ -266,12 +266,15 @@
     </AndroidResource>
     <None Include="ToDo-MvvmCross\_ Droid UI.txt" />
     <AndroidResource Include="Resources\layout\SplashScreen.axml" />
-    <AndroidResource Include="Resources\drawable\splash.png" />
     <AndroidResource Include="Resources\layout\InfoRequestView.xml" />
     <AndroidResource Include="Resources\drawable\RoundedCorner.xml" />
     <AndroidResource Include="Resources\drawable\Circle.xml" />
     <AndroidResource Include="Resources\layout\CertificatesView.xml" />
     <AndroidResource Include="Resources\layout\CertificateView.xml" />
+    <AndroidResource Include="Resources\drawable\BluePurpleGrandient.xml" />
+    <AndroidResource Include="Resources\drawable\lynxlogo.png" />
+    <AndroidResource Include="Resources\drawable\splash.xml" />
+    <AndroidResource Include="Resources\drawable\ButtonRoundedCorner.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />

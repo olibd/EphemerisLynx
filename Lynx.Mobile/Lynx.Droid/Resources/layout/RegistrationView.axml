@@ -3,7 +3,8 @@
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@drawable/BluePurpleGrandient">
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:id="@+id/firstname_layout"
