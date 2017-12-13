@@ -28,7 +28,6 @@ namespace Lynx.Core.PeerVerification
         private ICertificateFacade _certificateFacade;
         protected Attribute[] _accessibleAttributes;
         private IAttributeFacade _attributeFacade;
-
         public event EventHandler<IssuedCertificatesAddedToIDEvent> HandshakeComplete;
 
         public Requester(ITokenCryptoService<IToken> tokenCryptoService, IAccountService accountService, ID id, IIDFacade idFacade, IAttributeFacade attributeFacade, ICertificateFacade certificateFacade) : base(tokenCryptoService, accountService, idFacade)
@@ -116,12 +115,11 @@ namespace Lynx.Core.PeerVerification
 
         protected async Task ProcessAck(string encryptedToken)
         {
+            Ack ack = await base.DecryptAndInstantiateHandshakeToken<Ack>(encryptedToken);
+            VerifyHandshakeTokenIDOwnership(ack);
+
             try
             {
-                Ack ack = await base.DecryptAndInstantiateHandshakeToken<Ack>(encryptedToken);
-
-                VerifyHandshakeTokenIDOwnership(ack);
-
                 if (_tokenCryptoService.VerifySignature(ack))
                 {
                     Ack = ack;

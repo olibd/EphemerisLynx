@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Lynx.Core.Communications.Packets;
 using Lynx.Core.Communications.Packets.Interfaces;
+using Lynx.Core.Crypto;
 using Lynx.Core.Crypto.Interfaces;
 using Lynx.Core.Facade.Interfaces;
 using Lynx.Core.Interfaces;
@@ -49,18 +50,27 @@ namespace Lynx.Core.PeerVerification
         /// <returns>The HandshakeToken object</returns>
         protected async Task<T> DecryptAndInstantiateHandshakeToken<T>(string encryptedHandshakeToken, ID id = null) where T : HandshakeToken, new()
         {
+            HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade, id);
+
+            string decryptedToken = "";
+
             try
             {
-                string decryptedToken =
-                    _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
-                HandshakeTokenFactory<T> handshakeTokenFactory = new HandshakeTokenFactory<T>(_idFacade, id);
-                T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
-
-                return handshakeToken;
+                _tokenCryptoService.Decrypt(encryptedHandshakeToken, _accountService.GetPrivateKeyAsByteArray());
             }
             catch (Exception e)
             {
                 throw new UnableToProcessTokenException("Unable to decrypt the other peer's messages", e);
+            }
+
+            try
+            {
+                T handshakeToken = await handshakeTokenFactory.CreateHandshakeTokenAsync(decryptedToken);
+                return handshakeToken;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidTokenFormatException("Unable to process the data sent by the other peer", e);
             }
         }
 

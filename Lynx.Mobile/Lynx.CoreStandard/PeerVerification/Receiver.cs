@@ -55,29 +55,29 @@ namespace Lynx.Core.PeerVerification
                 Encrypted = true,
             };
 
-            try
-            {
                 byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions
                     .HexToByteArray(syn.PublicKey);
                 _tokenCryptoService.Sign(ack, _accountService.GetPrivateKeyAsByteArray());
                 string encryptedToken =
                     _tokenCryptoService.Encrypt(ack, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
+            try
+            {
                 _session.Open(syn.NetworkAddress);
                 _session.Send(encryptedToken);
             }
             catch (Exception e)
             {
-                throw new AckFailedException("Unable to communicate with the requester", e);
+                throw new MessageSendException("Unable to communicate with the requester", e);
             }
         }
 
         public async Task ProcessSyn(string synString)
         {
+            HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_idFacade);
+
             try
             {
-                HandshakeTokenFactory<Syn> synFactory = new HandshakeTokenFactory<Syn>(_idFacade);
                 Syn syn = await synFactory.CreateHandshakeTokenAsync(synString);
-
                 VerifyHandshakeTokenIDOwnership(syn);
 
                 // This needs to be done within the try-catch because VerifySignature could throw an exception
@@ -88,7 +88,6 @@ namespace Lynx.Core.PeerVerification
                 }
                 else
                     throw new SignatureMismatchException("Unable to validate the other peer's signature");
-
             }
             catch (UserFacingException){throw;}
             catch (Exception e)
@@ -141,7 +140,6 @@ namespace Lynx.Core.PeerVerification
             {
                 SynAck = _synAck
             };
-
             IdentityProfileReceived.Invoke(this, e);
         }
 

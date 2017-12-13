@@ -12,7 +12,6 @@ using Lynx.Core.Models.Interactions;
 using Lynx.Core.Interactions;
 using Lynx.Core.ViewModels;
 using Lynx.Droid.Views.Callbacks;
-using Microsoft.Azure.Mobile.Analytics;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Droid.Views;
@@ -29,7 +28,6 @@ namespace Lynx.Droid.Views
     public class IDView : MvxFragmentActivity
     {
         private LinearLayout _bottomSheet;
-        private CameraManager _cManager;
 
         private IMvxInteraction<UserFacingErrorInteraction> _displayErrorInteraction;
 
@@ -50,26 +48,15 @@ namespace Lynx.Droid.Views
             }
         }
 
-
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
-            _cManager = (CameraManager)GetSystemService(CameraService);
 
             SetContentView(Resource.Layout.IDView);
             _bottomSheet = FindViewById<LinearLayout>(Resource.Id.bottom_sheet);
 
-            if (_cManager.GetCameraIdList().Length > 0) //If a camera is available
-            {
-                _scanner = new ZXingScannerFragment
-                {
-                    ScanningOptions = MobileBarcodeScanningOptions.Default
-                };
-                SupportFragmentManager.BeginTransaction()
-                    .Add(Resource.Id.ZXingScannerLayout, _scanner, "ZXINGSCANNER")
-                    .Commit();
-            }
+            CreateScanner();
             BindCommands();
 
             var v = this.FindViewById(Resource.Id.IDViewLayout);
@@ -79,11 +66,49 @@ namespace Lynx.Droid.Views
         protected override void OnResume()
         {
             base.OnResume();
+            StartScanner();
+        }
+
+        private void ShowErrorDialog(object sender, MvxValueEventArgs<UserFacingErrorInteraction> e)
+        {
+            RunOnUiThread(() =>
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.SetTitle("Error")
+                    .SetMessage(e.Value.Exception.Message)
+                    .SetPositiveButton("OK", (o, args) => { })
+                    .Show();
+            });
+        }
+
+        private void CreateScanner()
+        {
+            CameraManager cameraManager = (CameraManager) GetSystemService(CameraService);
+
+            // If there is no camera (eg. emulator) we do not do anything
+            if (cameraManager.GetCameraIdList().Length > 0) 
+            {
+                _scanner = new ZXingScannerFragment
+                {
+                    ScanningOptions = MobileBarcodeScanningOptions.Default
+                };
+                SupportFragmentManager.BeginTransaction()
+                    .Add(Resource.Id.ZXingScannerLayout, _scanner, "ZXINGSCANNER")
+                    .Commit();
+            }
+        }
+
+        private void StartScanner()
+        {
+
+            CameraManager cameraManager = (CameraManager) GetSystemService(CameraService);
+
             if (PermissionsHandler.NeedsPermissionRequest(this))
             {
                 PermissionsHandler.RequestPermissionsAsync(this);
             }
-            if (_cManager.GetCameraIdList().Length > 0) //If a camera is available
+
+            if (cameraManager.GetCameraIdList().Length > 0) //If a camera is available
             {
                 _scanner.StartScanning(result =>
                     {
@@ -101,18 +126,6 @@ namespace Lynx.Droid.Views
             }
         }
 
-        private void ShowErrorDialog(object sender, MvxValueEventArgs<UserFacingErrorInteraction> e)
-        {
-            RunOnUiThread(() =>
-            {
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.SetTitle("Error")
-                    .SetMessage(e.Value.Exception.Message)
-                    .SetPositiveButton("OK", (o, args) => { })
-                    .Show();
-            });
-        }
-
         private void BindCommands()
         {
             var set = this.CreateBindingSet<IDView, IDViewModel>();
@@ -126,7 +139,6 @@ namespace Lynx.Droid.Views
                 .OneWay();
             set.Apply();
         }
-
     }
 }
 

@@ -78,7 +78,7 @@ namespace Lynx.Core.Communications
             }
             catch (Exception e)
             {
-                throw new MessageSendException("Unable to communicate", e);
+                throw new MessageSendException("Unable to send data over the network", e);
             }
         }
 

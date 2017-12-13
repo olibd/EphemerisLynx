@@ -27,7 +27,6 @@ namespace Lynx.Core.Crypto
         {
             //dissamble the encrypted token to decrypt the payload
             string[] splittedEncryptedToken = encryptedToken.Split(':');
-
             string typePrefix = splittedEncryptedToken[0];
             splittedEncryptedToken = splittedEncryptedToken[1].Split('.');
 
@@ -43,7 +42,6 @@ namespace Lynx.Core.Crypto
 
             //reassemble the decrypted token, add the signature if there is one
             return typePrefix + ":" + splittedEncryptedToken[0] + "." + decryptedPayload + "." + splittedEncryptedToken[2];
-
         }
 
         public bool VerifySignature(T token)
