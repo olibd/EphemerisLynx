@@ -10,10 +10,13 @@ namespace Lynx.Droid
     internal class AndroidSpecificDataService : IPlatformSpecificDataService
     {
         private Context applicationContext;
+        private const string fileName = "keys";
+        KeyStoreCryptoService keyStoreCryptoService;
 
         public AndroidSpecificDataService(Context applicationContext)
         {
             this.applicationContext = applicationContext;
+            keyStoreCryptoService = new KeyStoreCryptoService();
         }
 
         public string IDAddress
@@ -60,29 +63,30 @@ namespace Lynx.Droid
            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/" + file;
         }
 
-        //TODO: Android keystore logic to safely store the private key
         public IAccountService LoadAccount()
         {
-            string path = GetFileInDataDir("keys");
+            string path = GetFileInDataDir(fileName);
 
+            //Load the account from the file if it existed
             try
             {
-                string pkey = File.ReadAllText(path);
-                return new AccountService(pkey);
-            }
-            catch (IOException)
+                string encryptedKey = File.ReadAllText(path);
+                return new AccountService(keyStoreCryptoService.DecryptKey(encryptedKey));
+            } 
+            //If the file doesn’t exist or corrupted, return null and the caller creates a new account
+            catch (IOException e)
             {
                 return null;
             }
-
         }
 
-        //TODO: Android keystore logic to safely store the private key
         public void SaveAccount(IAccountService accountService)
         {
             string key = accountService.PrivateKey;
-            string path = GetFileInDataDir("keys");
-            File.WriteAllText(path, key);
+            string encryptedKey = keyStoreCryptoService.EncryptKey(key);
+
+            string path = GetFileInDataDir(fileName);
+            File.WriteAllText(path, encryptedKey);
         }
     }
 }
