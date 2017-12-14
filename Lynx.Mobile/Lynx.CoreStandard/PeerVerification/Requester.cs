@@ -71,24 +71,20 @@ namespace Lynx.Core.PeerVerification
                 Encrypted = true,
                 AccessibleAttributes = _accessibleAttributes
             };
+            string encryptedToken = "";
 
             try
             {
                 byte[] requesterPubKey = Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions
                     .HexToByteArray(ack.PublicKey);
                 _tokenCryptoService.Sign(synAck, _accountService.GetPrivateKeyAsByteArray());
-                string encryptedToken =
-                    _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
-                _session.Send(encryptedToken);
-            }
-            catch (UserFacingException)
-            {
-                throw;
+                encryptedToken = _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
             }
             catch (Exception e)
             {
                 throw new SynAckEncryptionFailedException("Unable to respond to the other peer", e);
             }
+            _session.Send(encryptedToken);
         }
 
         protected virtual async Task RouteEncryptedHandshakeToken<T>(string encryptedHandshakeToken)
