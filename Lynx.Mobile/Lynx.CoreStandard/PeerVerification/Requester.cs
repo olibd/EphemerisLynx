@@ -81,9 +81,13 @@ namespace Lynx.Core.PeerVerification
                     _tokenCryptoService.Encrypt(synAck, requesterPubKey, _accountService.GetPrivateKeyAsByteArray());
                 _session.Send(encryptedToken);
             }
+            catch (UserFacingException)
+            {
+                throw;
+            }
             catch (Exception e)
             {
-                throw new SynAckFailedException("Unable to respond to the other peer", e);
+                throw new SynAckEncryptionFailedException("Unable to respond to the other peer", e);
             }
         }
 
