@@ -23,12 +23,23 @@ namespace Lynx.Core.ViewModels
     public class MainViewModel : MvxViewModel
     {
         public IMvxCommand FingerprintLoginCommand => new MvxCommand(FingerprintLoginAsync);
-        public IMvxCommand RegistrationButtonClick => new MvxCommand(Register);
-        public IMvxCommand RecoveryButtonClick => new MvxCommand(NavigateRecovery);
+        public IMvxCommand RegistrationButtonClick => new MvxCommand(Register, () => ActionReady);
+        public IMvxCommand RecoveryButtonClick => new MvxCommand(NavigateRecovery, () => ActionReady);
 
         private readonly IMvxNavigationService _navigationService;
 
-        private bool _mustGenerateKeys = false;
+        private bool _mustGenerateKeys;
+
+        private bool _actionReady;
+        private bool ActionReady
+        {
+            get => _actionReady;
+            set
+            {
+                _actionReady = value;
+                RaiseAllPropertiesChanged();
+            }
+        }
 
         private IAccountService _accountService;
 
@@ -56,6 +67,7 @@ namespace Lynx.Core.ViewModels
             catch(NoAccountExistsException)
             {
                 _mustGenerateKeys = true;
+                ActionReady = true;
             }
         }
 
@@ -116,6 +128,7 @@ namespace Lynx.Core.ViewModels
             var result = await CrossFingerprint.Current.IsAvailableAsync(true);
             if (result)
             {
+                ActionReady = true;
                 var auth = await CrossFingerprint.Current.AuthenticateAsync("Scan fingerprint to access your ID.");
                 if (auth.Status == FingerprintAuthenticationResultStatus.TooManyAttempts)
                 {

@@ -10,7 +10,7 @@ namespace Lynx.Core
 
         public static string RpcEndpointUrl
         {
-            get => "http://c4011a58.ngrok.io"; 
+            get => "http://ae5213da.ngrok.io"; 
         }
     }
 }
