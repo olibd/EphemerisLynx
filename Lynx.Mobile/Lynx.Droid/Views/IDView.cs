@@ -16,6 +16,8 @@ using ZXing;
 using ZXing.Mobile;
 using ZXing.Net.Mobile.Android;
 using static Android.Support.Design.Widget.BottomSheetBehavior;
+using Android.Content;
+using Android.Support.V4.Content;
 
 namespace Lynx.Droid.Views
 {
@@ -23,7 +25,7 @@ namespace Lynx.Droid.Views
     public class IDView : MvxFragmentActivity
     {
         private LinearLayout _bottomSheet;
-
+        private BroadcastReceiver mMessageReceiver = null;
         private ZXingScannerFragment _scanner;
 
         public IMvxCommand QrCodeScanCommand { get; set; }
@@ -45,11 +47,17 @@ namespace Lynx.Droid.Views
             BindCommands();
             var v = this.FindViewById(Resource.Id.IDViewLayout);
             v.ClipToOutline = true;
+
+            mMessageReceiver = new SnackbarBroadcastReceiver(this._view);
+
         }
 
         protected override void OnResume()
         {
             base.OnResume();
+
+            LocalBroadcastManager.GetInstance(this).RegisterReceiver(mMessageReceiver, new IntentFilter("EVENT_SNACKBAR"));
+
             if (PermissionsHandler.NeedsPermissionRequest(this))
             {
                 PermissionsHandler.RequestPermissionsAsync(this);

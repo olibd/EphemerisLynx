@@ -6,6 +6,7 @@ using Nethereum.Web3;
 using Nethereum.JsonRpc.Client;
 using System;
 using Lynx.Core.Interfaces;
+using Lynx.Core.Networking;
 
 namespace Lynx.Core
 {
@@ -30,6 +31,17 @@ namespace Lynx.Core
             Mvx.RegisterSingleton<ICertificateFacade>(() => new CertificateFacade(web3, Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));
             Mvx.RegisterSingleton<IAttributeFacade>(() => new AttributeFacade(web3, Mvx.Resolve<ICertificateFacade>(), Mvx.Resolve<IContentService>(), Mvx.Resolve<IAccountService>()));
             Mvx.RegisterSingleton<IIDFacade>(() => new IDFacade(factoryContract, web3, Mvx.Resolve<IAttributeFacade>(), Mvx.Resolve<IAccountService>()));
+        }
+
+        public void ConfigurePolling()
+        {
+            EthBlockchainPollingService ethPS = new EthBlockchainPollingService(Mvx.Resolve<Web3>());
+            InternetPollingService InternetPS = new InternetPollingService();
+            NetworkRessourcesPollingService NetPS = new NetworkRessourcesPollingService();
+            NetPS.Add(ethPS);
+            NetPS.Add(InternetPS);
+            NetPS.Poll(5000);
+            Mvx.RegisterSingleton<NetworkRessourcesPollingService>(() => NetPS);
         }
     }
 }

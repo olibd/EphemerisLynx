@@ -24,7 +24,6 @@ namespace Lynx.Core.Communications
             _publicAddress = publicAddress;
         }
 
-
         public string SessionID { get { return _channel.Name; } }
 
         public void AddMessageReceptionHandler(EventHandler<string> handler)

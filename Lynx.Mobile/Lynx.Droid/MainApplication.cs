@@ -1,18 +1,23 @@
 using System;
 
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V4.Content;
+using Android.Text;
+using Lynx.Core.Networking;
+using MvvmCross.Platform;
 using Plugin.CurrentActivity;
 
 namespace Lynx.Droid
 {
-	//You can specify additional application information in this attribute
+    //You can specify additional application information in this attribute
     [Application(Theme = "@style/Theme.AppCompat.Light")]
     public class MainApplication : Application, Application.IActivityLifecycleCallbacks
     {
         public MainApplication(IntPtr handle, JniHandleOwnership transer)
-          :base(handle, transer)
+          : base(handle, transer)
         {
         }
 
@@ -21,6 +26,7 @@ namespace Lynx.Droid
             base.OnCreate();
             RegisterActivityLifecycleCallbacks(this);
             //A great place to initialize Xamarin.Insights and Dependency Services!
+
         }
 
         public override void OnTerminate()

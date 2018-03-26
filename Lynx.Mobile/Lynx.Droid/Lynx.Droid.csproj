@@ -246,6 +246,7 @@
     <Compile Include="Views\InfoRequestView.cs" />
     <Compile Include="Views\CertificatesView.cs" />
     <Compile Include="KeyStoreCryptoService.cs" />
+    <Compile Include="Views\SnackbarBroadcastReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -297,6 +298,9 @@
       <Project>{FFCE422E-7B59-42E1-A7C6-429D891641AF}</Project>
       <Name>Lynx.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Networking\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Build.Download.0.4.3\build\Xamarin.Build.Download.targets" Condition="Exists('..\packages\Xamarin.Build.Download.0.4.3\build\Xamarin.Build.Download.targets')" />

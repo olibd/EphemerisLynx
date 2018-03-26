@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 namespace Lynx.Core
 {
     public static class StaticRessources
     {
         public static string FactoryContractAddress
         {
-            get => "0x002155d5323cb425a89ecD3ab87AE5Ffdf4DB5F7";
+            get { return "0x1Bb42BB3463b62E3CfA0f184c4C2c735Ed134E62"; }
         }
 
         public static string RpcEndpointUrl
         {
-            get => "http://4bb264ae.ngrok.io"; 
+            get { return "http://3cc67cfe.ngrok.io"; }
         }
     }
 }
