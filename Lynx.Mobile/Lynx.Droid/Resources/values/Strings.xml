@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hello">Hello World, Click Me!</string>
-	<string name="app_name">Lynx</string>
+  <string name="register">Register a new ID</string>
+  <string name="beginverify">I have backed up my recovery phrase</string>
+  <string name="recover">Recover an existing ID</string>
+  <string name="app_name">Lynx</string>
+	<string name="firstname">Firstname</string>
+	<string name="lastname">Lastname</string>
+	<string name="cell">Cellphone</string>
+	<string name="address">Address</string>
+	<string name="certify">Certify</string>
+	<string name="fingerprint_login">Login using fingerprint</string>
 </resources>
